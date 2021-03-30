@@ -36,5 +36,4 @@ task:
     - packer validate -syntax-only ubuntu-20.04-amd64.json
     - packer validate -syntax-only ubuntu-20.04-amd64-minimal.json
 
-  build_ubuntu2004_amd64_script: packer build ubuntu-20.04-amd64.json
-  build_ubuntu2004_amd64_minimal_script: packer build ubuntu-20.04-amd64-minimal.json
+  build_ubuntu2004_amd64_script: mv http/preseed.cfg-example http/preseed.cfg && sed -i 's/TODO/ubuntu/g' http/preseed.cfg && packer build ubuntu-20.04-amd64.json
