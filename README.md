@@ -36,6 +36,10 @@ packer validate (-syntax-only) ubuntu-20.04-amd64-minimal.json
 packer build ubuntu-20.04-amd64-minimal.json
 ```
 
+## build with cirrus
+
+<https://cirrus-ci.com/github/osism/openstack-ironic-images>
+
 ## Work in progress
 
 All *gpt* and *autoinstall* configuration and files are work in progress
