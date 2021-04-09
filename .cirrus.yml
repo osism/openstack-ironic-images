@@ -34,6 +34,10 @@ task:
 
   validate_packer_configurations_script:
     - packer validate -syntax-only ubuntu-20.04-amd64.json
-    - packer validate -syntax-only ubuntu-20.04-amd64-minimal.json
+    - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
 
-  build_ubuntu2004_amd64_script: mv http/preseed.cfg-example http/preseed.cfg && sed -i 's/TODO/ubuntu/g' http/preseed.cfg && packer build ubuntu-20.04-amd64.json
+  build_ubuntu2004_amd64_legacy_script: mv http/preseed.cfg-example http/preseed.cfg && sed -i 's/TODO/ubuntu/g' http/preseed.cfg && packer build ubuntu-20.04-amd64.json
+  #upload_ubuntu2004_amd64_legacy_script:
+  cleanup: rm -rf ./builds/
+  build_ubuntu2004_amd64_uefi_script: packer build ubuntu-20.04-amd64-efi.json
+  #upload_ubuntu2004_amd64_efi_script:
