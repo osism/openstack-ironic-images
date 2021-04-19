@@ -36,7 +36,10 @@ task:
     - packer validate -syntax-only ubuntu-20.04-amd64.json
     - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
 
-  build_ubuntu2004_amd64_legacy_script: mv http/preseed.cfg-example http/preseed.cfg && sed -i 's/TODO/ubuntu/g' http/preseed.cfg && packer build ubuntu-20.04-amd64.json
-  #upload_ubuntu2004_amd64_legacy_script:
-  build_ubuntu2004_amd64_uefi_script: rm -rf ./builds/ && packer build ubuntu-20.04-amd64-efi.json
-  #upload_ubuntu2004_amd64_efi_script:
+  build_ubuntu2004_amd64_legacy_script: mv http/preseed.cfg-example http/preseed.cfg && sed -i 's/TODO/ubuntu/g' http/preseed.cfg && packer build ubuntu-20.04-amd64.json && mkdir ./images/ && mv ./builds/* ./images/
+
+  build_ubuntu2004_amd64_uefi_script: rm -rf ./builds/ && packer build ubuntu-20.04-amd64-efi.json && mv ./builds/* ./images/
+
+  push_script:
+    - s3cmd --configure --host="$S3CMD_HOST" --host-bucket="%(bucket)s.$S3CMD_HOST" --access_key="$S3CMD_ACCESS_KEY" --secret_key="$S3CMD_SECRET_KEY" --dump-config 2>&1 > /tmp/cirrus-ci-build/.s3cfg
+    - cd ./images/ && s3cmd sync . "s3://$S3CMD_BUCKET"
