@@ -26,7 +26,7 @@ env:
 task:
   install_script:
     - apt-get update
-    - apt-get install -y qemu-kvm curl git software-properties-common python3-pip
+    - apt-get install -y qemu-kvm curl git software-properties-common python3-pip patch lftp s3cmd
     - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
     - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
     - apt-add-repository --yes --update ppa:ansible/ansible
