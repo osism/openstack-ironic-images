@@ -48,5 +48,6 @@ task:
 
   push_script:
     - s3cmd --configure --host="$S3CMD_HOST" --host-bucket="%(bucket)s.$S3CMD_HOST" --access_key="$S3CMD_ACCESS_KEY" --secret_key="$S3CMD_SECRET_KEY" --dump-config > /tmp/cirrus-ci-build/.s3cfg
+    - echo $S3CMD_HOST
     - cat /tmp/cirrus-ci-build/.s3cfg
     - cd ./images/ && s3cmd sync . "s3://$S3CMD_BUCKET"
