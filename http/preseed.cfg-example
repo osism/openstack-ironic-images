@@ -137,7 +137,7 @@ d-i apt-setup/backports boolean true
 
 tasksel tasksel/first multiselect standard, lubuntu-desktop
 # Individual additional packages to install
-d-i pkgsel/include string openssh-server python htop vim bridge-utils ifenslave ifupdown vlan gnupg vim
+d-i pkgsel/include string openssh-server python htop vim bridge-utils ifenslave ifupdown vlan gnupg
 # No update during installation
 d-i pkgsel/upgrade select none
 # Language pack selection
