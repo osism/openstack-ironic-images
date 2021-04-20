@@ -24,9 +24,9 @@ env:
   S3CMD_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
 
 task:
-  #install_script:
-  #  - apt-get update
-  #  - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
+  install_script:
+    - apt-get update
+    - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
   #  - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
   #  - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
   #  - apt-add-repository --yes --update ppa:ansible/ansible
@@ -49,4 +49,4 @@ task:
   push_script:
     - s3cmd --configure --host="$S3CMD_HOST" --host-bucket="%(bucket)s.$S3CMD_HOST" --access_key="$S3CMD_ACCESS_KEY" --secret_key="$S3CMD_SECRET_KEY" --dump-config > /tmp/cirrus-ci-build/.s3cfg
     - cat /tmp/cirrus-ci-build/.s3cfg
-    - cd ./images/ && s3cmd sync . "s3://$S3CMD_BUCKET"
+    #- cd ./images/ && s3cmd sync . "s3://$S3CMD_BUCKET"
