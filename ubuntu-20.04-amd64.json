@@ -74,7 +74,7 @@
       "variables": {
         "box_basename": "ubuntu-20.04",
         "build_directory": "./builds",
-        "build_timestamp": "2020-04",
+        "build_timestamp": "2021-04",
         "cpus": "2",
         "disk_size": "153600",
         "git_revision": "__unknown_git_revision__",
