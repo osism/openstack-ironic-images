@@ -18,19 +18,21 @@ env:
   DEBIAN_FRONTEND: noninteractive
   HOME: "$CIRRUS_WORKING_DIR"
   PACKER_TMP_DIR: "$CIRRUS_WORKING_DIR/.packer.d"
-  S3CMD_ACCESS_KEY: ENCRYPTED[2165ad09060557336a041cd1874c36ef97e3a401b70411b9f95656e6ac380bec8f1dbb16edcc87c295cab617995cb957]
-  S3CMD_BUCKET: ENCRYPTED[05c5c380218da332278be9cdf080b523760b1c63245e3f432447ba61a00dc34842e3454f16f23ae786dd75b8c340138c]
-  S3CMD_HOST: ENCRYPTED[6bd276402a1b4012bf3e4c30ccd82004521135a148ee8ce3f41356d1a996dd019a512e58c8b756e86233b9e01d726991]
-  S3CMD_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
+  MC_ACCESS_KEY: ENCRYPTED[2165ad09060557336a041cd1874c36ef97e3a401b70411b9f95656e6ac380bec8f1dbb16edcc87c295cab617995cb957]
+  MC_BUCKET: ENCRYPTED[05c5c380218da332278be9cdf080b523760b1c63245e3f432447ba61a00dc34842e3454f16f23ae786dd75b8c340138c]
+  MC_HOST: ENCRYPTED[6bd276402a1b4012bf3e4c30ccd82004521135a148ee8ce3f41356d1a996dd019a512e58c8b756e86233b9e01d726991]
+  MC_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
 
 task:
   install_script:
     - apt-get update
-    - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
+    - apt-get install -y qemu-kvm curl git software-properties-common
   #  - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
   #  - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
   #  - apt-add-repository --yes --update ppa:ansible/ansible
   #  - apt-get install -y packer ansible
+    - wget -o /tmp/cirrus-ci-build/mc https://dl.min.io/client/mc/release/linux-amd64/mc
+    - chmod +x /tmp/cirrus-ci-build/mc
 
   #submodules_script:
   #  - git submodule init
@@ -47,6 +49,8 @@ task:
   build_test_script: mkdir ./images/ && echo "testing s3 sync" > ./images/testing
 
   push_script:
-    - s3cmd --configure --host="$S3CMD_HOST" --host-bucket="%(bucket)s.$S3CMD_HOST" --access_key="$S3CMD_ACCESS_KEY" --secret_key="$S3CMD_SECRET_KEY" --dump-config > /tmp/cirrus-ci-build/.s3cfg
-    - cat /tmp/cirrus-ci-build/.s3cfg
+    - /tmp/cirrus-ci-build/mc alias set minio-betacloud https://${MC_HOST} ${MC_ACCESS_KEY} ${MC_SECRET_KEY}
+    - /tmp/cirrus-ci-build/mc cp ./images/* minio-betacloud/${MC_BUCKET}
+    #- s3cmd --configure --host="${S3CMD_HOST}" --host-bucket="%(bucket)s.${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" --dump-config > /tmp/cirrus-ci-build/.s3cfg
+    #- cat /tmp/cirrus-ci-build/.s3cfg
     #- cd ./images/ && s3cmd sync . "s3://$S3CMD_BUCKET"
