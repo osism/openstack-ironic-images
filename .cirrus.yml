@@ -26,13 +26,11 @@ env:
 task:
   install_script:
     - apt-get update
-    - apt-get install -y qemu-kvm curl git software-properties-common
-  #  - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-  #  - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
-  #  - apt-add-repository --yes --update ppa:ansible/ansible
-  #  - apt-get install -y packer ansible
-    - wget -o /tmp/cirrus-ci-build/mc https://dl.min.io/client/mc/release/linux-amd64/mc
-    - chmod +x /tmp/cirrus-ci-build/mc
+    - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
+    - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+    - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
+    - apt-add-repository --yes --update ppa:ansible/ansible
+    - apt-get install -y packer ansible
 
   #submodules_script:
   #  - git submodule init
@@ -49,8 +47,6 @@ task:
   build_test_script: mkdir ./images/ && echo "testing s3 sync" > ./images/testing
 
   push_script:
-    - /tmp/cirrus-ci-build/mc alias set minio-betacloud https://${MC_HOST} ${MC_ACCESS_KEY} ${MC_SECRET_KEY}
-    - /tmp/cirrus-ci-build/mc cp ./images/* minio-betacloud/${MC_BUCKET}
-    #- s3cmd --configure --host="${S3CMD_HOST}" --host-bucket="%(bucket)s.${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" --dump-config > /tmp/cirrus-ci-build/.s3cfg
+    - s3cmd --configure --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" --dump-config > /tmp/cirrus-ci-build/.s3cfg
     #- cat /tmp/cirrus-ci-build/.s3cfg
-    #- cd ./images/ && s3cmd sync . "s3://$S3CMD_BUCKET"
+    - cd ./images/ && s3cmd sync . "s3://${S3CMD_BUCKET}"
