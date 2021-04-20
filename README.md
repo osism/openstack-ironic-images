@@ -1,5 +1,7 @@
 # openstack-ironic-images
 
+This repository is used to manage build recipes for creating images for use on baremetal systems.
+
 ## Download
 
 Images are downloadable at the following URL:

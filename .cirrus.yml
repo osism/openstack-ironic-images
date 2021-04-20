@@ -20,6 +20,8 @@ env:
   S3CMD_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
 
 task:
+  skip: "!changesInclude('.cirrus.yml', '**.{json}', 'dev/**', 'http/**', 'scripts/**')"
+
   install_script:
     - apt-get update
     - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
@@ -42,4 +44,5 @@ task:
 
   push_task:
     only_if: $CIRRUS_BRANCH == 'main'
-    skript: cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
+
+    push_script: cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
