@@ -1,6 +1,12 @@
 # openstack-ironic-images
 
-## files
+## Download
+
+Images are downloadable at the following URL:
+
+https://images.osism.io/minio/openstack-ironic-images/
+
+## Files
 
 * packer configuration: ubuntu-20.04-amd64.json
 * preseed file: http/preseed.cfg
@@ -18,28 +24,32 @@
 * image.qcow2 will be in directory builds/
 * packer binary: <https://www.packer.io/downloads>
 
-## create image
+## Create image
 
 ```bash
 git clone ..
 cd packer-ironic-images
-change ssh pub key in node.sh
-replace TODO in preseed file with password for user ubuntu and rename to e.g. preseed.cfg-example -> preseed.cfg
+```
+
+* change SSH public key in node.sh
+* replace TODO in preseed file with password for user ubuntu and rename to e.g. preseed.cfg-example -> preseed.cfg
+
+```bash
 packer validate (-syntax-only) ubuntu-20.04-amd64.json
 packer build ubuntu-20.04-amd64.json
 ```
 
-### create minimal image
+### Create minimal image
 
 ```bash
 packer validate (-syntax-only) ubuntu-20.04-amd64-minimal.json
 packer build ubuntu-20.04-amd64-minimal.json
 ```
 
-## build with cirrus
+## Build with cirrus
 
 <https://cirrus-ci.com/github/osism/openstack-ironic-images>
 
 ## Work in progress
 
-All *gpt* and *autoinstall* configuration and files are work in progress
+* all *gpt* and *autoinstall* configurations and files are a work in progress
