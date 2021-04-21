@@ -61,11 +61,11 @@
       "execute_command": "echo 'ubuntu' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
       "expect_disconnect": true,
       "scripts": [
-        "{{ template_dir }}/scripts/update.sh",
+        "{{ template_dir }}/scripts/ubuntu/update.sh",
         "{{ template_dir }}/scripts/sshd.sh",
-        "{{ template_dir }}/scripts/sudoers.sh",
-        "{{ template_dir }}/scripts/node.sh",
-        "{{ template_dir }}/scripts/cleanup.sh",
+        "{{ template_dir }}/scripts/ubuntu/sudoers.sh",
+        "{{ template_dir }}/scripts/ubuntu/node.sh",
+        "{{ template_dir }}/scripts/ubuntu/cleanup.sh",
         "{{ template_dir }}/scripts/minimize.sh"
       ],
       "type": "shell"
