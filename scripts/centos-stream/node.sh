@@ -2,52 +2,41 @@
 
 # NOTE: Because DNS queries don't always work directly at the beginning a
 #       retry for APT.
-echo "set apt retry"
-echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
 
-echo "set restart-without-asking to true"
-echo '* libraries/restart-without-asking boolean true' | debconf-set-selections
-
-echo "apt-get update"
-apt-get update
+echo "yum update"
+dnf --assumeyes update
 
 echo "install packages"
-apt-get install --yes \
+dnf install --assumeyes \
   ifupdown \
-  python3-pip \
+  python38-debug \
+  python38-pip \
   python3-argcomplete \
-  python3-crypto \
-  python3-dnspython \
   python3-jmespath \
   python3-kerberos \
-  python3-libcloud \
   python3-lockfile \
   python3-netaddr \
-  python3-ntlm-auth \
   python3-requests-kerberos \
-  python3-requests-ntlm \
-  python3-selinux \
+  python3-libselinux \
   python3-winrm \
   python3-xmltodict\
   htop \
   vim \
   bridge-utils \
-  ifenslave \
-  ifupdown \
-  vlan \
-  gnupg \
+  gnupg2 \
   cloud-init \
-  cloud-guest-utils \
-  cloud-initramfs-copymods \
-  cloud-initramfs-dyn-netconf \
-  git
+  git \
+  gcc
 
 # NOTE: There are cloud images on which Ansible is pre-installed.
 echo "remove ansible package"
-apt-get remove --yes ansible
+dnf remove --assumeyes ansible
 
-echo "install ansible via pip3"
-pip3 install --no-cache-dir 'ansible>=2.10'
+echo "install dependencies via pip3.8"
+pip3.8 install --no-cache-dir 'pycrypto' 'dnspython' 'apache-libcloud' 'ntlm-auth' 'requests_ntlm' 'pywinrm'
+
+echo "install ansible via pip3.8"
+pip3.8 install --no-cache-dir 'ansible>=2.10'
 
 echo "create autorized_keys"
 mkdir /home/ubuntu/.ssh

@@ -68,7 +68,7 @@
     "name": "centos-stream-8",
     "no_proxy": "{{ env `no_proxy` }}",
     "template": "centos-stream-8-x86_64",
-    "boot_command": "<up><wait><tab> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `ks_path` }}<enter><wait>",
+    "boot_command": "<up><wait>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `ks_path` }}<leftCtrlOn>x<leftCtrlOff><wait>",
     "version": "TIMESTAMP"
   }
 }
