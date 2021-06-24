@@ -96,6 +96,8 @@
   roles:
     - docker
 
+  when: ansible_os_family == "Debian"
+
 - name: Apply role docker_compose
   hosts: localhost
   connection: local
@@ -109,3 +111,5 @@
 
   roles:
     - role: docker_compose
+
+  when: ansible_os_family == "Debian"
