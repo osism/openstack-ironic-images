@@ -28,7 +28,7 @@ apt-get install --yes \
   python3-requests-ntlm \
   python3-selinux \
   python3-winrm \
-  python3-xmltodict\
+  python3-xmltodict \
   htop \
   vim \
   bridge-utils \
