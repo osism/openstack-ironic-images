@@ -20,7 +20,7 @@ dnf install --assumeyes \
   python3-netaddr \
   python3-requests-kerberos \
   python3-libselinux \
-  python3-xmltodict\
+  python3-xmltodict \
   htop \
   vim \
   bridge-utils \
