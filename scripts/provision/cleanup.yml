@@ -20,3 +20,12 @@
         autoremove: true
         purge: true
       become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Remove python2 environment
+      dnf:
+        name: python2
+        state: absent
+        autoremove: true
+      become: true
+      when: ansible_os_family == "RedHat"
