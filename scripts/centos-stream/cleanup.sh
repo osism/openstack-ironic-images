@@ -2,9 +2,7 @@
 
 # should output one of 'redhat' 'centos' 'oraclelinux'
 distro="`rpm -qf --queryformat '%{NAME}' /etc/redhat-release | cut -f 1 -d '-'`"
-
 major_version="`sed 's/^.\+ release \([.0-9]\+\).*/\1/' /etc/redhat-release | awk -F. '{print $1}'`";
-
 
 echo "reduce the grub menu time to 1 second"
 if ! [ "$major_version" -eq 6 ]; then
@@ -18,7 +16,6 @@ if [ "$major_version" -ge 8 ]; then
 else
   pkg_cmd="yum"
 fi
-
 
 echo "Remove development and kernel source packages"
 $pkg_cmd -y remove gcc cpp gc kernel-devel kernel-headers glibc-devel elfutils-libelf-devel glibc-headers kernel-devel kernel-headers
