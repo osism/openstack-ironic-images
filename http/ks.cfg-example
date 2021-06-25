@@ -11,10 +11,19 @@ text
 skipx
 zerombr
 clearpart --all --initlabel
-autopart --nohome --nolvm --noboot
+part /boot/efi --fstype=fat32 --size 512 --asprimary
+part /boot --fstype=ext4 --size 512 --asprimary
+part pv.1 --size 1 --grow --fstype=lvmpv --asprimary
+volgroup system pv.1
+logvol / --fstype=ext4 --vgname=system --size=20480 --name=root
+logvol /home --fstype=ext4 --vgname=system --size=20480 --name=home
+logvol /tmp --fstype=ext4 --vgname=system --size=2048 --name=tmp
+logvol /var/log/audit --fstype=ext4 --vgname=system --size=1024 --name=audit
+logvol /var --fstype=ext4 --vgname=system --size=10240 --name=var
+logvol swap --fstype=swap --vgname=system --size=8192 --name=swap
 firstboot --disabled
 reboot --eject
-user --name=ubuntu --plaintext --password TODO
+user --name=centos --plaintext --password TODO
 
 %packages --ignoremissing --excludedocs --instLangs=en_US.utf8
 openssh-clients
@@ -35,21 +44,20 @@ openssh-server
 python38
 vim
 gnupg2
-epel-release
-htop
-bridge-utils
 -fprintd-pam
 -intltool
 -iwl*-firmware
 -microcode_ctl
 -NetworkManager
+-NetworkManager-tui
+-NetworkManager-team
 %end
 
 %post
 # sudo
-echo 'Defaults:ubuntu !requiretty' > /etc/sudoers.d/ubuntu
-echo '%ubuntu ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/ubuntu
-chmod 440 /etc/sudoers.d/ubuntu
+echo 'Defaults:centos !requiretty' > /etc/sudoers.d/centos
+echo '%centos ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/centos
+chmod 440 /etc/sudoers.d/centos
 
 # Since we disable consistent network naming, we need to make sure the eth0
 # configuration file is in place so it will come up.
@@ -73,4 +81,6 @@ NAME=eth0
 DEVICE=eth0
 ONBOOT=yes
 _EOF_
+
+systemctl enable --now network
 %end
