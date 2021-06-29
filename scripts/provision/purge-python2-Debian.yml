@@ -1,8 +1,0 @@
----
-- name: Purge python2 environment - {{ ansible_os_family }}
-  apt:
-    name: python
-    state: absent
-    autoremove: true
-    purge: true
-  become: true

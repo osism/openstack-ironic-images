@@ -80,7 +80,7 @@ echo "ansible-playbook cleanup.yml"
 /usr/local/bin/ansible-playbook -i localhost, /home/ubuntu/cleanup.yml
 
 echo "remove provisioner scripts"
-for i in cleanup Debian node RedHat purge-python2-Debian purge-python2-RedHat; do rm /home/ubuntu/${i}.yml; done
+for i in cleanup Debian node RedHat cleanup-Debian cleanup-RedHat; do rm /home/ubuntu/${i}.yml; done
 
 echo "remove .ansible directory for user ubuntu, created during ansible runs in node.sh and cleanup.sh"
 rm -rf /home/ubuntu/.ansible

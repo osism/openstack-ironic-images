@@ -1,0 +1,11 @@
+---
+- name: Set python3 as default
+  command: update-alternatives --remove python /usr/libexec/no-python
+  become: true
+
+# NOTE: This must be the last task. It will uninstall Ansible.
+- name: Purge python2 environment - {{ ansible_os_family }}
+  dnf:
+    name: python2
+    state: absent
+  become: true

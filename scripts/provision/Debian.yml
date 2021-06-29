@@ -2,3 +2,5 @@
 cleanup_packages_distribution:
   - popularity-contest
   - xauth
+operator_authorized_keys:
+  - "{{ lookup('file', '/home/ubuntu/.ssh/id_rsa.pub') }}"
