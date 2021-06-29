@@ -76,3 +76,15 @@ fi
 echo "Clear the history so our install commands aren't there"
 rm -f /root/.wget-hsts
 export HISTSIZE=0
+
+echo "remove floppy entry in fstab"
+sed -i '/floppy/d' /etc/fstab
+
+echo "ansible-playbook cleanup.yml"
+/usr/local/bin/ansible-playbook -i localhost, /home/centos/cleanup.yml
+
+echo "remove provisioner scripts"
+for i in cleanup Debian node RedHat; do rm /home/centos/${i}.yml; done
+
+echo "remove .ansible directory for user centos, created during ansible runs in node.sh and cleanup.sh"
+rm -rf /home/centos/.ansible

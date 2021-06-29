@@ -20,8 +20,24 @@
   connection: local
   gather_facts: true
 
+  pre_tasks:
+    - include_vars:
+        file: "{{ ansible_os_family }}.yml"
+
   vars:
     ansible_python_interpreter: /usr/bin/python3
+
+    # cleanup
+    cleanup_services_extra:
+      - NetworkManager
+      - iscsid
+      - lxcfs
+      - nscd
+      - ntp
+    cleanup_packages_extra:
+      - dosfstools
+      - ntfs-3g
+      - telnet
 
     # packages
     upgrade_packages: false
@@ -47,83 +63,5 @@
     - role: motd
     - role: hddtemp
     - role: rng
-
-- name: Bootstrap node - pt. 3/1
-  hosts: localhost
-  connection: local
-  gather_facts: true
-
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
-
-    # cleanup
-    cleanup_services_extra:
-      - NetworkManager
-      - iscsid
-      - lxcfs
-      - nscd
-      - ntp
-    cleanup_packages_extra:
-      - dosfstools
-      - ntfs-3g
-      - telnet
-      - popularity-contest
-      - xauth
-
-  collections:
-    - osism.commons
-    - osism.services
-
-  roles:
     - role: cleanup
-
-  when: ansible_os_family == "Debian"
-
-- name: Bootstrap node - pt. 3/2
-  hosts: localhost
-  connection: local
-  gather_facts: true
-
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
-
-    # cleanup
-    cleanup_services_extra:
-      - NetworkManager
-      - iscsid
-      - lxcfs
-      - nscd
-      - ntp
-    cleanup_packages_extra:
-      - dosfstools
-      - ntfs-3g
-      - telnet
-      - xorg-x11-xauth
-
-  collections:
-    - osism.commons
-    - osism.services
-
-  roles:
-    - role: cleanup
-
-  when: ansible_os_family == "RedHat"
-
-- name: Bootstrap node - pt. 4
-  hosts: localhost
-  connection: local
-  gather_facts: true
-
-  vars:
-    # operator
-    operator_user: dragon
-    operator_group: dragon
-    operator_authorized_keys:
-      - "{{ lookup('file', '/home/ubuntu/.ssh/id_rsa.pub') }}"
-
-  collections:
-    - osism.commons
-    - osism.services
-
-  roles:
     - role: operator

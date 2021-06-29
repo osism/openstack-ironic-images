@@ -1,5 +1,8 @@
 #!/bin/sh -eux
 
+echo "set frontend to Noninteractive to supress 'debconf: unable to initialize frontend' - messages"
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
 echo "remove specific Linux kernels, such as linux-image-3.11.0-15-generic but keeps the current kernel and does not touch the virtual packages"
 dpkg --list \
     | awk '{ print $2 }' \
@@ -77,7 +80,7 @@ echo "ansible-playbook cleanup.yml"
 /usr/local/bin/ansible-playbook -i localhost, /home/ubuntu/cleanup.yml
 
 echo "remove provisioner scripts"
-rm /home/ubuntu/node.yml /home/ubuntu/cleanup.yml
+for i in cleanup Debian node RedHat purge-python2-Debian purge-python2-RedHat; do rm /home/ubuntu/${i}.yml; done
 
 echo "remove .ansible directory for user ubuntu, created during ansible runs in node.sh and cleanup.sh"
 rm -rf /home/ubuntu/.ansible

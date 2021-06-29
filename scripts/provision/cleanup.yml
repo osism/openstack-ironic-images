@@ -4,6 +4,10 @@
   connection: local
   gather_facts: true
 
+  pre_tasks:
+    - include_vars:
+        file: "{{ ansible_os_family }}.yml"
+
   vars:
     ansible_python_interpreter: /usr/bin/python3
 
@@ -13,19 +17,5 @@
       become: true
 
     # NOTE: This must be the last task. It will uninstall Ansible.
-    - name: Purge python2 environment
-      apt:
-        name: python
-        state: absent
-        autoremove: true
-        purge: true
-      become: true
-      when: ansible_os_family == "Debian"
-
-    - name: Remove python2 environment
-      dnf:
-        name: python2
-        state: absent
-        autoremove: true
-      become: true
-      when: ansible_os_family == "RedHat"
+    - name: Include distribution specific purge python2 tasks
+      include_tasks: "purge-python2-{{ ansible_os_family }}.yml"

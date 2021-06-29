@@ -11,6 +11,9 @@ echo '* libraries/restart-without-asking boolean true' | debconf-set-selections
 echo "apt-get update"
 apt-get update
 
+echo "set frontend to Noninteractive to supress 'debconf: unable to initialize frontend' - messages"
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
 echo "install packages"
 apt-get install --yes \
   ifupdown \

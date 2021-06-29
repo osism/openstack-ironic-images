@@ -1,0 +1,4 @@
+---
+cleanup_packages_distribution:
+  - popularity-contest
+  - xauth
