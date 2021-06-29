@@ -17,7 +17,7 @@ part pv.1 --size 1 --grow --fstype=lvmpv --asprimary
 volgroup system pv.1
 logvol / --fstype=ext4 --vgname=system --size=20480 --name=root
 logvol /home --fstype=ext4 --vgname=system --size=20480 --name=home
-logvol /tmp --fstype=ext4 --vgname=system --size=2048 --name=tmp
+logvol /tmp --fstype=ext4 --vgname=system --size=5120 --name=tmp
 logvol /var/log/audit --fstype=ext4 --vgname=system --size=1024 --name=audit
 logvol /var --fstype=ext4 --vgname=system --size=10240 --name=var
 logvol swap --fstype=swap --vgname=system --size=8192 --name=swap

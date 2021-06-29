@@ -91,7 +91,7 @@ efi-host-vg ::                            \
     use_filesystem{ } filesystem{ ext4 }  \
     mountpoint{ /home }                   \
     .                                     \
-  2048 1000 2048 ext4                     \
+  5120 1000 5120 ext4                     \
     $lvmok{ }                             \
     lv_name{ tmp }                        \
     method{ lvm } format{ }               \
