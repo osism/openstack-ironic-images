@@ -55,12 +55,12 @@
     "disk_size": "153600",
     "git_revision": "__unknown_git_revision__",
     "guest_additions_url": "",
-    "headless": "false",
+    "headless": "true",
     "http_directory": "{{ template_dir }}/http",
     "http_proxy": "{{ env `http_proxy` }}",
     "https_proxy": "{{ env `https_proxy` }}",
-    "iso_checksum": "f6f534015ea32f6694ebbf2f9528ce4330485e05b47359dbaf3cc5a57f1595d2",
-    "iso_name": "CentOS-Stream-8-x86_64-20210617-dvd1.iso",
+    "iso_checksum": "d40e44d8a3358df0b57ca727beafda66dc5a7b122af4acc9b040a8beaedefd2e",
+    "iso_name": "CentOS-Stream-8-x86_64-20210415-dvd1.iso",
     "ks_path": "ks.cfg",
     "memory": "2048",
     "mirror": "http://mirrors.kernel.org/centos",
@@ -68,7 +68,7 @@
     "name": "centos-stream-8",
     "no_proxy": "{{ env `no_proxy` }}",
     "template": "centos-stream-8-x86_64",
-    "boot_command": "<up><wait>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `ks_path` }}<leftCtrlOn>x<leftCtrlOff><wait>",
+    "boot_command": "<wait><up><wait>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `ks_path` }}<leftCtrlOn>x<leftCtrlOff><wait>",
     "version": "TIMESTAMP"
   }
 }
