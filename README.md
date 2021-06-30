@@ -34,18 +34,18 @@ cd packer-ironic-images
 ```
 
 * change SSH public key in node.sh
-* replace TODO in preseed file with password for user ubuntu and rename to e.g. preseed.cfg-example -> preseed.cfg
+* replace TODO in preseed file with password for user install and rename to e.g. preseed.cfg-example -> preseed.cfg
 
 ```bash
-packer validate (-syntax-only) ubuntu-20.04-amd64.json
-packer build ubuntu-20.04-amd64.json
+packer validate (-syntax-only) ubuntu-20.04-amd64-efi.json
+packer build ubuntu-20.04-amd64-efi.json
 ```
 
 ### Create minimal image
 
 ```bash
-packer validate (-syntax-only) ubuntu-20.04-amd64-minimal.json
-packer build ubuntu-20.04-amd64-minimal.json
+packer validate (-syntax-only) ubuntu-20.04-amd64-efi-minimal.json
+packer build ubuntu-20.04-amd64-efi-minimal.json
 ```
 
 ## Build with cirrus
