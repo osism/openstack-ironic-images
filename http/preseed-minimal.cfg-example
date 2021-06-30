@@ -14,7 +14,7 @@ d-i keyboard-configuration/xkb-keymap string us
 # Skip network configuration
 d-i netcfg/enable boolean false
 # Set hostname and domain
-d-i netcfg/get_hostname string ubuntu-host
+d-i netcfg/get_hostname string install-host
 d-i netcfg/get_domain string osism.customer
 # Disable that annoying WEP key dialog.
 d-i netcfg/wireless_wep string
@@ -31,9 +31,9 @@ d-i mirror/http/proxy string
 # Skip creation of a root account
 d-i passwd/root-login boolean false
 d-i passwd/make-user boolean true
-# User ubuntu with password
-d-i passwd/user-fullname string ubuntu
-d-i passwd/username string ubuntu
+# User install with password
+d-i passwd/user-fullname string install
+d-i passwd/username string install
 # Normal user's password
 d-i passwd/user-password password TODO
 d-i passwd/user-password-again password TODO
