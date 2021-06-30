@@ -1,5 +1,3 @@
 ---
 cleanup_packages_distribution:
   - xorg-x11-xauth
-operator_authorized_keys:
-  - "{{ lookup('file', '/home/centos/.ssh/id_rsa.pub') }}"

@@ -81,10 +81,10 @@ echo "remove floppy entry in fstab"
 sed -i '/floppy/d' /etc/fstab
 
 echo "ansible-playbook cleanup.yml"
-/usr/local/bin/ansible-playbook -i localhost, /home/centos/cleanup.yml
+/usr/local/bin/ansible-playbook -i localhost, /home/install/cleanup.yml
 
 echo "remove provisioner scripts"
-for i in cleanup Debian node RedHat cleanup-RedHat cleanup-Debian; do rm /home/centos/${i}.yml; done
+for i in cleanup Debian node RedHat cleanup-RedHat cleanup-Debian; do rm /home/install/${i}.yml; done
 
-echo "remove .ansible directory for user centos, created during ansible runs in node.sh and cleanup.sh"
-rm -rf /home/centos/.ansible
+echo "remove .ansible directory for user install, created during ansible runs in node.sh and cleanup.sh"
+rm -rf /home/install/.ansible

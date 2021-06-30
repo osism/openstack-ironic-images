@@ -6,7 +6,7 @@
         "linux /install/vmlinuz",
         " auto",
         " netcfg/get_domain=osism.test",
-        " netcfg/get_hostname=ubuntu",
+        " netcfg/get_hostname=install",
         " console-setup/ask_detect=false",
         " console-setup/layoutcode=us",
         " console-setup/modelcode=pc105",
@@ -31,11 +31,11 @@
       "iso_url": "{{ user `mirror` }}/{{ user `mirror_directory` }}/{{ user `iso_name` }}",
       "memory": "{{ user `memory` }}",
       "output_directory": "{{ user `build_directory` }}/",
-      "shutdown_command": "echo 'ubuntu' | sudo -S shutdown -P now",
-      "ssh_password": "ubuntu",
+      "shutdown_command": "echo 'install' | sudo -S shutdown -P now",
+      "ssh_password": "install",
       "ssh_port": 22,
       "ssh_timeout": "10000s",
-      "ssh_username": "ubuntu",
+      "ssh_username": "install",
       "type": "qemu",
       "qemu_binary": "qemu-system-x86_64",
       "vm_name": "{{ user `template` }}-{{ user `build_timestamp` }}.qcow2",
@@ -46,16 +46,16 @@
     {
       "type": "file",
       "source": "{{ template_dir }}/scripts/provision/",
-      "destination": "/home/ubuntu/"
+      "destination": "/home/install/"
     },
     {
       "environment_vars": [
-        "HOME_DIR=/home/ubuntu",
+        "HOME_DIR=/home/install",
         "http_proxy={{ user `http_proxy` }}",
         "https_proxy={{ user `https_proxy` }}",
         "no_proxy={{ user `no_proxy` }}"
       ],
-      "execute_command": "echo 'ubuntu' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+      "execute_command": "echo 'install' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
       "expect_disconnect": true,
       "scripts": [
         "{{ template_dir }}/scripts/ubuntu/update.sh",
