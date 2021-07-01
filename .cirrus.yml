@@ -50,6 +50,6 @@ task:
     - mv ./builds/* ./images/
     - echo $CIRRUS_BRANCH
 
-  push_task:
+  publish_task:
     only_if: $CIRRUS_BRANCH == 'main'
-    push_script: cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
+    script: cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
