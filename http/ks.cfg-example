@@ -23,7 +23,7 @@ logvol /var --fstype=ext4 --vgname=system --size=10240 --name=var
 logvol swap --fstype=swap --vgname=system --size=8192 --name=swap
 firstboot --disabled
 reboot --eject
-user --name=centos --plaintext --password TODO
+user --name=install --plaintext --password TODO
 
 %packages --ignoremissing --excludedocs --instLangs=en_US.utf8
 openssh-clients
@@ -55,9 +55,9 @@ gnupg2
 
 %post
 # sudo
-echo 'Defaults:centos !requiretty' > /etc/sudoers.d/centos
-echo '%centos ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/centos
-chmod 440 /etc/sudoers.d/centos
+echo 'Defaults:install !requiretty' > /etc/sudoers.d/install
+echo '%install ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers.d/install
+chmod 440 /etc/sudoers.d/install
 
 # Since we disable consistent network naming, we need to make sure the eth0
 # configuration file is in place so it will come up.
