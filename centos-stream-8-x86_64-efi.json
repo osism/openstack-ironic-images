@@ -59,8 +59,8 @@
     "http_directory": "{{ template_dir }}/http",
     "http_proxy": "{{ env `http_proxy` }}",
     "https_proxy": "{{ env `https_proxy` }}",
-    "iso_checksum": "d40e44d8a3358df0b57ca727beafda66dc5a7b122af4acc9b040a8beaedefd2e",
-    "iso_name": "CentOS-Stream-8-x86_64-20210415-dvd1.iso",
+    "iso_checksum": "154000058770843d38b72ace5c9277738596c0ddb68c56b4f68b48c37bd43151",
+    "iso_name": "CentOS-Stream-8-x86_64-20210629-dvd1.iso",
     "ks_path": "ks.cfg",
     "memory": "2048",
     "mirror": "http://mirrors.kernel.org/centos",
@@ -72,3 +72,4 @@
     "version": "TIMESTAMP"
   }
 }
+https://mirrors.edge.kernel.org/centos/8-stream/isos/x86_64/
