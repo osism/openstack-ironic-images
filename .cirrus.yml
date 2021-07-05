@@ -52,6 +52,7 @@ task:
 
   publish_script:
     - echo $CIRRUS_BRANCH
+  only_if: $CIRRUS_BRANCH == 'main'
 
 #publish_task:
   #only_if: $CIRRUS_BRANCH == 'main'
