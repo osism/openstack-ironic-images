@@ -22,9 +22,6 @@ env:
 build_task:
   skip: "!changesInclude('.cirrus.yml', '**.{json}', 'dev/**', 'http/**', 'scripts/**')"
 
-  node_modules_cache:
-    folder: ./images/
-
   install_script:
     - apt-get update
     - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
