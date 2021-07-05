@@ -58,7 +58,7 @@ task:
       publish_script:
         - echo $CIRRUS_BRANCH
       depends_on:
-        - validate_packer_configurations_script
+        - Validate
 
 #publish_task:
   #only_if: $CIRRUS_BRANCH == 'main'
