@@ -39,25 +39,16 @@ build_task:
     - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
 
   build_ubuntu2004_amd64_legacy_script:
-    - mkdir ./images/ && touch ./images/legacy
-  #  - mv http/preseed.cfg-example http/preseed.cfg
-  #  - sed -i 's/TODO/install/g' http/preseed.cfg
-  #  - packer build ubuntu-20.04-amd64.json
-  #  - mkdir ./images/ && mv ./builds/* ./images/
+    - mv http/preseed.cfg-example http/preseed.cfg
+    - sed -i 's/TODO/install/g' http/preseed.cfg
+    - packer build ubuntu-20.04-amd64.json
+    - mkdir ./images/ && mv ./builds/* ./images/
 
   build_ubuntu2004_amd64_uefi_script:
-    - touch ./images/uefi
-  #  - rm -rf ./builds/
-  #  - packer build ubuntu-20.04-amd64-efi.json
-  #  - mv ./builds/* ./images/
-  #  - echo $CIRRUS_BRANCH
+    - rm -rf ./builds/
+    - packer build ubuntu-20.04-amd64-efi.json
+    - mv ./builds/* ./images/
+    - echo $CIRRUS_BRANCH
 
   publish_script:
     - bash ./cirrus-publish.sh
-
-#publish_task:
-  #only_if: $CIRRUS_BRANCH == 'main'
-  #depends_on: build
-  #script:
-    #- ls ./images/
-    #- cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
