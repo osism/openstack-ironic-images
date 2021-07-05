@@ -19,24 +19,28 @@ env:
   S3CMD_HOST: ENCRYPTED[6bd276402a1b4012bf3e4c30ccd82004521135a148ee8ce3f41356d1a996dd019a512e58c8b756e86233b9e01d726991]
   S3CMD_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
 
-build_task:
+task:
   skip: "!changesInclude('.cirrus.yml', '**.{json}', 'dev/**', 'http/**', 'scripts/**')"
 
-  install_script:
-    - apt-get update
-    - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
-    - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-    - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
-    - apt-add-repository --yes --update ppa:ansible/ansible
-    - apt-get install -y packer ansible
+  matrix:
+    - name: Install
+      install_script:
+        - apt-get update
+        - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
+        - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+        - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
+        - apt-add-repository --yes --update ppa:ansible/ansible
+        - apt-get install -y packer ansible
 
-  submodules_script:
-    - git submodule init
-    - git submodule update
+    - name: Submodules
+      submodules_script:
+        - git submodule init
+        - git submodule update
 
-  validate_packer_configurations_script:
-    - packer validate -syntax-only ubuntu-20.04-amd64.json
-    - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
+    - name: Validate
+      validate_packer_configurations_script:
+        - packer validate -syntax-only ubuntu-20.04-amd64.json
+        - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
 
   #build_ubuntu2004_amd64_legacy_script:
   #  - mv http/preseed.cfg-example http/preseed.cfg
@@ -50,9 +54,15 @@ build_task:
   #  - mv ./builds/* ./images/
   #  - echo $CIRRUS_BRANCH
 
-publish_task:
+    - name: Publish
+      publish_script:
+        - echo $CIRRUS_BRANCH
+      depends_on:
+        - validate_packer_configurations_script
+
+#publish_task:
   #only_if: $CIRRUS_BRANCH == 'main'
-  depends_on: build_task
-  script:
+#  depends_on: build_task
+#  script:
     - echo $CIRRUS_BRANCH
     #- cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
