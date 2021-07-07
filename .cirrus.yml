@@ -35,8 +35,8 @@ task:
     - git submodule update
 
   validate_packer_configurations_script:
-    - packer validate -syntax-only ubuntu-20.04-amd64.json
     - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
+    - packer validate -syntax-only centos-stream-8-x86_64-efi.json
 
   build_centos8_amd64_uefi_script:
     - mv http/ks.cfg-example http/ks.cfg
@@ -50,6 +50,6 @@ task:
     - mv ./builds/* ./images/
     - echo $CIRRUS_BRANCH
 
-  push_task:
-    only_if: $CIRRUS_BRANCH == 'main'
-    push_script: cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
+  #push_task:
+  #  only_if: $CIRRUS_BRANCH == 'main'
+  #  push_script: cd ./images/ && s3cmd --host="${S3CMD_HOST}" --host-bucket="${S3CMD_HOST}" --access_key="${S3CMD_ACCESS_KEY}" --secret_key="${S3CMD_SECRET_KEY}" sync . "s3://${S3CMD_BUCKET}"
