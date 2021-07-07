@@ -50,5 +50,5 @@ task:
     - mv ./builds/* ./images/
     - echo $CIRRUS_BRANCH
 
-  publish_script:
-    - bash ./cirrus-publish.sh
+  #publish_script:
+  #  - bash ./cirrus-publish.sh
