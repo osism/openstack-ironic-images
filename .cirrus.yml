@@ -38,7 +38,7 @@ task:
     - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
     - packer validate -syntax-only centos-stream-8-x86_64-efi.json
 
-    build_centos8_amd64_uefi_script:
+  build_centos8_amd64_uefi_script:
     - mv http/ks.cfg-example http/ks.cfg
     - sed -i 's/TODO/install/g' http/ks.cfg
     - packer build centos-stream-8-x86_64-efi.json
