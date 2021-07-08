@@ -19,7 +19,7 @@ env:
   S3CMD_HOST: ENCRYPTED[6bd276402a1b4012bf3e4c30ccd82004521135a148ee8ce3f41356d1a996dd019a512e58c8b756e86233b9e01d726991]
   S3CMD_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
 
-task:
+build_task:
   skip: "!changesInclude('.cirrus.yml', '**.{json}', 'dev/**', 'http/**', 'scripts/**')"
 
   install_script:
