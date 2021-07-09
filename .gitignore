@@ -3,3 +3,4 @@ final
 http/preseed*.cfg
 packer_cache
 http/ks*.cfg
+images

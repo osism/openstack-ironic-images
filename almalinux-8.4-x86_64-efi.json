@@ -1,0 +1,74 @@
+{
+    "builders": [
+      {
+        "boot_command": "{{ user `boot_command` }}",
+        "boot_wait": "5s",
+        "cpus": "{{ user `cpus` }}",
+        "disk_size": "{{ user `disk_size` }}",
+        "headless": "{{ user `headless` }}",
+        "http_directory": "{{ user `http_directory` }}",
+        "iso_checksum": "{{ user `iso_checksum` }}",
+        "iso_url": "{{ user `mirror` }}/{{ user `mirror_directory` }}/{{ user `iso_name` }}",
+        "memory": "{{ user `memory` }}",
+        "output_directory": "{{ user `build_directory` }}/",
+        "shutdown_command": "echo 'install'|sudo -S /sbin/halt -h -p",
+        "ssh_password": "install",
+        "ssh_port": 22,
+        "ssh_timeout": "10000s",
+        "ssh_username": "install",
+        "type": "qemu",
+        "qemu_binary": "qemu-system-x86_64",
+        "vm_name": "{{ user `template` }}",
+        "firmware": "/usr/share/OVMF/OVMF_CODE.fd"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "file",
+        "source": "{{ template_dir }}/scripts/provision/",
+        "destination": "/home/install/"
+      },
+      {
+        "environment_vars": [
+          "HOME_DIR=/home/install",
+          "http_proxy={{ user `http_proxy` }}",
+          "https_proxy={{ user `https_proxy` }}",
+          "no_proxy={{ user `no_proxy` }}"
+        ],
+        "execute_command": "echo 'install' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+        "expect_disconnect": true,
+        "scripts": [
+          "{{ template_dir }}/scripts/centos-stream/update.sh",
+          "{{ template_dir }}/scripts/sshd.sh",
+          "{{ template_dir }}/scripts/centos-stream/node.sh",
+          "{{ template_dir }}/scripts/centos-stream/cleanup.sh",
+          "{{ template_dir }}/scripts/minimize.sh"
+        ],
+        "type": "shell"
+      }
+    ],
+    "variables": {
+      "box_basename": "alma-8",
+      "build_directory": "./builds",
+      "build_timestamp": "2021-07",
+      "cpus": "2",
+      "disk_size": "153600",
+      "git_revision": "__unknown_git_revision__",
+      "guest_additions_url": "",
+      "headless": "false",
+      "http_directory": "{{ template_dir }}/http",
+      "http_proxy": "{{ env `http_proxy` }}",
+      "https_proxy": "{{ env `https_proxy` }}",
+      "iso_checksum": "4dd2f7c558bfa34d9a5e71d5add2c77c59fdec58076678a381d9dfd0f9583a51",
+      "iso_name": "AlmaLinux-8.4-x86_64-dvd.iso",
+      "ks_path": "ks.cfg",
+      "memory": "2048",
+      "mirror": "http://ftp.gwdg.de/pub/linux/almalinux",
+      "mirror_directory": "8.4/isos/x86_64",
+      "name": "rocky-8",
+      "no_proxy": "{{ env `no_proxy` }}",
+      "template": "alma-8-x86_64",
+      "boot_command": "<wait><up><wait>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `ks_path` }}<leftCtrlOn>x<leftCtrlOff><wait>",
+      "version": "TIMESTAMP"
+    }
+  }
