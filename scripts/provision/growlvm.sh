@@ -5,24 +5,18 @@ fdisk /dev/sda << FDISK
 d
 2
 n
-e
 2
-1001470
+999424
 
 n
 
 
-x
-b
-5
-1001472
-r
 t
-5
-8e
+2
+31
 w
 FDISK
 
 # partprobe and pvresize
 partprobe /dev/sda
-pvresize /dev/sda5
+pvresize /dev/sda2
