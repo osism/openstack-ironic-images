@@ -39,7 +39,7 @@ echo "remove X11 libraries"
 apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6;
 
 echo "remove obsolete networking packages"
-apt-get -y purge ppp pppconfig pppoeconf;
+apt-get -y purge ppp pppconfig pppoeconf netplan-io;
 
 echo "remove packages we don't need"
 apt-get -y purge popularity-contest installation-report command-not-found friendly-recovery bash-completion fonts-ubuntu-font-family-console laptop-detect motd-news-config usbutils grub-legacy-ec2;
