@@ -90,5 +90,12 @@
     "preseed_path": "preseed.cfg",
     "template": "ubuntu-20.04-amd64",
     "version": "TIMESTAMP"
-  }
+  },
+  "post-processors": [
+    {
+      "type": "compress",
+      "output": "ubuntu-20.04-amd64-efi.gz",
+      "keep_input_artifact": false
+    }
+  ]
 }

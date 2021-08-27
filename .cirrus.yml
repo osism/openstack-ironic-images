@@ -1,6 +1,4 @@
 ---
-# NOTE: That didn't work, thus use of instance with nested virtualization enabled.
-
 compute_engine_instance:
   image_project: cirrus-images
   image: family/docker-kvm
@@ -14,21 +12,22 @@ env:
   DEBIAN_FRONTEND: noninteractive
   HOME: "$CIRRUS_WORKING_DIR"
   PACKER_TMP_DIR: "$CIRRUS_WORKING_DIR/.packer.d"
-  S3CMD_ACCESS_KEY: ENCRYPTED[2165ad09060557336a041cd1874c36ef97e3a401b70411b9f95656e6ac380bec8f1dbb16edcc87c295cab617995cb957]
-  S3CMD_BUCKET: ENCRYPTED[05c5c380218da332278be9cdf080b523760b1c63245e3f432447ba61a00dc34842e3454f16f23ae786dd75b8c340138c]
-  S3CMD_HOST: ENCRYPTED[6bd276402a1b4012bf3e4c30ccd82004521135a148ee8ce3f41356d1a996dd019a512e58c8b756e86233b9e01d726991]
-  S3CMD_SECRET_KEY: ENCRYPTED[81c29650386ef5dfd116abd33a20201b4ce1eb1b285a9ff7a395bac8779004881ce4e8c0cd3ea9f9ba94a95be67502c5]
+  MINIO_ACCESS_KEY: "ENCRYPTED[8741c780eb239a6d8418328d246dd55cb3b1137f76f7e94f7c491481f833dfc426828ec413661d81bd5849067627aebd]"
+  MINIO_SECRET_KEY: "ENCRYPTED[efc1800216e365a2e3d921e1c6ff85e05877c4f4eec20c1078a67a8259f5724e3863ff73209a6f0a0d9948b14913f075]"
 
 build_task:
   skip: "!changesInclude('.cirrus.yml', '**.{json}', 'dev/**', 'http/**', 'scripts/**')"
 
   install_script:
     - apt-get update
-    - apt-get install -y qemu-kvm curl git software-properties-common s3cmd
+    - apt-get install -y qemu-kvm curl git software-properties-common
     - curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
     - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
     - apt-add-repository --yes --update ppa:ansible/ansible
     - apt-get install -y packer ansible
+    - wget https://dl.min.io/client/mc/release/linux-amd64/mc
+    - chmod +x mc
+    - ./mc alias set minio https://images.osism.tech $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 
   submodules_script:
     - git submodule init
@@ -38,18 +37,20 @@ build_task:
     - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
     - packer validate -syntax-only centos-stream-8-x86_64-efi.json
 
-  build_centos8_amd64_uefi_script:
-    - mv http/ks.cfg-example http/ks.cfg
-    - sed -i 's/TODO/install/g' http/ks.cfg
-    - packer build centos-stream-8-x86_64-efi.json
-    - mkdir ./images/ && mv ./builds/* ./images/
+  # build_centos8_amd64_efi_script:
+  #   - mv http/ks.cfg-example http/ks.cfg
+  #   - sed -i 's/TODO/install/g' http/ks.cfg
+  #   - packer build centos-stream-8-x86_64-efi.json
+  #   - mkdir -p ./images/ && mv ./builds/* ./images/
 
-  build_ubuntu2004_amd64_uefi_script:
+  build_ubuntu2004_amd64_efi_script:
     - rm -rf ./builds/
     - mv http/preseed.cfg-example http/preseed.cfg
     - sed -i 's/TODO/install/g' http/preseed.cfg
     - packer build ubuntu-20.04-amd64-efi.json
-    - mv ./builds/* ./images/
+    - mkdir -p ./images/
+    - mv ubuntu-20.04-amd64-efi.gz ./images/
 
-  #publish_script:
-  #  - bash ./cirrus-publish.sh
+  push_script:
+    - ./mc cp images/* minio/openstack-ironic-images
+    - ./mc policy set download minio/openstack-ironic-images
