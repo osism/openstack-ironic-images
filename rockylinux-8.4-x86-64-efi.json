@@ -70,5 +70,12 @@
       "template": "rocky-8-x86_64",
       "boot_command": "<wait><up><wait>e<wait><down><down><end> inst.text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `ks_path` }}<leftCtrlOn>x<leftCtrlOff><wait>",
       "version": "TIMESTAMP"
+    },
+  "post-processors": [
+    {
+      "type": "compress",
+      "output": "rockylinux-8.4-x86-64-efi.gz",
+      "keep_input_artifact": false
     }
-  }
+  ]
+}
