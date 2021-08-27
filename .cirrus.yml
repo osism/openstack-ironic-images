@@ -37,19 +37,19 @@ build_task:
     - packer validate -syntax-only ubuntu-20.04-amd64-efi.json
     - packer validate -syntax-only centos-stream-8-x86_64-efi.json
 
-  # build_centos8_amd64_efi_script:
-  #   - mv http/ks.cfg-example http/ks.cfg
-  #   - sed -i 's/TODO/install/g' http/ks.cfg
-  #   - packer build centos-stream-8-x86_64-efi.json
-  #   - mkdir -p ./images/ && mv ./builds/* ./images/
+  build_centos8_amd64_efi_script:
+    - mv http/ks.cfg-example http/ks.cfg
+    - sed -i 's/TODO/install/g' http/ks.cfg
+    - packer build centos-stream-8-x86_64-efi.json
+    - mkdir -p ./images/ && mv ./builds/* ./images/
+    - rm -rf ./builds/
 
   build_ubuntu2004_amd64_efi_script:
     - rm -rf ./builds/
     - mv http/preseed.cfg-example http/preseed.cfg
     - sed -i 's/TODO/install/g' http/preseed.cfg
     - packer build ubuntu-20.04-amd64-efi.json
-    - mkdir -p ./images/
-    - mv ubuntu-20.04-amd64-efi.gz ./images/
+    - mv ./builds/* ./images/
 
   push_script:
     - ./mc cp images/* minio/openstack-ironic-images
