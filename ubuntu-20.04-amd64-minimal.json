@@ -73,7 +73,7 @@
   ],
   "variables": {
     "box_basename": "ubuntu-20.04",
-    "build_directory": "./builds",
+    "build_directory": "/dev/shm/ubuntu-min/",
     "build_timestamp": "2021-04",
     "cpus": "2",
     "disk_size": "10240",
@@ -97,7 +97,7 @@
   "post-processors": [
     {
       "type": "compress",
-      "output": "ubuntu-20.04-amd64-minimal.gz",
+      "output": "/dev/shm/ubuntu-20.04-amd64-minimal.gz",
       "keep_input_artifact": false
     }
   ]

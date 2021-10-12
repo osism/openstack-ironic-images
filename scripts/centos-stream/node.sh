@@ -29,6 +29,14 @@ dnf install --assumeyes \
   git \
   gcc
 
+# cloud init config
+echo "cloud init config"
+sed -i 's/name: TODO/name: install/g' /etc/cloud/cloud.cfg
+sed -i 's/gecos: TODO/gecos: Install/g' /etc/cloud/cloud.cfg
+for i in cloud-init systemd-networkd-wait-online; do
+  systemctl enable $i
+done
+
 # NOTE: There are cloud images on which Ansible is pre-installed.
 echo "remove ansible package"
 dnf remove --assumeyes ansible

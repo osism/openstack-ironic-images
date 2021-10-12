@@ -45,6 +45,27 @@ apt-get install --yes \
   cloud-initramfs-dyn-netconf \
   git
 
+# cloud init config
+echo "cloud init config"
+sed -i 's/name: ubuntu/name: install/g' /etc/cloud/cloud.cfg
+sed -i 's/gecos: Ubuntu/gecos: Install/g' /etc/cloud/cloud.cfg
+for i in cloud-init systemd-networkd-wait-online; do
+  systemctl enable $i
+done
+ln -s /lib/systemd/system/cloud-init.target /etc/systemd/system/multi-user.target.wants/cloud-init.target
+
+# configure netplan
+echo <<EOF > /etc/netplan/01-netcfg.yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    alleths:
+      match:
+        name: en*
+      dhcp4: true
+EOF
+
 # NOTE: There are cloud images on which Ansible is pre-installed.
 echo "remove ansible package"
 apt-get remove --yes ansible
