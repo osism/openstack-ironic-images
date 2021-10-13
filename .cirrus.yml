@@ -4,7 +4,7 @@ compute_engine_instance:
   image: family/docker-kvm
   platform: linux
   cpu: 4
-  memory: 16G
+  memory: 32G
   disk: 100
   nested_virtualization: true
 
@@ -47,7 +47,7 @@ build_task:
     - mv http/preseed.cfg-example http/preseed.cfg
     - sed -i 's/TODO/install/g' http/preseed.cfg
     - packer build ubuntu-20.04-amd64-efi.json
-    - mv /tmp/ubuntu-20.04-amd64-efi.gz ./images/
+    - mv /dev/shm/ubuntu-20.04-amd64-efi.gz ./images/
 
   push_script:
     - ./mc cp images/* minio/openstack-ironic-images
