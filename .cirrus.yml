@@ -3,7 +3,7 @@ compute_engine_instance:
   image_project: cirrus-images
   image: family/docker-kvm
   platform: linux
-  cpu: 4
+  cpu: 8
   memory: 32G
   disk: 100
   nested_virtualization: true
