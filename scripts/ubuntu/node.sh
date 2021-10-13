@@ -49,7 +49,9 @@ apt-get install --yes \
 echo "cloud init config"
 sed -i 's/name: ubuntu/name: install/g' /etc/cloud/cloud.cfg
 sed -i 's/gecos: Ubuntu/gecos: Install/g' /etc/cloud/cloud.cfg
-systemctl enable cloud-init
+for i in cloud-init systemd-networkd-wait-online.service; do
+  systemctl enable $i
+done
 ln -s /lib/systemd/system/cloud-init.target /etc/systemd/system/multi-user.target.wants/cloud-init.target
 
 # configure netplan
