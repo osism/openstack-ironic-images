@@ -34,6 +34,7 @@ echo "cloud init config"
 sed -i 's/name: TODO/name: install/g' /etc/cloud/cloud.cfg
 sed -i 's/gecos: TODO/gecos: Install/g' /etc/cloud/cloud.cfg
 systemctl enable cloud-init
+ln -s /lib/systemd/system/cloud-init.target /etc/systemd/system/multi-user.target.wants/cloud-init.target
 
 # NOTE: There are cloud images on which Ansible is pre-installed.
 echo "remove ansible package"
