@@ -12,8 +12,8 @@ env:
   DEBIAN_FRONTEND: noninteractive
   HOME: "$CIRRUS_WORKING_DIR"
   PACKER_TMP_DIR: "$CIRRUS_WORKING_DIR/.packer.d"
-  MINIO_ACCESS_KEY: "ENCRYPTED[8741c780eb239a6d8418328d246dd55cb3b1137f76f7e94f7c491481f833dfc426828ec413661d81bd5849067627aebd]"
-  MINIO_SECRET_KEY: "ENCRYPTED[efc1800216e365a2e3d921e1c6ff85e05877c4f4eec20c1078a67a8259f5724e3863ff73209a6f0a0d9948b14913f075]"
+  MINIO_ACCESS_KEY: "ENCRYPTED[acb08dd1dda0d7e5d4c901058e805e7c25f0a51b97598ff027a1fcefd08c2c9500fc875ee40cb55e29e1b2f1da2f0750]"
+  MINIO_SECRET_KEY: "ENCRYPTED[3380c37d3515deb39aad2dabc45594834dfce83717927affc9566d8c7377ddccb4c041263e21a25b5d82e4127649e0b5]"
 
 build_task:
   skip: "!changesInclude('.cirrus.yml', '**.{json}', 'dev/**', 'http/**', 'scripts/**')"
@@ -27,7 +27,7 @@ build_task:
     - apt-get install -y packer ansible
     - wget https://dl.min.io/client/mc/release/linux-amd64/mc
     - chmod +x mc
-    - ./mc alias set minio https://images.osism.tech $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+    - ./mc alias set minio https://minio.services.osism.tech $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 
   submodules_script:
     - git submodule init

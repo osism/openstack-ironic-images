@@ -6,7 +6,7 @@ This repository is used to manage build recipes for creating images for use on b
 
 Images are downloadable at the following URL:
 
-https://images.osism.tech/minio/openstack-ironic-images/
+https://minio.services.osism.tech/openstack-ironic-images/
 
 ## Files
 
