@@ -63,4 +63,3 @@
     - role: hddtemp
     - role: rng
     - role: cleanup
-    - role: operator

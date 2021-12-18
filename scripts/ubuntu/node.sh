@@ -47,24 +47,14 @@ apt-get install --yes \
 
 # cloud init config
 echo "cloud init config"
-sed -i 's/name: ubuntu/name: install/g' /etc/cloud/cloud.cfg
-sed -i 's/gecos: Ubuntu/gecos: Install/g' /etc/cloud/cloud.cfg
 for i in cloud-init systemd-networkd-wait-online.service; do
   systemctl enable $i
 done
 ln -s /lib/systemd/system/cloud-init.target /etc/systemd/system/multi-user.target.wants/cloud-init.target
 
 # configure netplan
-echo <<EOF > /etc/netplan/01-netcfg.yaml
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    alleths:
-      match:
-        name: en*
-      dhcp4: true
-EOF
+echo "netplan config"
+mv /home/install/01-netcfg.yaml /etc/netplan/01-netcfg.yaml
 
 # NOTE: There are cloud images on which Ansible is pre-installed.
 echo "remove ansible package"
@@ -72,15 +62,6 @@ apt-get remove --yes ansible
 
 echo "install ansible via pip3"
 pip3 install --no-cache-dir 'ansible>=2.10'
-
-echo "create autorized_keys"
-mkdir /home/install/.ssh
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDbQhGsHpRbK06skYIGTOB/iPrbTGL3j+O2Wvy9sEhWM4uSudmMWVeDePElS5BWiLWTgQeHZX67zBY/WsbZ71XmU3qOozanvF/Uw82bTabRaO7FVWi+b6IPslWhgtQayA0ea+uNK/+dUGCnZ42wznugSb7MuVUfyMUMgHjGVluEwNB6HW+4P8uw8PhX5ssPBd2fO0SB9zkMm8zIPPVAsuogfbq9uTh+LOfhs5xyaxevGKq395YUO9Ne2sOart2JjTmBVhyf6plAJgKHGRnGY4QRP/YIlTO5d/mdF15sFTXcljpYZEDdO157HXoWIcMNGGTxLwYpX8KrD1JUmeTgK7g7bCnDpTvBsoKBrsHHEKp3BPvHk/wE3pEcbFIwC7E+7AVyhoG12oO09QRHtBTuDbuBqlO09dnFBKc+Y/Gd0RNi1HYkJk3Bt7TSY0+TKsp4d5XLPqFYuhNQlmPf0lIkFwU1GJe47RCp2TjjMn31ZQFzLke+EMqEcBB1ebtWFmZcoiWX7vb4jiQWeYg6cRj89jNQm7PUWnHMzQ1eAw9lbzfjFYoVwLx6/HVsdaKp1tpysChXqNRlOwaQMACh1hxxDPpVf2Jt1143P8u0IiZ08z51AfLUOekgzee4Iilv8xJPXxi7ajep1zcOtJalLaqT9Cey6/DV1B/bp0Fez4UfzSYnbw==" > /home/install/.ssh/authorized_keys
-cp /home/install/.ssh/authorized_keys /home/install/.ssh/id_rsa.pub
-chown -R install:install /home/install/.ssh
-chmod 0700 /home/install/.ssh
-chmod 0600 /home/install/.ssh/authorized_keys
-chmod 0644 /home/install/.ssh/id_rsa.pub
 
 echo "mkdir /usr/share/ansible for collections"
 mkdir -p /usr/share/ansible

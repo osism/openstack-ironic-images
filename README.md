@@ -23,17 +23,30 @@ Images are downloadable at the following URLs:
 * packer configuration: ubuntu-20.04-amd64.json
 * preseed file: http/preseed.cfg
 * post scripts: scripts/
-  * update.sh
   * sshd.sh
+  * minimize.sh
+* post scripts ubuntu: scripts/ubuntu/
+  * update.sh
   * sudoers.sh
   * node.sh
   * cleanup.sh
-  * minimize.sh
+* post scripts centos stream/almalinux/rockylinux: scripts/cenots-stream/
+  * update.sh
+  * sudoers.sh
+  * node.sh
+  * cleanup.sh
 * provision scripts: scripts/provision
   * node.yml, called in node.sh
   * cleanup.yml, called in cleanup.yml
-  * growlvm.sh
-* image.qcow2 will be in directory builds/
+    * cleanup-Debian.yml
+    * cleanup-RedHat.yml
+  * growlvm.sh (dev)
+  * distribution variables
+    * RedHat.yml
+    * Debian.yml
+  * netplan configuration
+    * 01-netcfg.yaml
+* image.qcow2 will be in directory /dev/shm/
 * packer binary: <https://www.packer.io/downloads>
 
 ## Create image
@@ -43,7 +56,6 @@ git clone ..
 cd packer-ironic-images
 ```
 
-* change SSH public key in node.sh
 * replace TODO in preseed file with password for user install and rename to e.g. preseed.cfg-example -> preseed.cfg
 
 ```bash
