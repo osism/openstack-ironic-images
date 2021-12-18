@@ -41,13 +41,13 @@ build_task:
   #  - mv http/ks.cfg-example http/ks.cfg
   #  - sed -i 's/TODO/install/g' http/ks.cfg
   #  - packer build centos-stream-8-x86_64-efi.json
-  #  - mkdir -p ./images/ && mv /dev/shm/centos-stream-8-x86_64-efi.gz ./images/
+  #  - mkdir -p ./images/ && mv /dev/shm/centos-stream-8-x86_64-efi* ./images/
 
   build_ubuntu2004_amd64_efi_script:
     - mv http/preseed.cfg-example http/preseed.cfg
     - sed -i 's/TODO/install/g' http/preseed.cfg
     - packer build ubuntu-20.04-amd64-efi.json
-    - mkdir -p ./images/ && mv /dev/shm/ubuntu-20.04-amd64-efi.gz ./images/
+    - mkdir -p ./images/ && mv /dev/shm/ubuntu-20.04-amd64-efi* ./images/
 
   push_script: |
     if [ "$CIRRUS_BRANCH" == "main" ]; then

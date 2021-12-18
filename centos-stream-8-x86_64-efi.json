@@ -40,6 +40,7 @@
       "scripts": [
         "{{ template_dir }}/scripts/centos-stream/update.sh",
         "{{ template_dir }}/scripts/sshd.sh",
+        "{{ template_dir }}/scripts/centos-stream/sudoers.sh",
         "{{ template_dir }}/scripts/centos-stream/node.sh",
         "{{ template_dir }}/scripts/centos-stream/cleanup.sh",
         "{{ template_dir }}/scripts/minimize.sh"
@@ -75,7 +76,7 @@
     {
       "type": "compress",
       "output": "/dev/shm/centos-stream-8-x86_64-efi.gz",
-      "keep_input_artifact": false
+      "keep_input_artifact": true
     }
   ]
 }

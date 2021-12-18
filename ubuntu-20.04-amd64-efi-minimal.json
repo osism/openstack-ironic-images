@@ -95,7 +95,7 @@
     {
       "type": "compress",
       "output": "/dev/shm/ubuntu-20.04-amd64-efi-minimal.gz",
-      "keep_input_artifact": false
+      "keep_input_artifact": true
     }
   ]
 }

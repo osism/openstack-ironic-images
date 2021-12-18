@@ -98,7 +98,7 @@
     {
       "type": "compress",
       "output": "/dev/shm/ubuntu-20.04-amd64-minimal.gz",
-      "keep_input_artifact": false
+      "keep_input_artifact": true
     }
   ]
 }
