@@ -1,0 +1,91 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "<wait>c<wait>",
+        "linux /casper/vmlinuz quiet",
+        " autoinstall 'ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/'<wait5>",
+        " ---<enter><wait>",
+        "initrd /casper/initrd<enter><wait>",
+        "boot<enter><wait>"
+      ],
+      "boot_wait": "5s",
+      "cpus": "{{ user `cpus` }}",
+      "disk_size": "{{ user `disk_size` }}",
+      "headless": "{{ user `headless` }}",
+      "http_directory": "{{ user `http_directory` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_url": "{{ user `mirror` }}/{{ user `mirror_directory` }}/{{ user `iso_name` }}",
+      "memory": "{{ user `memory` }}",
+      "output_directory": "{{ user `build_directory` }}/",
+      "shutdown_command": "echo 'install' | sudo -S shutdown -P now",
+      "ssh_password": "install",
+      "ssh_port": 22,
+      "ssh_timeout": "20m",
+      "ssh_username": "install",
+      "type": "qemu",
+      "qemu_binary": "qemu-system-x86_64",
+      "vm_name": "{{ user `template` }}-{{ user `build_timestamp` }}.qcow2",
+      "firmware": "/usr/share/OVMF/OVMF_CODE.fd",
+      "qemuargs": [
+        [ "-m", "{{ user `memory` }}" ]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "{{ template_dir }}/scripts/provision/",
+      "destination": "/home/install/"
+    },
+    {
+      "environment_vars": [
+        "HOME_DIR=/home/install",
+        "http_proxy={{ user `http_proxy` }}",
+        "https_proxy={{ user `https_proxy` }}",
+        "no_proxy={{ user `no_proxy` }}"
+      ],
+      "execute_command": "echo 'install' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+      "expect_disconnect": true,
+      "scripts": [
+        "{{ template_dir }}/scripts/ubuntu/update.sh",
+        "{{ template_dir }}/scripts/sshd.sh",
+        "{{ template_dir }}/scripts/ubuntu/sudoers.sh",
+        "{{ template_dir }}/scripts/ubuntu/node.sh",
+        "{{ template_dir }}/scripts/ubuntu/cleanup.sh",
+        "{{ template_dir }}/scripts/minimize.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "variables": {
+    "box_basename": "ubuntu-20.04",
+    "build_directory": "/dev/shm/ubuntu-efi-min/",
+    "build_timestamp": "2021-04",
+    "cpus": "2",
+    "disk_size": "153600",
+    "git_revision": "__unknown_git_revision__",
+    "guest_additions_url": "",
+    "headless": "false",
+    "http_directory": "{{template_dir}}/http",
+    "http_proxy": "{{ env `http_proxy` }}",
+    "https_proxy": "{{ env `https_proxy` }}",
+    "iso_checksum": "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98",
+    "iso_name": "ubuntu-20.04.3-live-server-amd64.iso",
+    "memory": "2048",
+    "mirror": "http://releases.ubuntu.com",
+    "mirror_directory": "20.04.3",
+    "name": "ubuntu-20.04",
+    "no_proxy": "{{ env `no_proxy` }}",
+    "preseed_path": "preseed.cfg",
+    "template": "ubuntu-20.04-amd64",
+    "version": "TIMESTAMP"
+  },
+  "post-processors": [
+    {
+      "type": "compress",
+      "output": "/dev/shm/ubuntu-20.04-amd64-efi-minimal.gz",
+      "keep_input_artifact": true
+    }
+  ]
+}
