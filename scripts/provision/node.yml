@@ -21,7 +21,8 @@
   gather_facts: true
 
   pre_tasks:
-    - ansible.builtin.include_vars:
+    - name: Packages
+      ansible.builtin.include_vars:
         file: "{{ ansible_os_family }}.yml"
 
   vars:

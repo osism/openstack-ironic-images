@@ -5,7 +5,8 @@
   gather_facts: true
 
   pre_tasks:
-    - ansible.builtin.include_vars:
+    - name: Packages for cleanup
+      ansible.builtin.include_vars:
         file: "{{ ansible_os_family }}.yml"
 
   vars:
