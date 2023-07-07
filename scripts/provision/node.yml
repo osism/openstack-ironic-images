@@ -7,13 +7,9 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
 
-  collections:
-    - osism.commons
-    - osism.services
-
   roles:
-    - role: resolvconf
-    - role: repository
+    - role: osism.commons.resolvconf
+    - role: osism.commons.repository
 
 - name: Bootstrap node - pt. 2
   hosts: localhost
@@ -49,18 +45,14 @@
     operator_authorized_keys:
       - "{{ lookup('file', '/home/install/.ssh/id_rsa.pub') }}"
 
-  collections:
-    - osism.commons
-    - osism.services
-
   roles:
-    - role: chrony
-    - role: systohc
-    - role: configfs
-    - role: packages
-    - role: sysctl
-    - role: services
-    - role: motd
-    - role: hddtemp
-    - role: rng
-    - role: cleanup
+    - role: osism.services.chrony
+    - role: osism.commons.systohc
+    - role: osism.commons.configfs
+    - role: osism.commons.packages
+    - role: osism.commons.sysctl
+    - role: osism.commons.services
+    - role: osism.commons.motd
+    - role: osism.services.hddtemp
+    - role: osism.services.rng
+    - role: osism.commons.cleanup

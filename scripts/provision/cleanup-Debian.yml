@@ -1,13 +1,14 @@
 ---
 - name: Set python3 as default
-  ansible.builtin.command: update-alternatives --install /usr/bin/python python /usr/bin/python3 1  # noqa 301
   become: true
+  ansible.builtin.command: update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+  changed_when: true
 
 # NOTE: This must be the last task. It will uninstall Ansible.
 - name: Purge python2 environment - {{ ansible_os_family }}
+  become: true
   ansible.builtin.apt:
     name: python
     state: absent
     autoremove: true
     purge: true
-  become: true
