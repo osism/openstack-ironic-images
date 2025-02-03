@@ -1,0 +1,14 @@
+---
+- semaphore:
+    name: semaphore-openstack-ironic-imgages-publish
+    max: 1
+
+- project:
+    merge-mode: squash-merge
+    default-branch: main
+    check:
+      jobs:
+        - yamllint
+    periodic-daily:
+      jobs:
+        - yamllint
