@@ -1,0 +1,43 @@
+---
+- name: Build image
+  hosts: all
+
+  tasks:
+    - name: Run build script
+      ansible.builtin.shell:
+        executable: /bin/bash
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: |
+          set -e
+          set -x
+
+          export PATH=/home/zuul/.local/bin:$PATH
+          export ELEMENTS_PATH=./elements
+          export DIB_CLOUD_INIT_DATASOURCES="ConfigDrive, OpenStack"
+          export DIB_RELEASE=noble
+
+          source /tmp/venv/bin/activate
+
+          disk-image-create \
+            -a amd64 \
+            -o osism-stress-ng-image \
+            --image-size 8 \
+            vm ubuntu cloud-init stress-ng
+
+          qemu-img info osism-stress-ng-image.qcow2
+          sha256sum osism-stress-ng-image.qcow2 > osism-stress-ng-image.qcow2.CHECKSUM
+      changed_when: true
+
+    - name: Run upload script
+      ansible.builtin.shell:  # noqa command-instead-of-module
+        executable: /bin/bash
+        chdir: "{{ zuul.project.src_dir }}"
+        cmd: |
+          wget https://dl.min.io/client/mc/release/linux-amd64/mc
+          chmod +x mc
+          ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
+          ./mc cp osism-stress-ng-image.qcow2 minio/openstack-ironic-images
+          ./mc cp osism-stress-ng-image.qcow2.CHECKSUM minio/openstack-ironic-images
+      when: upload_image | bool
+      no_log: true
+      changed_when: true

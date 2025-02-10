@@ -1,14 +1,67 @@
 ---
+- secret:
+    name: SECRET_OPENSTACK_IRONIC_IMAGES
+    data:
+      MINIO_ACCESS_KEY: !encrypted/pkcs1-oaep
+        - jhhJg3zzHg9XG5ka14FbsNQqgUEmPxt2ZDljfwDeKNCh4c40rmiH3XrREypfo1j82gEN7
+          OaaeFn9sMcmcOwCTzbfg8vm5d/i+oaJ2gK/d7im418iczfJ68uRLEqUpvhPPGK9hWl+v9
+          niXULkywl44+KvEPilGWnUzGJt+SilDwCm7VJ3/83NHG3qS19E5Iw8unB0JhsnLrr24fr
+          7xyom8/Gd1nhYpqvxvi925uFINQWlrVSr2MzTVEuFjgCRlb5+KmbiLuIHuCCitPCJHSNc
+          zzbHEkjH2eE256FnqqngGTpLjEUmvAPdswyBUDuK7fAmidNiFdAOyHozFtyXs0/3ykR/c
+          xgZDG6h0NSeRV+owFE3+mcXk/vSEdS4rBp7Ul+ptuM8amP0zVhlYCF1c1PC0v5OMx0X+C
+          8trl877PMmvJzuQCRhRh2A3Pl5pd5pxFpafT1n5hwkjXqiE7uTPRQZruKO3oab4u1PSBY
+          3glQXYzPF4mDcH9Z84wmiZFbTscoVJL020T6NldlpM5N8oAeoX8rwyudVINXnweOeyrrE
+          39ODbNtOQbVvmN15CjSOgbVEaBZoDwrL+xdt5qlK9GgdgZnv0G0YavEWzc0MInH1slPHG
+          0Xvu1A0a+kZutRQTQ6sLHVaJn/uNgAJN21DCNJ0fC5A1x8RvjSnuczmBfmut+Y=
+      MINIO_SECRET_KEY: !encrypted/pkcs1-oaep
+        - Km/6dFul/iD4IDImDgRSGhdGo4EA7Z4ZVvO1HDaM9utE7We31ArBUcYcYAE01VsVbACd9
+          NqXOs4Dk5xA0SFl2h4KN5H4oyYzQSdNhF0OsMoKoHGm0XW7loZk2Jn9gzoxPiU6n+QcKl
+          TvxbHr4l6/oT7DcnGDekJvYE479/ocB7uYxc0zHR/XmuDeo7lcTnS3MkMKQNm9WTB9Sa8
+          yJRAlF1I/lyWvyZO3ftqyfOK7OE+p3y5llEJyLWFBYyLs+JVArpPDmIh46T3y/OvcNg+U
+          MQ9ut8u6eATUva7Hiwz7dxz9S8dYfi5knfkn8gkuhBrc//fSbTsmRAuyoyF4PP86+c0fm
+          MwCaaPTakBXU6OFc0QenyBHa3QMD1U9RGbebcfQGv8B5phIt+goQDM6FVNL433j8+eG0+
+          UA6kDIJ44k0FsItHWDne1jlf4cl4M+5O8H9CI/C3+NJgz+G7+aoKe/Xx6TP4r55B/O0To
+          rY4a5hXa9kc7tFuvUx+wpbhGubYfjF5JRLEXfiu9E0KmAFqN/kYlCsPha/bU5HFMPHQWR
+          Ey7kQA+wBmMccFUScUresH96wlAahvFYvMSLmLFR+FVhLJ7PqBTAoV3t4CfWn+DDTZaea
+          UATHf0+lyhBMn27+kAF3l8n9MG15rvbU1mlc3EcwyWGysoEIcsj3Mq5qyFRFWA=
+
 - semaphore:
-    name: semaphore-openstack-ironic-imgages-publish
+    name: semaphore-openstack-ironic-images-publish
     max: 1
+
+- job:
+    name: openstack-ironic-images-build
+    nodeset: ubuntu-noble-large
+    pre-run: playbooks/pre.yml
+    run: playbooks/build.yml
+    timeout: 1800
+    vars:
+      upload_image: false
+
+- job:
+    name: openstack-ironic-images-publish
+    parent: openstack-ironic-images-build
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish
+    vars:
+      upload_image: true
+    secrets:
+      - name: minio
+        secret: SECRET_OPENSTACK_IRONIC_IMAGES
+        pass-to-parent: true
 
 - project:
     merge-mode: squash-merge
     default-branch: main
     check:
       jobs:
+        - openstack-ironic-images-build
         - yamllint
     periodic-daily:
       jobs:
+        - openstack-ironic-images-publish
         - yamllint
+    post:
+      jobs:
+        - openstack-ironic-images-publish:
+            branches: main
