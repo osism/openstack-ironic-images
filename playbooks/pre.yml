@@ -13,6 +13,8 @@
       become: true
       ansible.builtin.apt:
         name:
+          - dosfstools
+          - gdisk
           - kpartx
           - qemu-utils
           - squashfs-tools
