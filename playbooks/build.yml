@@ -21,7 +21,7 @@
           disk-image-create \
             -a amd64 \
             -o osism-stress-ng-image \
-            --image-size 8 \
+            --image-size 3 \
             vm ubuntu cloud-init stress-ng
 
           qemu-img info osism-stress-ng-image.qcow2
