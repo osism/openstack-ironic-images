@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+[ -n "$TMP_HOOKS_PATH" ] || die "Temp hook path not set"
+
+cat files/stress-ng.sh > $TMP_HOOKS_PATH/stress-ng.sh
+cat files/cloud.cfg > $TMP_HOOKS_PATH/cloud.cfg
