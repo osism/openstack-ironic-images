@@ -16,6 +16,7 @@
           - dosfstools
           - gdisk
           - kpartx
+          - lvm2
           - qemu-utils
           - squashfs-tools
 
