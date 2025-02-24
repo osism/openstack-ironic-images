@@ -6,7 +6,9 @@ fi
 set -eu
 set -o pipefail
 
-apt-get install -y stress-ng
+apt-get install -y \
+    memtester \
+    stress-ng
 
 cp /tmp/in_target.d/stress-ng.sh /usr/local/bin/stress-ng.sh
 chmod +x /usr/local/bin/stress-ng.sh
