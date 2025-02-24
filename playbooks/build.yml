@@ -23,7 +23,7 @@
             -t raw \
             -o osism-stress-ng-image.raw \
             --image-size 3 \
-            vm block-device-gpt ubuntu bootloader cloud-init cloud-init-nocloud stress-ng
+            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud stress-ng
 
           sha256sum osism-stress-ng-image.raw > osism-stress-ng-image.raw.CHECKSUM
       changed_when: true
