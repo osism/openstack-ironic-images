@@ -13,8 +13,10 @@
 
           export PATH=/home/zuul/.local/bin:$PATH
           export ELEMENTS_PATH=./elements
-          export DIB_CLOUD_INIT_DATASOURCES="ConfigDrive, OpenStack"
           export DIB_RELEASE=noble
+
+          export DIB_DEV_USER_PWDLESS_SUDO=True
+          export DIB_DEV_USER_PASSWORD=password
 
           source /tmp/venv/bin/activate
 
@@ -23,7 +25,7 @@
             -t raw \
             -o osism-stress-ng-image.raw \
             --image-size 3 \
-            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud stress-ng
+            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud devuser stress-ng
 
           sha256sum osism-stress-ng-image.raw > osism-stress-ng-image.raw.CHECKSUM
       changed_when: true
