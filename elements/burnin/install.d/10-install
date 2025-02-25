@@ -8,11 +8,15 @@ set -o pipefail
 
 apt-get install -y \
     bash \
+    beep \
     memtester \
     stress-ng
 
 cp /tmp/in_target.d/burnin.sh /usr/local/bin/burnin.sh
 chmod +x /usr/local/bin/burnin.sh
+
+cp /tmp/in_target.d/halt.sh /usr/local/bin/halt.sh
+chmod +x /usr/local/bin/halt.sh
 
 cp /tmp/in_target.d/info.sh /usr/local/bin/info.sh
 chmod +x /usr/local/bin/info.sh

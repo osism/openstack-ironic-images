@@ -2,6 +2,11 @@
 
 ## burnin
 
+The image is used to read out some information about a system and perform
+rudimentary memory and CPU tests. The results are saved under /opt.
+
+Once all tests have been completed, the system is shut down.
+
 ```
 $ sudo dd if=osism-burnin-image.raw of=/dev/sdb bs=8M status=progress
 ```
