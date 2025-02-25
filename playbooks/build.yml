@@ -23,11 +23,11 @@
           disk-image-create \
             -a amd64 \
             -t raw \
-            -o osism-stress-ng-image.raw \
+            -o osism-burnin-image.raw \
             --image-size 3 \
-            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud devuser stress-ng
+            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud devuser burnin
 
-          sha256sum osism-stress-ng-image.raw > osism-stress-ng-image.raw.CHECKSUM
+          sha256sum osism-burnin-image.raw > osism-burnin-image.raw.CHECKSUM
       changed_when: true
 
     - name: Run upload script
@@ -38,8 +38,8 @@
           wget https://dl.min.io/client/mc/release/linux-amd64/mc
           chmod +x mc
           ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
-          ./mc cp osism-stress-ng-image.raw minio/openstack-ironic-images
-          ./mc cp osism-stress-ng-image.raw.CHECKSUM minio/openstack-ironic-images
+          ./mc cp osism-burnin-image.raw minio/openstack-ironic-images
+          ./mc cp osism-burnin-image.raw.CHECKSUM minio/openstack-ironic-images
       when: upload_image | bool
       no_log: true
       changed_when: true
