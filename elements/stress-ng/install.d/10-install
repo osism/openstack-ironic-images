@@ -13,6 +13,6 @@ apt-get install -y \
 cp /tmp/in_target.d/stress-ng.sh /usr/local/bin/stress-ng.sh
 chmod +x /usr/local/bin/stress-ng.sh
 
-cp /tmp/in_target.d/cloud.cfg /etc/cloud/cloud.cfg
-chown root:root /etc/cloud/cloud.cfg
-chmod 0644 /etc/cloud/cloud.cfg
+cp /tmp/in_target.d/99_burnin.cfg /etc/cloud/cloud.cfg.d/99_burnin.cfg
+chown root:root /etc/cloud/cloud.cfg.d/99_burnin.cfg
+chmod 0644 /etc/cloud/cloud.cfg.d/99_burnin.cfg
