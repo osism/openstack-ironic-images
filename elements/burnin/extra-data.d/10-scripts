@@ -8,5 +8,6 @@ set -o pipefail
 
 [ -n "$TMP_HOOKS_PATH" ] || die "Temp hook path not set"
 
-cat files/stress-ng.sh > $TMP_HOOKS_PATH/stress-ng.sh
+cat files/burnin.sh > $TMP_HOOKS_PATH/burnin.sh
+cat files/info.sh > $TMP_HOOKS_PATH/info.sh
 cat files/99_burnin.cfg > $TMP_HOOKS_PATH/99_burnin.cfg

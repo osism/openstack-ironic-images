@@ -1,9 +1,9 @@
 # openstack-ironic-images
 
-## stress-ng
+## burnin
 
 ```
-$ sudo dd if=osism-stress-ng-image.raw of=/dev/sdb bs=8M status=progress
+$ sudo dd if=osism-burnin-image.raw of=/dev/sdb bs=8M status=progress
 ```
 
 ```
