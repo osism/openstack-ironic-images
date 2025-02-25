@@ -8,7 +8,6 @@ set -o pipefail
 
 apt-get install -y \
     bash \
-    beep \
     memtester \
     stress-ng
 
