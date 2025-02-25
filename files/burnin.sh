@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 NUMBER_OF_CPUS=$(nproc --all)
-MEMTOTAL=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 - 32768 }')
+MEMTOTAL=$(cat /proc/meminfo | grep MemTotal | awk '{ print $2 - 2097152 }')
 
 mkdir -p /opt/burnin
 
