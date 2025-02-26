@@ -36,7 +36,7 @@ $ cd /mnt/opt
 ```
 
 ```
-$ cat burnin/1
+$ cat burnin-*.txt
 Default string
 stress-ng: info:  [1255] setting to a 10 mins, 0 secs run per stressor
 stress-ng: info:  [1255] dispatching hogs: 4 cpu
@@ -55,5 +55,5 @@ stress-ng: info:  [1286] successful run completed in 10 mins, 5.24 secs
 ```
 
 ```
-$ cat info/1
+$ cat info-*.txt
 ```
