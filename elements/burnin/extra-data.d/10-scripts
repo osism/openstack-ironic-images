@@ -9,6 +9,8 @@ set -o pipefail
 [ -n "$TMP_HOOKS_PATH" ] || die "Temp hook path not set"
 
 cat files/burnin.sh > $TMP_HOOKS_PATH/burnin.sh
+cat files/burnin.service > $TMP_HOOKS_PATH/burnin.service
 cat files/halt.sh > $TMP_HOOKS_PATH/halt.sh
 cat files/info.sh > $TMP_HOOKS_PATH/info.sh
+cat files/run.sh > $TMP_HOOKS_PATH/run.sh
 cat files/99_burnin.cfg > $TMP_HOOKS_PATH/99_burnin.cfg
