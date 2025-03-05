@@ -1,0 +1,32 @@
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+---
+network:
+  version: 2
+  renderer: networkd
+
+  bonds:
+    {}
+
+  bridges:
+    {}
+
+  dummy-devices:
+    loopback0:
+        addresses:
+        - OSISM_IPV4/32
+        - OSISM_IPV6/128
+
+  ethernets:
+    OSISM_INTERFACE1_NAME:
+        mtu: 9100
+        optional: yes
+    OSISM_INTERFACE2_NAME:
+        mtu: 9100
+        optional: yes
+
+  tunnels:
+    {}
+
+  vlans:
+    {}
