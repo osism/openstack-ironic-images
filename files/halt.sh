@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-shutdown -h now
+shutdown -h +3
+systemctl enable burnin

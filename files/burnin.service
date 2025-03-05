@@ -1,0 +1,12 @@
+[Unit]
+Description=Burnin
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/burnin.sh
+RemainAfterExit=true
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -20,6 +20,15 @@ chmod +x /usr/local/bin/halt.sh
 cp /tmp/in_target.d/info.sh /usr/local/bin/info.sh
 chmod +x /usr/local/bin/info.sh
 
+cp /tmp/in_target.d/run.sh /usr/local/bin/run.sh
+chmod +x /usr/local/bin/run.sh
+
+cp /tmp/in_target.d/burnin.service /etc/systemd/system/burnin.service
+chown root:root /etc/systemd/system/burnin.service
+chmod 0644 /etc/systemd/system/burnin.service
+systemctl daemon-reload
+systemctl disable burnin
+
 cp /tmp/in_target.d/99_burnin.cfg /etc/cloud/cloud.cfg.d/99_burnin.cfg
 chown root:root /etc/cloud/cloud.cfg.d/99_burnin.cfg
 chmod 0644 /etc/cloud/cloud.cfg.d/99_burnin.cfg
