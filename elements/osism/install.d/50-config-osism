@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+SCRIPTDIR=$(dirname $0)
+
+echo $DIB_OSISM_HOSTNAME > /etc/hostname
+
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+    install -D -g root -o root -m 0600 ${SCRIPTDIR}/osism-netplan.yaml /etc/netplan/01-osism.yaml
+    install -D -g root -o root -m 0640 ${SCRIPTDIR}/frr.conf /etc/frr/frr.conf
+    install -D -g root -o root -m 0640 ${SCRIPTDIR}/frr-daemons /etc/frr/daemons
+    sed -i "s/OSISM_IPV4/${DIB_OSISM_IPV4}/" /etc/netplan/01-osism.yaml
+    sed -i "s/OSISM_IPV6/${DIB_OSISM_IPV6}/" /etc/netplan/01-osism.yaml
+    sed -i "s/OSISM_INTERFACE1_NAME/${DIB_OSISM_INTERFACE1_NAME}/" /etc/netplan/01-osism.yaml
+    sed -i "s/OSISM_INTERFACE2_NAME/${DIB_OSISM_INTERFACE2_NAME}/" /etc/netplan/01-osism.yaml
+    sed -i "s/OSISM_ASN/${DIB_OSISM_ASN}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_HOSTNAME/${DIB_OSISM_HOSTNAME}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_IPV4/${DIB_OSISM_IPV4}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_IPV6/${DIB_OSISM_IPV6}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_INTERFACE1_NAME/${DIB_OSISM_INTERFACE1_NAME}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_INTERFACE2_NAME/${DIB_OSISM_INTERFACE2_NAME}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_INTERFACE1_ASN/${DIB_OSISM_INTERFACE1_ASN}/" /etc/frr/frr.conf
+    sed -i "s/OSISM_INTERFACE2_ASN/${DIB_OSISM_INTERFACE2_ASN}/" /etc/frr/frr.conf
+else
+    echo "Wrong init system, what is happening here?"
+    exit 1
+fi
