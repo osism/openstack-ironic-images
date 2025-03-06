@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/burnin.sh
+ExecStart=/usr/local/bin/run.sh
 RemainAfterExit=true
 StandardOutput=journal
 
