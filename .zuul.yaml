@@ -63,18 +63,40 @@
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
 
+- job:
+    name: openstack-ironic-images-build-metalbox
+    parent: abstract-openstack-ironic-images-build
+    vars:
+      dib_element: metalbox
+
+- job:
+    name: openstack-ironic-images-publish-metalbox
+    parent: abstract-openstack-ironic-images-publish
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish-metalbox
+    vars:
+      dib_element: metalbox
+    secrets:
+      - name: minio
+        secret: SECRET_OPENSTACK_IRONIC_IMAGES
+        pass-to-parent: true
+
 - project:
     merge-mode: squash-merge
     default-branch: main
     check:
       jobs:
         - openstack-ironic-images-build-burnin
+        - openstack-ironic-images-build-metalbox
         - yamllint
     periodic-daily:
       jobs:
         - openstack-ironic-images-publish-burnin
+        - openstack-ironic-images-publish-metalbox
         - yamllint
     post:
       jobs:
         - openstack-ironic-images-publish-burnin:
+            branches: main
+        - openstack-ironic-images-publish-metalbox:
             branches: main
