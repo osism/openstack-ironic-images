@@ -26,11 +26,12 @@
           UATHf0+lyhBMn27+kAF3l8n9MG15rvbU1mlc3EcwyWGysoEIcsj3Mq5qyFRFWA=
 
 - semaphore:
-    name: semaphore-openstack-ironic-images-publish
+    name: semaphore-openstack-ironic-images-publish-burnin
     max: 1
 
 - job:
-    name: openstack-ironic-images-build
+    name: abstract-openstack-ironic-images-build
+    abstract: true
     nodeset: ubuntu-noble-large
     pre-run: playbooks/pre.yml
     run: playbooks/build.yml
@@ -39,12 +40,24 @@
       upload_image: false
 
 - job:
-    name: openstack-ironic-images-publish
-    parent: openstack-ironic-images-build
-    semaphores:
-      - name: semaphore-openstack-ironic-images-publish
+    name: abstract-openstack-ironic-images-publish
+    parent: abstract-openstack-ironic-images-build
     vars:
       upload_image: true
+
+- job:
+    name: openstack-ironic-images-build-burnin
+    parent: abstract-openstack-ironic-images-build
+    vars:
+      dib_element: burnin
+
+- job:
+    name: openstack-ironic-images-publish-burnin
+    parent: abstract-openstack-ironic-images-publish
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish-burnin
+    vars:
+      dib_element: burnin
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
@@ -55,13 +68,13 @@
     default-branch: main
     check:
       jobs:
-        - openstack-ironic-images-build
+        - openstack-ironic-images-build-burnin
         - yamllint
     periodic-daily:
       jobs:
-        - openstack-ironic-images-publish
+        - openstack-ironic-images-publish-burnin
         - yamllint
     post:
       jobs:
-        - openstack-ironic-images-publish:
+        - openstack-ironic-images-publish-burnin:
             branches: main

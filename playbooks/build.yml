@@ -2,6 +2,9 @@
 - name: Build image
   hosts: all
 
+  vars:
+    dib_element: burnin
+
   tasks:
     - name: Run build script
       ansible.builtin.shell:
@@ -23,11 +26,11 @@
           disk-image-create \
             -a amd64 \
             -t raw \
-            -o osism-burnin-image.raw \
+            -o osism-{{ dib_element }}-image.raw \
             --image-size 3 \
-            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud devuser burnin
+            vm block-device-efi ubuntu bootloader cloud-init cloud-init-nocloud devuser {{ dib_element }}
 
-          sha256sum osism-burnin-image.raw > osism-burnin-image.raw.CHECKSUM
+          sha256sum osism-{{ dib_element }}-image.raw > osism-{{ dib_element }}-image.raw.CHECKSUM
       changed_when: true
 
     - name: Run upload script
@@ -38,8 +41,8 @@
           wget https://dl.min.io/client/mc/release/linux-amd64/mc
           chmod +x mc
           ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
-          ./mc cp osism-burnin-image.raw minio/openstack-ironic-images
-          ./mc cp osism-burnin-image.raw.CHECKSUM minio/openstack-ironic-images
+          ./mc cp osism-{{ dib_element }}-image.raw minio/openstack-ironic-images
+          ./mc cp osism-{{ dib_element }}-image.raw.CHECKSUM minio/openstack-ironic-images
       when: upload_image | bool
       no_log: true
       changed_when: true
