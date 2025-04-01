@@ -8,6 +8,7 @@ set -o pipefail
 
 apt-get install -y \
     bash \
+    ipmitool \
     memtester \
     stress-ng
 
