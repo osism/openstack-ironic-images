@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+apt-get install --yes pipx
+pipx install 'ansible-core>=2.18.0,<2.19.0'

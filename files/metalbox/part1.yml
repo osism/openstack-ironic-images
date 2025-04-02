@@ -1,0 +1,75 @@
+---
+- name: Run bootstrap
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    operator_user: dragon
+    operator_group: dragon
+
+    cleanup_cloudinit: false
+    cleanup_packages_extra:
+      - snapd
+
+    required_packages_extra:
+      - linux-generic-hwe-24.04
+      - python3-netaddr
+
+    hostname_name: metalbox
+
+  roles:
+    - osism.commons.hostname
+    - osism.commons.operator
+    - osism.commons.systohc
+    - osism.commons.configfs
+    - osism.commons.packages
+    - osism.commons.sysctl
+    - osism.commons.limits
+    - osism.commons.services
+    - osism.commons.motd
+    - osism.services.rng
+    - osism.commons.cleanup
+    - osism.services.chrony
+    - osism.services.journald
+    - osism.services.lldpd
+
+- name: Apply role docker
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    docker_opts:
+      max-concurrent-downloads: 20
+    # renovate: datasource=github-releases depName=moby/moby
+    docker_version: '5:27.5.1'
+    docker_facts: false
+
+  roles:
+    - osism.services.docker
+
+- name: Apply role docker_compose
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    docker_compose_install_type: package
+
+  roles:
+    - role: osism.commons.docker_compose
+
+- name: Other preparations
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - name: Create /etc/metalbox file
+      ansible.builtin.copy:
+        content: 1
+        dest: /etc/metalbox
+        owner: root
+        group: root
+        mode: 0644
