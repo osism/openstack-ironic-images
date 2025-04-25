@@ -9,3 +9,4 @@ set -o pipefail
 [ -n "$TMP_HOOKS_PATH" ] || die "Temp hook path not set"
 
 cat files/metalbox/part1.yml > $TMP_HOOKS_PATH/part1.yml
+cat files/metalbox/part2.yml > $TMP_HOOKS_PATH/part2.yml

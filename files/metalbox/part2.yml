@@ -1,0 +1,9 @@
+---
+- name: Run test
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  tasks:
+    - ansible.builtin.debug:
+        msg: "TEST"
