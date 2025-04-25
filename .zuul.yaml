@@ -50,6 +50,10 @@
     parent: abstract-openstack-ironic-images-build
     vars:
       dib_element: burnin
+    files:
+      - "^elements/burnin/.*"
+      - "^files/burnin.sh"
+      - "^files/burnin/.*"
 
 - job:
     name: openstack-ironic-images-publish-burnin
@@ -62,12 +66,20 @@
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
+    files:
+      - "^elements/burnin/.*"
+      - "^files/burnin.sh"
+      - "^files/burnin/.*"
 
 - job:
     name: openstack-ironic-images-build-metalbox
     parent: abstract-openstack-ironic-images-build
     vars:
       dib_element: metalbox
+    files:
+      - "^elements/metalbox/.*"
+      - "^files/metalbox.sh"
+      - "^files/metalbox/.*"
 
 - job:
     name: openstack-ironic-images-publish-metalbox
@@ -80,6 +92,10 @@
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
+    files:
+      - "^elements/metalbox/.*"
+      - "^files/metalbox.sh"
+      - "^files/metalbox/.*"
 
 - project:
     merge-mode: squash-merge
