@@ -15,6 +15,7 @@
     required_packages_extra:
       - linux-generic-hwe-24.04
       - python3-netaddr
+      - skopeo
 
     hostname_name: metalbox
 

@@ -1,9 +1,32 @@
 ---
-- name: Run test
+- name: Pull container images
   hosts: localhost
   connection: local
   gather_facts: true
 
+  vars:
+    images_manager:
+      - osism:0.20250407.0
+
   tasks:
-    - ansible.builtin.debug:
-        msg: "TEST"
+    - ansible.builtin.command: docker ps
+
+    - name: Create registry volume
+      community.docker.docker_volume:
+        name: registry
+
+    - name: Run local container registry
+      community.docker.docker_container:
+        name: registry
+        image: registry:3
+        state: started
+        restart_policy: always
+        ports:
+          - "5000:5000"
+        volumes:
+          - registry:/var/lib/registry
+
+    - name: Copy stable manager images
+      ansible.builtin.command:
+        cmd: "skopeo copy docker://registry.osism.tech/osism/{{ item }} docker:localhost:5000/osism/{{ item }}"
+      loop: "{{ images_manager }}"
