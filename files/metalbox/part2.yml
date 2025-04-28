@@ -4,6 +4,28 @@
   connection: local
   gather_facts: true
 
+  vars:
+    network_ethernets:
+      eth*:
+        dhcp4: no
+        dhcp6: no
+        link-local: [ipv6]
+      en*:
+        dhcp4: no
+        dhcp6: no
+        link-local: [ipv6]
+      enp*:
+        dhcp4: no
+        dhcp6: no
+        link-local: [ipv6]
+      eno*:
+        dhcp4: no
+        dhcp6: no
+        link-local: [ipv6]
+
+  roles:
+    - osism.commons.network
+
   tasks:
     - name: Create /etc/metalbox file
       ansible.builtin.copy:
