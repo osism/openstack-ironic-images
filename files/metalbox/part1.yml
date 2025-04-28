@@ -1,5 +1,5 @@
 ---
-- name: Run bootstrap
+- name: Run bootstrap -part 1
   hosts: localhost
   connection: local
   gather_facts: true
@@ -20,6 +20,9 @@
 
   roles:
     - osism.commons.hostname
+    - osism.commons.hosts
+    - osism.commons.repository
+    - osism.services.rsyslog
     - osism.commons.operator
     - osism.commons.systohc
     - osism.commons.configfs
@@ -59,17 +62,3 @@
 
   roles:
     - role: osism.commons.docker_compose
-
-- name: Other preparations
-  hosts: localhost
-  connection: local
-  gather_facts: true
-
-  tasks:
-    - name: Create /etc/metalbox file
-      ansible.builtin.copy:
-        content: 1
-        dest: /etc/metalbox
-        owner: root
-        group: root
-        mode: 0644
