@@ -1,9 +1,14 @@
 ---
-- name: Run test
+- name: Run bootstrap - part 2
   hosts: localhost
   connection: local
   gather_facts: true
 
   tasks:
-    - ansible.builtin.debug:
-        msg: "TEST"
+    - name: Create /etc/metalbox file
+      ansible.builtin.copy:
+        content: 1
+        dest: /etc/metalbox
+        owner: root
+        group: root
+        mode: 0644
