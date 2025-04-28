@@ -31,6 +31,12 @@ ansible-playbook -i localhost, /tmp/in_target.d/part1.yml
 git clone https://github.com/osism/metalbox /opt/configuration
 chown -R dragon:dragon /opt/configuration
 
+# prepare manager environment
+
+pushd /opt/configuration/environments/manager
+sudo -u dragon bash run.sh noop
+popd
+
 # run part 2
 
 ansible-playbook -i localhost, /tmp/in_target.d/part2.yml
