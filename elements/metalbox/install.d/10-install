@@ -8,3 +8,10 @@ set -o pipefail
 
 apt-get install --yes pipx
 pipx install 'ansible-core>=2.18.0,<2.19.0'
+
+cp /tmp/in_target.d/run.sh /usr/local/bin/run.sh
+chmod +x /usr/local/bin/run.sh
+
+cp /tmp/in_target.d/99_metalbox.cfg /etc/cloud/cloud.cfg.d/99_metalbox.cfg
+chown root:root /etc/cloud/cloud.cfg.d/99_metalbox.cfg
+chmod 0644 /etc/cloud/cloud.cfg.d/99_metalbox.cfg
