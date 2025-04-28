@@ -13,8 +13,18 @@
       - snapd
 
     required_packages_extra:
+      - ca-certificates
+      - frr
+      - htop
+      - ipmitool
+      - iptables
       - linux-generic-hwe-24.04
       - python3-netaddr
+      - socat
+      - sosreport
+      - tcpdump
+      - tuned
+      - wireguard-tools
 
     hostname_name: metalbox
 
@@ -22,6 +32,7 @@
     - osism.commons.hostname
     - osism.commons.hosts
     - osism.commons.repository
+    - osism.commons.microcode
     - osism.services.rsyslog
     - osism.commons.operator
     - osism.commons.systohc
