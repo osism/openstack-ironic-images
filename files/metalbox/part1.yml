@@ -1,5 +1,5 @@
 ---
-- name: Run bootstrap -part 1
+- name: Run bootstrap - part 1
   hosts: localhost
   connection: local
   gather_facts: true
