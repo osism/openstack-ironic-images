@@ -1,3 +1,4 @@
+export DIB_DEV_USER_USERNAME=dragon
 export DIB_DEV_USER_PWDLESS_SUDO=True
 export DIB_DEV_USER_PASSWORD=password
 
