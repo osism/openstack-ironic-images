@@ -4,6 +4,7 @@
 
   vars:
     _dib_element: "{{ dib_element | default('burnin') }}"
+    _image_format: "{{ image_format | default('raw') }}"
 
   tasks:
     - name: Run build script
@@ -23,12 +24,12 @@
 
           disk-image-create \
             -a amd64 \
-            -t raw \
-            -o osism-{{ _dib_element }}-image.raw \
+            -t {{ _image_format }} \
+            -o osism-{{ _dib_element }}-image.{{ _image_format }} \
             --image-size $IMAGE_SIZE \
             vm block-device-efi ubuntu bootloader cloud-init $IMAGE_ELEMENTS {{ _dib_element }}
 
-          sha256sum osism-{{ _dib_element }}-image.raw > osism-{{ _dib_element }}-image.raw.CHECKSUM
+          sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} > osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
       changed_when: true
 
     - name: Run upload script
@@ -39,8 +40,8 @@
           wget https://dl.min.io/client/mc/release/linux-amd64/mc
           chmod +x mc
           ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
-          ./mc cp osism-{{ _dib_element }}-image.raw minio/openstack-ironic-images
-          ./mc cp osism-{{ _dib_element }}-image.raw.CHECKSUM minio/openstack-ironic-images
+          ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }} minio/openstack-ironic-images
+          ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
       when: upload_image | bool
       no_log: true
       changed_when: true
