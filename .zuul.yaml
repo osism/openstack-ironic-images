@@ -50,6 +50,7 @@
     parent: abstract-openstack-ironic-images-build
     vars:
       dib_element: burnin
+      image_format: raw
     files:
       - "^elements/burnin/.*"
       - "^files/burnin.sh"
@@ -62,6 +63,7 @@
       - name: semaphore-openstack-ironic-images-publish-burnin
     vars:
       dib_element: burnin
+      image_format: raw
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
@@ -76,6 +78,7 @@
     parent: abstract-openstack-ironic-images-build
     vars:
       dib_element: metalbox
+      image_format: qcow2
     files:
       - "^elements/metalbox/.*"
       - "^files/metalbox.sh"
@@ -88,6 +91,7 @@
       - name: semaphore-openstack-ironic-images-publish-metalbox
     vars:
       dib_element: metalbox
+      image_format: qcow2
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
@@ -102,6 +106,7 @@
     parent: abstract-openstack-ironic-images-build
     vars:
       dib_element: metalbox-carrier
+      image_format: qcow2
     files:
       - "^elements/metalbox-carrier/.*"
       - "^files/metalbox-carrier.sh"
@@ -114,6 +119,7 @@
       - name: semaphore-openstack-ironic-images-publish-metalbox-carrier
     vars:
       dib_element: metalbox-carrier
+      image_format: qcow2
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
