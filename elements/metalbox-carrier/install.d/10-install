@@ -16,5 +16,7 @@ chmod 0644 /etc/cloud/cloud.cfg.d/91-metalbox-carrier.cfg
 systemctl disable multipathd
 systemctl disable multipathd.socket
 
+apt-get install -y cifs-utils nfs-common
+
 apt-get remove -y modemmanager snapd unattended-upgrades apport
 apt-get autoremove -y
