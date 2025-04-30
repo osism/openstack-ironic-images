@@ -7,3 +7,6 @@ set -eu
 set -o pipefail
 
 [ -n "$TMP_HOOKS_PATH" ] || die "Temp hook path not set"
+
+cat files/metalbox-carrier/50-metalbox-carrier.yaml > $TMP_HOOKS_PATH/50-metalbox-carrier.yaml
+cat files/metalbox-carrier/91-metalbox-carrier.cfg > $TMP_HOOKS_PATH/91-metalbox-carrier.cfg
