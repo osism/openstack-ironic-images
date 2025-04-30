@@ -6,9 +6,9 @@ fi
 set -eu
 set -o pipefail
 
-apt-get install -y \
-    bash \
-    nfs-common \
-    rsync \
-    skopeo \
-    socat
+cp /tmp/in_target.d/50-metalbox-carrier.yaml /etc/netplan/50-metalbox-carrier.yaml
+chmod 0600 /etc/netplan/50-metalbox-carrier.yaml
+rm -f /etc/netplan/50-cloud-init.yaml
+
+cp /tmp/in_target.d/91-metalbox-carrier.cfg /etc/cloud/cloud.cfg.d/91-metalbox-carrier.cfg
+chmod 0644 /etc/cloud/cloud.cfg.d/91-metalbox-carrier.cfg
