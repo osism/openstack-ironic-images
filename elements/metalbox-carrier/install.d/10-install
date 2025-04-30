@@ -12,3 +12,9 @@ rm -f /etc/netplan/50-cloud-init.yaml
 
 cp /tmp/in_target.d/91-metalbox-carrier.cfg /etc/cloud/cloud.cfg.d/91-metalbox-carrier.cfg
 chmod 0644 /etc/cloud/cloud.cfg.d/91-metalbox-carrier.cfg
+
+systemctl disable multipathd
+systemctl disable multipathd.socket
+
+apt-get remove -y modemmanager snapd unattended-upgrades apport
+apt-get autoremove -y
