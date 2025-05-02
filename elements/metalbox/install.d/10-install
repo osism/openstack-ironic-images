@@ -60,6 +60,10 @@ skopeo copy --dest-tls-verify=false docker://docker.io/library/registry:3 docker
 
 skopeo copy --dest-tls-verify=false docker://docker.io/library/alpine:3 docker-archive:/opt/alpine.tar:alpine:3
 
+# download registry volume archive
+
+wget -O /opt/registry.tar.bz2 https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/metalbox/registry.tar.bz2
+
 # run part 2
 
 ansible-playbook -i localhost, /tmp/in_target.d/part2.yml
