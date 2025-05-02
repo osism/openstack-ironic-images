@@ -20,6 +20,8 @@
       - iptables
       - linux-generic-hwe-24.04
       - python3-netaddr
+      - rsync
+      - skopeo
       - socat
       - sosreport
       - tcpdump

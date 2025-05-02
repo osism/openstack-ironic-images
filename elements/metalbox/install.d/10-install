@@ -6,8 +6,18 @@ fi
 set -eu
 set -o pipefail
 
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US
+export LC_ALL=
+
+export PATH=/root/.local/bin:$PATH
+
+# prepare ansible
+
 apt-get install --yes pipx
 pipx install 'ansible-core>=2.18.0,<2.19.0'
+
+# copy required files
 
 cp /tmp/in_target.d/run.sh /usr/local/bin/run.sh
 chmod +x /usr/local/bin/run.sh
@@ -15,3 +25,40 @@ chmod +x /usr/local/bin/run.sh
 cp /tmp/in_target.d/99_metalbox.cfg /etc/cloud/cloud.cfg.d/99_metalbox.cfg
 chown root:root /etc/cloud/cloud.cfg.d/99_metalbox.cfg
 chmod 0644 /etc/cloud/cloud.cfg.d/99_metalbox.cfg
+
+# install required ansible collections
+
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections ansible.netcommon
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections ansible.posix
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections community.docker
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections community.general
+
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-services
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-commons
+
+# run part 1
+
+ansible-playbook -i localhost, /tmp/in_target.d/part1.yml
+
+# clone configuration repository
+
+git clone https://github.com/osism/metalbox /opt/configuration
+chown -R dragon:dragon /opt/configuration
+
+# prepare manager environment
+
+pushd /opt/configuration/environments/manager
+sudo -u dragon bash run.sh noop
+popd
+
+# download registry image
+
+skopeo copy --dest-tls-verify=false docker://docker.io/library/registry:3 docker-archive:/opt/registry.tar:registry:3
+
+# run part 2
+
+ansible-playbook -i localhost, /tmp/in_target.d/part2.yml
+
+# cleanup
+
+rm -rf /root/.ansible
