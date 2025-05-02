@@ -49,6 +49,7 @@ chown -R dragon:dragon /opt/configuration
 
 pushd /opt/configuration/environments/manager
 sudo -u dragon bash run.sh noop
+sed -i 's/\(INSTALL_ANSIBLE_ROLES=${INSTALL_ANSIBLE_ROLES:-\)true/\1false/' /opt/configuration/environments/manager/run.sh
 popd
 
 # download registry image
