@@ -7,6 +7,7 @@
   vars:
     operator_user: dragon
     operator_group: dragon
+    operator_password: $6$uBNqcH/eR0dQ2wxA$Zeb/dLBKStIq4gFxgUKKmrnCs4uGlGQoCby/G9CSfAJE2VzTb8ofm.HCYzmKJXkzIXIjdQL1xeDoI3b9GAvVX.
 
     cleanup_cloudinit: false
     cleanup_packages_extra:
