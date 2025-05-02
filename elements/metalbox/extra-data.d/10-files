@@ -10,5 +10,5 @@ set -o pipefail
 
 cat files/metalbox/part1.yml > $TMP_HOOKS_PATH/part1.yml
 cat files/metalbox/part2.yml > $TMP_HOOKS_PATH/part2.yml
-cat files/burnin/run.sh > $TMP_HOOKS_PATH/run.sh
+cat files/metalbox/run.sh > $TMP_HOOKS_PATH/run.sh
 cat files/metalbox/99_metalbox.cfg > $TMP_HOOKS_PATH/99_metalbox.cfg
