@@ -78,7 +78,7 @@
     parent: abstract-openstack-ironic-images-build
     vars:
       dib_element: metalbox
-      image_format: qcow2
+      image_format: raw
     files:
       - "^elements/metalbox/.*"
       - "^files/metalbox.sh"
@@ -91,7 +91,7 @@
       - name: semaphore-openstack-ironic-images-publish-metalbox
     vars:
       dib_element: metalbox
-      image_format: qcow2
+      image_format: raw
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
