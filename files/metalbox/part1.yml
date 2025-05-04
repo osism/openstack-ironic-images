@@ -80,7 +80,7 @@
     # hosts
     hosts_type: template
     hosts_additional_entries:
-      api.metalbox.osism.xyz: 192.168.42.10
+      api.metalbox.osism.xyz: 192.168.42.20
 
   roles:
     - osism.commons.hostname
