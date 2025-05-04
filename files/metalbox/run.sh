@@ -10,4 +10,4 @@ if [[ -e /opt/registry.tar.bz2 ]]; then
     docker run --rm -v registry:/volume -v /opt:/import alpine:3 sh -c 'cd /volume && tar xjf /import/registry.tar.bz2'
 fi
 
-docker run -d -p 5000:5000 -v registry:/var/lib/registry --name registry registry:3
+docker run -d -p 127.0.0.1:5000:5000 -v registry:/var/lib/registry --name registry registry:3
