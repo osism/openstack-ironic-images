@@ -69,6 +69,12 @@ wget -O /opt/registry.tar.bz2 https://swift.services.a.regiocloud.tech/swift/v1/
 wget -O /opt/ironic-agent.initramfs https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.initramfs
 wget -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.kernel
 
+# change console font
+
+sed -i 's/FONTFACE="Fixed"/FONTFACE="Terminus"/' /etc/default/console-setup
+sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' /etc/default/console-setup
+update-initramfs -u
+
 # run part 2
 
 ansible-playbook -i localhost, /tmp/in_target.d/part2.yml
