@@ -101,34 +101,6 @@
       - "^files/metalbox.sh"
       - "^files/metalbox/.*"
 
-- job:
-    name: openstack-ironic-images-build-metalbox-carrier
-    parent: abstract-openstack-ironic-images-build
-    vars:
-      dib_element: metalbox-carrier
-      image_format: qcow2
-    files:
-      - "^elements/metalbox-carrier/.*"
-      - "^files/metalbox-carrier.sh"
-      - "^files/metalbox-carrier/.*"
-
-- job:
-    name: openstack-ironic-images-publish-metalbox-carrier
-    parent: abstract-openstack-ironic-images-publish
-    semaphores:
-      - name: semaphore-openstack-ironic-images-publish-metalbox-carrier
-    vars:
-      dib_element: metalbox-carrier
-      image_format: qcow2
-    secrets:
-      - name: minio
-        secret: SECRET_OPENSTACK_IRONIC_IMAGES
-        pass-to-parent: true
-    files:
-      - "^elements/metalbox-carrier/.*"
-      - "^files/metalbox-carrier.sh"
-      - "^files/metalbox-carrier/.*"
-
 - project:
     merge-mode: squash-merge
     default-branch: main
@@ -136,7 +108,6 @@
       jobs:
         - openstack-ironic-images-build-burnin
         - openstack-ironic-images-build-metalbox
-        - openstack-ironic-images-build-metalbox-carrier
         - yamllint
     periodic-daily:
       jobs:
@@ -146,6 +117,4 @@
         - openstack-ironic-images-publish-burnin:
             branches: main
         - openstack-ironic-images-publish-metalbox:
-            branches: main
-        - openstack-ironic-images-publish-metalbox-carrier:
             branches: main
