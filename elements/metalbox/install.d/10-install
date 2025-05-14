@@ -54,11 +54,11 @@ popd
 
 # download registry image
 
-skopeo copy --dest-tls-verify=false docker://docker.io/library/registry:3 docker-archive:/opt/registry.tar:registry:3
+skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/library/registry:3 docker-archive:/opt/registry.tar:registry:3
 
 # download alpine image
 
-skopeo copy --dest-tls-verify=false docker://docker.io/library/alpine:3 docker-archive:/opt/alpine.tar:alpine:3
+skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/library/alpine:3 docker-archive:/opt/alpine.tar:alpine:3
 
 # download registry volume archive
 
