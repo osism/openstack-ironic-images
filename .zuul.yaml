@@ -3,27 +3,27 @@
     name: SECRET_OPENSTACK_IRONIC_IMAGES
     data:
       MINIO_ACCESS_KEY: !encrypted/pkcs1-oaep
-        - jhhJg3zzHg9XG5ka14FbsNQqgUEmPxt2ZDljfwDeKNCh4c40rmiH3XrREypfo1j82gEN7
-          OaaeFn9sMcmcOwCTzbfg8vm5d/i+oaJ2gK/d7im418iczfJ68uRLEqUpvhPPGK9hWl+v9
-          niXULkywl44+KvEPilGWnUzGJt+SilDwCm7VJ3/83NHG3qS19E5Iw8unB0JhsnLrr24fr
-          7xyom8/Gd1nhYpqvxvi925uFINQWlrVSr2MzTVEuFjgCRlb5+KmbiLuIHuCCitPCJHSNc
-          zzbHEkjH2eE256FnqqngGTpLjEUmvAPdswyBUDuK7fAmidNiFdAOyHozFtyXs0/3ykR/c
-          xgZDG6h0NSeRV+owFE3+mcXk/vSEdS4rBp7Ul+ptuM8amP0zVhlYCF1c1PC0v5OMx0X+C
-          8trl877PMmvJzuQCRhRh2A3Pl5pd5pxFpafT1n5hwkjXqiE7uTPRQZruKO3oab4u1PSBY
-          3glQXYzPF4mDcH9Z84wmiZFbTscoVJL020T6NldlpM5N8oAeoX8rwyudVINXnweOeyrrE
-          39ODbNtOQbVvmN15CjSOgbVEaBZoDwrL+xdt5qlK9GgdgZnv0G0YavEWzc0MInH1slPHG
-          0Xvu1A0a+kZutRQTQ6sLHVaJn/uNgAJN21DCNJ0fC5A1x8RvjSnuczmBfmut+Y=
+        - J0RsfHJBCLmla/s+gb784EIXYQLjwtEmvyYANYb3hlAKhn0q13IekXNHnI00YCuxkbI48
+          1F8Bj/cdFtrcMDE6Nyz1roq+yb+HcsN7sVaJvps88ySW8ItXQ9jJgjrK0TB1PX8ZK4Q2Z
+          0IBnSnPBxop+d8G9B8smDleFgOQvMPPh1DXJ0B5pqiZKOWa7o9d9GXmf/2Ocuh5mcyCt5
+          pUCrSIXgNVYIXAHw7/cp/SeRzAQFGGOAyigw7mqst5dV7AIiGLj9bwdm33Sy/VcgFGUbM
+          Wv9LbmoZipDDcQp1YCQLq20XV3IGo4J5Rru4nj8rbNva8LBVxTsAGtXTjMxQ4Nk055U39
+          qW6EjV3/ab8RZ4XG39BLCDFfyun0jHJP02uaaFqmnjyuU/9HzXMe/owX8EqXEkCfzyjT8
+          5MEKpdTuzgmddS2X+c0hoSOR4uo1TyWJG3iFo8N6ma4DG8dF+H5Fi4W9SL55d+yk5iR0N
+          d1Hr0pN6rdDRaZIt8FIAMpYekJpsB8AK4HeXc6xNNGQO1gr/2yl6qTFtcqlbPKc5Q/DLN
+          v9BOeb01qzVj8iZ7EDzfYQeD52Fj+yoIG2BDnW6/Y95Bva7lEF4nXIUajE9RGOUaDWaIf
+          m+SW8jYvUhhZFGQ7P8dveGtiRvlFhx6/otKh4+9ZZZHMrZOGYx66/3Mk9pdCsU=
       MINIO_SECRET_KEY: !encrypted/pkcs1-oaep
-        - Km/6dFul/iD4IDImDgRSGhdGo4EA7Z4ZVvO1HDaM9utE7We31ArBUcYcYAE01VsVbACd9
-          NqXOs4Dk5xA0SFl2h4KN5H4oyYzQSdNhF0OsMoKoHGm0XW7loZk2Jn9gzoxPiU6n+QcKl
-          TvxbHr4l6/oT7DcnGDekJvYE479/ocB7uYxc0zHR/XmuDeo7lcTnS3MkMKQNm9WTB9Sa8
-          yJRAlF1I/lyWvyZO3ftqyfOK7OE+p3y5llEJyLWFBYyLs+JVArpPDmIh46T3y/OvcNg+U
-          MQ9ut8u6eATUva7Hiwz7dxz9S8dYfi5knfkn8gkuhBrc//fSbTsmRAuyoyF4PP86+c0fm
-          MwCaaPTakBXU6OFc0QenyBHa3QMD1U9RGbebcfQGv8B5phIt+goQDM6FVNL433j8+eG0+
-          UA6kDIJ44k0FsItHWDne1jlf4cl4M+5O8H9CI/C3+NJgz+G7+aoKe/Xx6TP4r55B/O0To
-          rY4a5hXa9kc7tFuvUx+wpbhGubYfjF5JRLEXfiu9E0KmAFqN/kYlCsPha/bU5HFMPHQWR
-          Ey7kQA+wBmMccFUScUresH96wlAahvFYvMSLmLFR+FVhLJ7PqBTAoV3t4CfWn+DDTZaea
-          UATHf0+lyhBMn27+kAF3l8n9MG15rvbU1mlc3EcwyWGysoEIcsj3Mq5qyFRFWA=
+        - d/KZpiyEADvcTTlkNf7A4nPncLfyndzTvK72KHBm1DjRK69EZddXjXVG+7jNp6hh721AW
+          ap+vbJCBCXRqc7jOTG7ILirT0PR1J6oViRhzTkbbfNuWKoA0TCz8efNf+VrUOJgexIKEf
+          Qo2wCZHJH5j57SHjrZ5umAM/PExcakuYKcbJMrLCnVvGe1amDY8+acVXlCODNWUJxy3Sf
+          /VHX9T4BuR0s9SCr1D33pW7h/LhTaJf3J2FqK4IdZbUEyWONRSyIkVrIkqijSFjhxs6Nd
+          3/zjGkuxr5Sl2p+WqPu4QfBSy7gfeiNto6Pv5fWjNVVC8oYd96mSWDuEFxwO3+cZMTMbo
+          +JvlGmqDz3EPSU6Jmp6ysASNab7fY9nnId6fXPMgxtrWDcRYATjpuT18C7guqxJ1Wwlh2
+          6Q3wGHRqpMuUzPzxjsDv9MfH1Aix8bV8hHeIpHtV1DyoIcXNMMdo9yDkX5n4BQ3fIDqoz
+          TGmru4KV+/bpNE8EuPoqYxQnHDaf4V3BGsl2n6BWjSB7HlGDFhJVJpCiEUaekEQoQ6xlQ
+          rVJLKkgNQnkI3sgSD/oc1lH0lX8PCm2btrOl91BRfw90PHgbnucVNRp4i021K0/ZXq5RH
+          6UX4k+NMiVWRFMR+149EE8jMGLkA70I/TULBrrQs2tRiKTbPHne2Q4o858OUPo=
 
 - semaphore:
     name: semaphore-openstack-ironic-images-publish-burnin
