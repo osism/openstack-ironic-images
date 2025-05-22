@@ -55,6 +55,7 @@
       - "^elements/burnin/.*"
       - "^files/burnin.sh"
       - "^files/burnin/.*"
+      - "^playbooks/.*"
 
 - job:
     name: openstack-ironic-images-publish-burnin
@@ -72,6 +73,7 @@
       - "^elements/burnin/.*"
       - "^files/burnin.sh"
       - "^files/burnin/.*"
+      - "^playbooks/.*"
 
 - job:
     name: openstack-ironic-images-build-metalbox
@@ -83,6 +85,7 @@
       - "^elements/metalbox/.*"
       - "^files/metalbox.sh"
       - "^files/metalbox/.*"
+      - "^playbooks/.*"
 
 - job:
     name: openstack-ironic-images-publish-metalbox
@@ -100,6 +103,7 @@
       - "^elements/metalbox/.*"
       - "^files/metalbox.sh"
       - "^files/metalbox/.*"
+      - "^playbooks/.*"
 
 - project:
     merge-mode: squash-merge
