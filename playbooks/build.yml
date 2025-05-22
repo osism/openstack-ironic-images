@@ -40,13 +40,15 @@
           chmod +x mc
           ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
 
-          if [[ "{{ _image_format }}" == "raw" ]]; then
-              qemu-img convert -O qcow2 osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.qcow2
-          fi
+          sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
 
-          sha256sum osism-{{ _dib_element }}-image.qcow2 > osism-{{ _dib_element }}-image.qcow2.CHECKSUM
-          ./mc cp osism-{{ _dib_element }}-image.qcow2.CHECKSUM minio/openstack-ironic-images
-          ./mc cp osism-{{ _dib_element }}-image.qcow2 minio/openstack-ironic-images
+          if [[ "{{ _image_format }}" == "raw" ]]; then
+              zip osism-{{ _dib_element }}-image.zip osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
+              ./mc cp osism-{{ _dib_element }}-image.zip minio/openstack-ironic-images
+          else
+              ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
+              ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }} minio/openstack-ironic-images
+          fi
 
       when: upload_image | bool
       no_log: true

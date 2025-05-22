@@ -18,6 +18,7 @@
           - kpartx
           - qemu-utils
           - squashfs-tools
+          - zip
 
     - name: Install requirements
       ansible.builtin.pip:
