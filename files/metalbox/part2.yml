@@ -7,20 +7,20 @@
   vars:
     network_ethernets:
       eth*:
-        dhcp4: no
-        dhcp6: no
+        dhcp4: false
+        dhcp6: false
         link-local: [ipv6]
       en*:
-        dhcp4: no
-        dhcp6: no
+        dhcp4: false
+        dhcp6: false
         link-local: [ipv6]
       enp*:
-        dhcp4: no
-        dhcp6: no
+        dhcp4: false
+        dhcp6: false
         link-local: [ipv6]
       eno*:
-        dhcp4: no
-        dhcp6: no
+        dhcp4: false
+        dhcp6: false
         link-local: [ipv6]
 
     network_dummy_devices:
