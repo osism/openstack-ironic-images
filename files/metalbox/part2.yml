@@ -5,24 +5,7 @@
   gather_facts: true
 
   vars:
-    network_ethernets:
-      eth*:
-        dhcp4: false
-        dhcp6: false
-        link-local: [ipv6]
-      en*:
-        dhcp4: false
-        dhcp6: false
-        link-local: [ipv6]
-      enp*:
-        dhcp4: false
-        dhcp6: false
-        link-local: [ipv6]
-      eno*:
-        dhcp4: false
-        dhcp6: false
-        link-local: [ipv6]
-
+    network_ethernets: {}
     network_dummy_devices:
       dummy0:
         addresses:
