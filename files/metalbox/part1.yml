@@ -109,8 +109,6 @@
   gather_facts: true
 
   vars:
-    docker_opts:
-      max-concurrent-downloads: 20
     # renovate: datasource=github-releases depName=moby/moby
     docker_version: '5:27.5.1'
     docker_facts: false
