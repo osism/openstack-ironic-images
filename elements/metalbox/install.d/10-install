@@ -62,12 +62,16 @@ skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/libra
 
 # download registry volume archive
 
-wget -O /opt/registry.tar.bz2 https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/metalbox/registry.tar.bz2
+if [[ "$DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE" == "true" ]] then
+    wget -O /opt/registry.tar.bz2 https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/metalbox/registry.tar.bz2
+fi
 
 # download ironic images
 
-wget -O /opt/ironic-agent.initramfs https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.initramfs
-wget -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-2024.2.kernel
+if [[ "$DIB_METALBOX_IPA_IMAGES" == "true" ]] then
+    wget -O /opt/ironic-agent.initramfs https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.initramfs
+    wget -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.kernel
+fi
 
 # change console font
 
