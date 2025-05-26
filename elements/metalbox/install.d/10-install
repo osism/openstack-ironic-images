@@ -52,6 +52,12 @@ sudo -u dragon bash run.sh noop
 sed -i 's/\(INSTALL_ANSIBLE_ROLES=${INSTALL_ANSIBLE_ROLES:-\)true/\1false/' /opt/configuration/environments/manager/run.sh
 popd
 
+# prepare netbox environment
+
+sudo -u dragon pipx install netbox-manager
+sudo -u dragon pipx install 'ansible-core>=2.18.0,<2.19.0'
+sudo -u dragon /home/dragon/.local/bin/ansible-galaxy collection install netbox.netbox
+
 # download registry image
 
 skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/library/registry:3 docker-archive:/opt/registry.tar:registry:3
