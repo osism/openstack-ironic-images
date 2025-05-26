@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# run docker registry
-
 docker load -i /opt/registry.tar
+docker load -i /opt/alpine.tar
 
 if [[ -e /opt/registry.tar.bz2 ]]; then
-    docker load -i /opt/alpine.tar
     docker volume create registry
     docker run --rm -v registry:/volume -v /opt:/import registry.osism.tech/dockerhub/library/alpine:3 sh -c 'cd /volume && tar xjf /import/registry.tar.bz2'
 fi
