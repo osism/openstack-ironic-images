@@ -74,6 +74,7 @@
       - tcpdump
       - tmux
       - tuned
+      - unzip
       - wireguard-tools
 
     # hostname
