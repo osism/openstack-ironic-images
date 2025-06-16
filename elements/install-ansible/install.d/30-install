@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US
+export LC_ALL=
+
+export PATH=/root/.local/bin:$PATH
+
+# prepare ansible
+
+apt-get install --yes pipx
+pipx install 'ansible-core>=2.18.0,<2.19.0'
+
+# install required ansible collections
+
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections ansible.netcommon
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections ansible.posix
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections community.docker
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections community.general
+
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-services
+ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-commons
