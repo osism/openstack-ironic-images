@@ -14,7 +14,6 @@ export PATH=/root/.local/bin:$PATH
 
 # prepare ansible
 
-apt-get install --yes pipx
 pipx install 'ansible-core>=2.18.0,<2.19.0'
 
 # install required ansible collections
