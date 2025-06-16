@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import jinja2
+import json
+import os
+import stat
+import subprocess
+
+def mount_config_drive():
+    config_drive = "/dev/disk/by-label/config-2"
+    if not os.path.exists(config_drive):
+        raise FileNotFoundError
+
+    # Mount config drive
+    subprocess.run(["mount", "-r", config_drive, "/mnt"],
+                   check=True)
+
+def unmount_config_drive():
+    config_drive = "/dev/disk/by-label/config-2"
+
+    subprocess.run(["umount", config_drive],
+                   check=True)
+
+def apply_config():
+    with open("/var/log/ansible.out","w") as outpipe:
+        with open("/var/log/ansible.err","w") as errpipe:
+            subprocess.run(["/root/.local/bin/ansible-playbook",
+                            "-i", "localhost,",
+                            "/mnt/playbook.yml"
+                           ],
+                           stderr=errpipe,
+                           stdout=outpipe,
+                           check=True)
+
+def main():
+    mount_config_drive()
+
+    apply_config()
+
+    unmount_config_drive()
+
+main()

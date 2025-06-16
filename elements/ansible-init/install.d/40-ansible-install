@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US
+export LC_ALL=
+
+export PATH=/root/.local/bin:$PATH
+
+# run part 1
+
+ansible-playbook -i localhost, /root/part1.yml
+
+# change console font
+
+sed -i 's/FONTFACE="Fixed"/FONTFACE="Terminus"/' /etc/default/console-setup
+sed -i 's/FONTSIZE="8x16"/FONTSIZE="16x32"/' /etc/default/console-setup
+update-initramfs -u
+
+# cleanup
+
+rm -f /etc/netplan/50-cloud-init.yaml
+rm -rf /root/.ansible
