@@ -1,0 +1,58 @@
+---
+- name: Run bootstrap - part 1
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    # operator
+    operator_user: dragon
+    operator_group: dragon
+    operator_password: $6$uBNqcH/eR0dQ2wxA$Zeb/dLBKStIq4gFxgUKKmrnCs4uGlGQoCby/G9CSfAJE2VzTb8ofm.HCYzmKJXkzIXIjdQL1xeDoI3b9GAvVX.
+    operator_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIALTE5geSy9lKjGRlhEGiIjp81ayr4Sbl8bPBYY9FgVh dragon@ctl3001
+
+    # cleanup
+    cleanup_cloudinit: false
+    cleanup_packages_extra:
+      - apport
+      - snapd
+
+    # packages
+    required_packages_extra:
+      - ca-certificates
+      - frr
+      - htop
+      - ipmitool
+      - iptables
+      - linux-generic-hwe-24.04
+      - net-tools
+      - python3-netaddr
+      - rsync
+      - skopeo
+      - socat
+      - sosreport
+      - tcpdump
+      - tuned
+      - wireguard-tools
+
+    # hostname
+    hostname_name: osism-NNN
+
+  roles:
+    - osism.commons.hostname
+    - osism.commons.repository
+    - osism.commons.microcode
+    - osism.commons.operator
+    - osism.commons.systohc
+    - osism.commons.configfs
+    - osism.commons.packages
+    - osism.commons.sysctl
+    - osism.commons.limits
+    - osism.commons.services
+    - osism.commons.motd
+    - osism.services.rng
+    - osism.commons.cleanup
+    - osism.services.chrony
+    - osism.services.journald
+    - osism.services.lldpd
