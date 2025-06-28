@@ -118,6 +118,7 @@
     docker_facts: false
     docker_insecure_registries:
       - localhost:5000
+    docker_ipv6: true
 
   roles:
     - osism.services.docker
