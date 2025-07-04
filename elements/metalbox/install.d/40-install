@@ -12,21 +12,6 @@ export LC_ALL=
 
 export PATH=/root/.local/bin:$PATH
 
-# prepare ansible
-
-apt-get install --yes pipx
-pipx install 'ansible-core>=2.18.0,<2.19.0'
-
-# install required ansible collections
-
-ansible-galaxy collection install --collections-path /usr/share/ansible/collections ansible.netcommon
-ansible-galaxy collection install --collections-path /usr/share/ansible/collections ansible.posix
-ansible-galaxy collection install --collections-path /usr/share/ansible/collections community.docker
-ansible-galaxy collection install --collections-path /usr/share/ansible/collections community.general
-
-ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-services
-ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-commons
-
 # run part 1
 
 ansible-playbook -i localhost, /root/part1.yml

@@ -25,3 +25,9 @@
         requirements: "{{ ansible_user_dir }}/{{ zuul.project.src_dir }}/requirements.txt"
         virtualenv: "{{ python_venv_dir }}"
         virtualenv_command: "python3 -m venv"
+
+    - name: Create log directory
+      file:
+        path: "{{ ansible_user_dir }}/zuul-output/logs"
+        state: directory
+        mode: 0755

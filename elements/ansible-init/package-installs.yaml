@@ -1,0 +1,20 @@
+ca-certificates:
+cloud-init:
+  uninstall: True
+curl:
+dmidecode:
+file:
+frr:
+git:
+htop:
+ipmitool:
+jq:
+less:
+lldpd:
+netplan.io:
+procps:
+python3:
+util-linux-extra:
+vim:
+wget:
+whois:
