@@ -14,5 +14,4 @@ fi
 
 rm -f /etc/default/grub.d/50-cloudimg-settings.cfg
 update-grub
-grub-install --modules=mdraid1x -v
 
