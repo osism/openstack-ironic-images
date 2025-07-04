@@ -105,6 +105,35 @@
       - "^files/metalbox/.*"
       - "^playbooks/.*"
 
+- job:
+    name: openstack-ironic-images-build-osism-ironic
+    parent: base-extra-logs
+    nodeset: 
+      nodes:
+        - label: ubuntu-noble-uefi
+          name: noble
+    pre-run: playbooks/pre.yml
+    run: playbooks/builder.yml
+    vars:
+      upload_image: false
+    files: &osism_ironic_files
+      - "^elements/ansible-init/.*"
+      - "^elements/block-device-osism-efi/.*"
+      - "^elements/install-ansible/.*"
+      - "^files/osism-ironic.yml$"
+      - "^playbooks/.*"
+
+- job:
+    name: openstack-ironic-images-publish-osism
+    parent: abstract-openstack-ironic-images-publish
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish-osism
+    secrets:
+      - name: minio
+        secret: SECRET_OPENSTACK_IRONIC_IMAGES
+        pass-to-parent: true
+    files: *osism_ironic_files
+
 - project:
     merge-mode: squash-merge
     default-branch: main
@@ -112,6 +141,7 @@
       jobs:
         - openstack-ironic-images-build-burnin
         - openstack-ironic-images-build-metalbox
+        - openstack-ironic-images-build-osism-ironic
         - yamllint
     periodic-daily:
       jobs:
@@ -121,4 +151,6 @@
         - openstack-ironic-images-publish-burnin:
             branches: main
         - openstack-ironic-images-publish-metalbox:
+            branches: main
+        - openstack-ironic-images-publish-osism:
             branches: main

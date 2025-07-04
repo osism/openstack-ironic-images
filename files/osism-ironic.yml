@@ -1,0 +1,23 @@
+- imagename: osism-ironic
+  arch: amd64
+  image-size: 5
+  checksum: true
+  logfile: /home/zuul/zuul-output/logs/osism-ironic.log
+  elements:
+    - ubuntu
+    - vm
+    - ansible-init
+    - block-device-osism-efi
+    - devuser
+    - growroot
+    - grub2
+    - openssh-server
+  environment:
+    ELEMENTS_PATH: ./elements
+    DIB_BOOTLOADER_USE_SERIAL_CONSOLE: "False"
+    DIB_DEV_USER_USERNAME: osism
+    DIB_DEV_USER_SHELL: /bin/bash
+    DIB_DEV_USER_PASSWORD: pass
+    DIB_DEV_USER_PWDLESS_SUDO: "yes"
+    DIB_DEV_USER_AUTHORIZED_KEYS: ./files/dragon-ssh-key.pub
+    DIB_RELEASE: noble
