@@ -1,3 +1,4 @@
+---
 - imagename: osism-ironic
   arch: amd64
   image-size: 5
