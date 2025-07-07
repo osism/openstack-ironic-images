@@ -108,7 +108,7 @@
 - job:
     name: openstack-ironic-images-build-osism-ironic
     parent: base-extra-logs
-    nodeset: 
+    nodeset:
       nodes:
         - label: ubuntu-noble-uefi
           name: noble

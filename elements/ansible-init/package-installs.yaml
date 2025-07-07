@@ -1,6 +1,7 @@
+---
 ca-certificates:
 cloud-init:
-  uninstall: True
+  uninstall: true
 curl:
 dmidecode:
 file:
