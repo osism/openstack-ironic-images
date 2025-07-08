@@ -1,13 +1,13 @@
 ---
-- imagename: osism-ironic
+- imagename: osism-node
   arch: amd64
   image-size: 5
   checksum: true
-  logfile: /home/zuul/zuul-output/logs/osism-ironic.log
+  logfile: /home/zuul/zuul-output/logs/osism-node.log
   elements:
     - ubuntu
     - vm
-    - ansible-init
+    - osism-node
     - block-device-osism-efi
     - devuser
     - growroot
