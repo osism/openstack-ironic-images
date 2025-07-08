@@ -3,7 +3,7 @@
   hosts: all
 
   vars:
-    _build_name: "{{ build_name | default('osism-ironic') }}"
+    _build_name: "{{ build_name | default('osism-node') }}"
     # TODO: find out how to pass this to diskimage-builder
     _image_format: "{{ image_format | default('qcow2') }}"
 

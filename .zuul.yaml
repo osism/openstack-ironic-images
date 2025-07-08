@@ -29,6 +29,14 @@
     name: semaphore-openstack-ironic-images-publish-burnin
     max: 1
 
+- semaphore:
+    name: semaphore-openstack-ironic-images-publish-metalbox
+    max: 1
+
+- semaphore:
+    name: semaphore-openstack-ironic-images-publish-osism-node
+    max: 1
+
 - job:
     name: abstract-openstack-ironic-images-build
     abstract: true
@@ -106,7 +114,7 @@
       - "^playbooks/.*"
 
 - job:
-    name: openstack-ironic-images-build-osism-ironic
+    name: openstack-ironic-images-build-osism-node
     parent: base-extra-logs
     nodeset:
       nodes:
@@ -115,24 +123,26 @@
     pre-run: playbooks/pre.yml
     run: playbooks/builder.yml
     vars:
+      build_name: osism-node
       upload_image: false
-    files: &osism_ironic_files
+    files: &osism_node_files
       - "^elements/ansible-init/.*"
       - "^elements/block-device-osism-efi/.*"
       - "^elements/install-ansible/.*"
-      - "^files/osism-ironic.yml$"
+      - "^elements/osism-node/.*"
+      - "^files/osism-node.yml$"
       - "^playbooks/.*"
 
 - job:
-    name: openstack-ironic-images-publish-osism
+    name: openstack-ironic-images-publish-osism-node
     parent: abstract-openstack-ironic-images-publish
     semaphores:
-      - name: semaphore-openstack-ironic-images-publish-osism
+      - name: semaphore-openstack-ironic-images-publish-osism-node
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
-    files: *osism_ironic_files
+    files: *osism_node_files
 
 - project:
     merge-mode: squash-merge
@@ -141,7 +151,7 @@
       jobs:
         - openstack-ironic-images-build-burnin
         - openstack-ironic-images-build-metalbox
-        - openstack-ironic-images-build-osism-ironic
+        - openstack-ironic-images-build-osism-node
         - yamllint
     periodic-daily:
       jobs:
@@ -152,5 +162,5 @@
             branches: main
         - openstack-ironic-images-publish-metalbox:
             branches: main
-        - openstack-ironic-images-publish-osism:
+        - openstack-ironic-images-publish-osism-node:
             branches: main
