@@ -138,6 +138,8 @@
     parent: abstract-openstack-ironic-images-publish
     semaphores:
       - name: semaphore-openstack-ironic-images-publish-osism-node
+    vars:
+      build_name: osism-node
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
