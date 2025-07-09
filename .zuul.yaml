@@ -135,11 +135,12 @@
 
 - job:
     name: openstack-ironic-images-publish-osism-node
-    parent: abstract-openstack-ironic-images-publish
+    parent: openstack-ironic-images-build-osism-node
     semaphores:
       - name: semaphore-openstack-ironic-images-publish-osism-node
     vars:
       build_name: osism-node
+      upload_image: true
     secrets:
       - name: minio
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
