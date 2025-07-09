@@ -1,4 +1,3 @@
-dib-init-system
-install-ansible
+ansible-init
 install-static
 package-installs
