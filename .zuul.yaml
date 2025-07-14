@@ -34,6 +34,10 @@
     max: 1
 
 - semaphore:
+    name: semaphore-openstack-ironic-images-publish-osism-ipa
+    max: 1
+
+- semaphore:
     name: semaphore-openstack-ironic-images-publish-osism-node
     max: 1
 
@@ -114,6 +118,38 @@
       - "^playbooks/.*"
 
 - job:
+    name: openstack-ironic-images-build-osism-ipa
+    parent: base-extra-logs
+    nodeset:
+      nodes:
+        - label: ubuntu-noble-uefi
+          name: noble
+    pre-run: playbooks/pre.yml
+    run: playbooks/builder.yml
+    vars:
+      build_name: osism-ipa
+      upload_image: false
+    files: &osism_ipa_files
+      - "^elements/install-ansible/.*"
+      - "^elements/osism-ipa/.*"
+      - "^files/osism-ipa.yml$"
+      - "^playbooks/.*"
+
+- job:
+    name: openstack-ironic-images-publish-osism-ipa
+    parent: openstack-ironic-images-build-osism-ipa
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish-osism-ipa
+    vars:
+      build_name: osism-ipa
+      upload_image: true
+    secrets:
+      - name: minio
+        secret: SECRET_OPENSTACK_IRONIC_IMAGES
+        pass-to-parent: true
+    files: *osism_ipa_files
+
+- job:
     name: openstack-ironic-images-build-osism-node
     parent: base-extra-logs
     nodeset:
@@ -154,6 +190,7 @@
       jobs:
         - openstack-ironic-images-build-burnin
         - openstack-ironic-images-build-metalbox
+        - openstack-ironic-images-build-osism-ipa
         - openstack-ironic-images-build-osism-node
         - yamllint
     periodic-daily:
@@ -164,6 +201,8 @@
         - openstack-ironic-images-publish-burnin:
             branches: main
         - openstack-ironic-images-publish-metalbox:
+            branches: main
+        - openstack-ironic-images-publish-osism-ipa:
             branches: main
         - openstack-ironic-images-publish-osism-node:
             branches: main

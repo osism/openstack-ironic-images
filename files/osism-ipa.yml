@@ -1,0 +1,22 @@
+---
+- imagename: osism-ipa
+  arch: amd64
+  image-size: 5
+  checksum: true
+  logfile: /home/zuul/zuul-output/logs/osism-ipa.log
+  elements:
+    - ubuntu
+    - ironic-python-agent-ramdisk
+    - openssh-server
+    - devuser
+    - osism-ipa
+  environment:
+    ELEMENTS_PATH: ./elements:./ironic-python-agent-builder/dib
+    DIB_BOOTLOADER_USE_SERIAL_CONSOLE: "False"
+    DIB_DEV_USER_USERNAME: osism
+    DIB_DEV_USER_SHELL: /bin/bash
+    DIB_DEV_USER_PASSWORD: pass
+    DIB_DEV_USER_PWDLESS_SUDO: "yes"
+    DIB_DEV_USER_AUTHORIZED_KEYS: ./files/dragon-ssh-key.pub
+    DIB_OSISM_HOSTNAME: osism-ipa
+    DIB_RELEASE: noble
