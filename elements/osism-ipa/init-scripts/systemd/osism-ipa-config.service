@@ -1,0 +1,11 @@
+[Unit]
+Description=OSISM IPA Config Generation
+
+[Service]
+ExecStart=/usr/local/sbin/osism-ipa-configure
+Type=oneshot
+RemainAfterExit=yes
+TimeoutSec=30
+
+[Install]
+WantedBy=multi-user.target

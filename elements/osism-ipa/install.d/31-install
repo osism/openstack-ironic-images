@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+python3 -m venv /usr/local/lib/osism
+
+/usr/local/lib/osism/bin/pip install jinja2 pyroute2 mactools

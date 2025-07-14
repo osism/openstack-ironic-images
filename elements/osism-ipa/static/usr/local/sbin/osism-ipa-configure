@@ -1,0 +1,81 @@
+#!/usr/local/lib/osism/bin/python3
+
+import jinja2
+import json
+import os
+import stat
+import subprocess
+
+from pyroute2 import IPRoute
+import mactools
+
+
+def find_attr(obj, name):
+    for i in obj["attrs"]:
+        if i[0] == name:
+            return i[1]
+    raise NotFound
+
+
+def scan_interfaces():
+    interfaces = []
+
+    # get access to the netlink socket
+    ipr = IPRoute()
+
+    # fetch interfaces
+    links = ipr.get_links()
+
+    for link in links:
+        if_name = find_attr(link, "IFLA_IFNAME")
+        if not if_name.startswith("en"):
+            continue
+        mac = mactools.MacAddress(find_attr(link, "IFLA_ADDRESS"))
+        eui64 = mac.eui64_suffix
+        print("%s %s %s" % (if_name, mac, eui64))
+        interfaces.append((if_name, eui64))
+
+    return interfaces
+
+
+config_files = [
+    ("frr.conf.j2", "/etc/frr/frr.conf"),
+    ("osism-netplan.yaml.j2", "/etc/netplan/01-osism.yaml"),
+]
+
+
+def write_config_files(data):
+    template_path = "/opt/osism/templates"
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
+    for template_name, file_name in config_files:
+        template = env.get_template(template_name)
+        template.stream(data).dump(file_name)
+
+
+def restart_networking():
+    os.chmod("/etc/netplan/01-osism.yaml", stat.S_IRUSR)
+
+    subprocess.run(["systemctl", "daemon-reload"], check=True)
+
+    subprocess.run(["netplan", "apply"], check=True)
+
+    subprocess.run(["systemctl", "restart", "frr.service"], check=True)
+
+
+def main():
+    data = {}
+    print("Before scan_interfaces()")
+    interfaces = scan_interfaces()
+    data["osism_interfaces"] = [interface[0] for interface in interfaces]
+    data["osism_ipv6"] = "2001:db8:ffff:ffff:%s" % interfaces[0][1]
+
+    print("Before write_config_files()")
+    write_config_files(data)
+
+    print("Before restart_networking()")
+    restart_networking()
+
+    print("Finished successfully")
+
+
+main()
