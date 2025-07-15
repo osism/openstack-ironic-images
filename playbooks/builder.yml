@@ -44,19 +44,18 @@
           chmod +x mc
           ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
 
-          cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
 
           if [[ "{{ _image_format }}" == "raw" ]]; then
+              cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
               zip {{ _build_name }}.zip {{ _build_name }}.{{ _image_format }} {{ _build_name }}.{{ _image_format }}.CHECKSUM
               ./mc cp {{ _build_name }}.zip minio/openstack-ironic-images
           elif [[ "{{ _image_format }}" == "initramfs" ]]; then
-              sha256sum {{ _build_name }}.kernel minio/openstack-ironic-images {{ _build_name }}.kernel.CHECKSUM
-
-              ./mc cp {{ _build_name }}.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
+              cp {{ _build_name }}.sha256 {{ _build_name }}.CHECKSUM
+              ./mc cp {{ _build_name }}.CHECKSUM minio/openstack-ironic-images
               ./mc cp {{ _build_name }}.{{ _image_format }} minio/openstack-ironic-images
               ./mc cp {{ _build_name }}.kernel minio/openstack-ironic-images
-              ./mc cp {{ _build_name }}.kernel.CHECKSUM minio/openstack-ironic-images
           else
+              cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
               ./mc cp {{ _build_name }}.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
               ./mc cp {{ _build_name }}.{{ _image_format }} minio/openstack-ironic-images
           fi
