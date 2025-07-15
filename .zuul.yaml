@@ -142,6 +142,7 @@
       - name: semaphore-openstack-ironic-images-publish-osism-ipa
     vars:
       build_name: osism-ipa
+      image_format: initramfs
       upload_image: true
     secrets:
       - name: minio
