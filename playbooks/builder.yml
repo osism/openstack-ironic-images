@@ -49,6 +49,13 @@
           if [[ "{{ _image_format }}" == "raw" ]]; then
               zip {{ _build_name }}.zip {{ _build_name }}.{{ _image_format }} {{ _build_name }}.{{ _image_format }}.CHECKSUM
               ./mc cp {{ _build_name }}.zip minio/openstack-ironic-images
+          elif [[ "{{ _image_format }}" == "initramfs" ]]; then
+              sha256sum {{ _build_name }}.kernel minio/openstack-ironic-images {{ _build_name }}.kernel.CHECKSUM
+
+              ./mc cp {{ _build_name }}.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
+              ./mc cp {{ _build_name }}.{{ _image_format }} minio/openstack-ironic-images
+              ./mc cp {{ _build_name }}.kernel minio/openstack-ironic-images
+              ./mc cp {{ _build_name }}.kernel.CHECKSUM minio/openstack-ironic-images
           else
               ./mc cp {{ _build_name }}.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
               ./mc cp {{ _build_name }}.{{ _image_format }} minio/openstack-ironic-images
