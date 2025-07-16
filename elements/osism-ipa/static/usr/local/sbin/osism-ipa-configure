@@ -67,7 +67,7 @@ def main():
     print("Before scan_interfaces()")
     interfaces = scan_interfaces()
     data["osism_interfaces"] = [interface[0] for interface in interfaces]
-    data["osism_ipv6"] = "2001:db8:ffff:ffff:%s" % interfaces[0][1]
+    data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
 
     print("Before write_config_files()")
     write_config_files(data)
