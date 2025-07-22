@@ -9,10 +9,11 @@ set -o pipefail
 
 # TODO(frickler): avoid this workaround
 if [ -f /boot/grub/x86_64-efi/mdraid1x.mod ]; then
-    cp /boot/grub/x86_64-efi/mdraid1x.mod /boot/efi/EFI/BOOT
+    mkdir -p /boot/efi/$EFI_BOOT_DIR
+    cp /boot/grub/x86_64-efi/mdraid1x.mod /boot/efi/$EFI_BOOT_DIR
 fi
 
 rm -f /etc/default/grub.d/50-cloudimg-settings.cfg
 update-grub
-grub-install --modules=mdraid1x -v
-
+grub-install --no-nvram --modules=mdraid1x -v $EFI_BOOT_DIR
+rm -rf /boot/efi/EFI/BOOT
