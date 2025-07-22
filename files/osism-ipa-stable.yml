@@ -1,9 +1,9 @@
 ---
-- imagename: osism-ipa
+- imagename: osism-ipa-stable
   arch: amd64
   image-size: 5
   checksum: true
-  logfile: /home/zuul/zuul-output/logs/osism-ipa.log
+  logfile: /home/zuul/zuul-output/logs/osism-ipa-stable.log
   elements:
     - ubuntu
     - ironic-python-agent-ramdisk
@@ -20,3 +20,5 @@
     DIB_DEV_USER_AUTHORIZED_KEYS: ./files/dragon-ssh-key.pub
     DIB_OSISM_HOSTNAME: osism-ipa
     DIB_RELEASE: noble
+    DIB_REPOREF_ironic_python_agent: origin/stable/2025.1
+    DIB_REPOREF_requirements: origin/stable/2025.1
