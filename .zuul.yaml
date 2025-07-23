@@ -229,6 +229,7 @@
         - openstack-ironic-images-build-burnin
         - openstack-ironic-images-build-metalbox
         - openstack-ironic-images-build-osism-ipa
+        - openstack-ironic-images-build-osism-ipa-stable
         - openstack-ironic-images-build-osism-node
         - yamllint
     periodic-daily:
@@ -241,6 +242,8 @@
         - openstack-ironic-images-publish-metalbox:
             branches: main
         - openstack-ironic-images-publish-osism-ipa:
+            branches: main
+        - openstack-ironic-images-publish-osism-ipa-stable:
             branches: main
         - openstack-ironic-images-publish-osism-node:
             branches: main
