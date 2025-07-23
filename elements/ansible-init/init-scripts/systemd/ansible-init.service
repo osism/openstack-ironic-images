@@ -5,7 +5,6 @@ Description=Ansible Init
 ExecStart=/usr/local/sbin/ansible-init
 Type=oneshot
 RemainAfterExit=yes
-TimeoutSec=30
 
 [Install]
 WantedBy=multi-user.target
