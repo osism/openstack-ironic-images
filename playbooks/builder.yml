@@ -17,7 +17,7 @@
           set -x
 
           git clone https://opendev.org/openstack/ironic-python-agent-builder
-      when: _build_name == "osism-ipa"
+      when: _build_name | regex_search("^osism-ipa")
 
     - name: Run diskimage-builder
       ansible.builtin.shell:
