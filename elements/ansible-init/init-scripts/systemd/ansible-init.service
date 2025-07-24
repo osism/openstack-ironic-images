@@ -1,10 +1,18 @@
 [Unit]
 Description=Ansible Init
+ConditionFirstBoot=yes
+Before=first-boot-complete.target
+RequiresMountsFor=/mnt/config
+ConditionPathIsMountPoint=/mnt/config
+ConditionPathExists=/mnt/config/playbook.yaml
 
 [Service]
-ExecStart=/usr/local/sbin/ansible-init
+ExecStart=/root/.local/bin/ansible-playbook -i localhost /mnt/config/playbook.yaml
+StandardOutput=append:/var/log/ansible.out
+StandardError=append:/var/log/ansible.err
 Type=oneshot
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=network-online.target
+Wants=first-boot-complete.target
