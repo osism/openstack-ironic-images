@@ -28,7 +28,7 @@ def scan_interfaces():
 
     for link in links:
         if_name = find_attr(link, "IFLA_IFNAME")
-        if not if_name.startswith("en"):
+        if not if_name.startswith("en") or if_name.startswith("enx"):
             continue
         mac = mactools.MacAddress(find_attr(link, "IFLA_ADDRESS"))
         eui64 = mac.eui64_suffix
