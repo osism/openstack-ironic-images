@@ -1,5 +1,6 @@
 [Unit]
 Description=OSISM IPA Config Generation
+After=network.target
 
 [Service]
 ExecStart=/usr/local/sbin/osism-ipa-configure
