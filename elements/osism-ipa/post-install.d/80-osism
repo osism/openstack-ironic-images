@@ -9,6 +9,8 @@ set -o pipefail
 case "$DIB_INIT_SYSTEM" in
     systemd)
         systemctl enable osism-ipa-config.service
+	systemctl disable apparmor.service
+        systemctl disable ironic-agent-resolve-config-drive.service
         systemctl disable ironic-python-agent.service
         ;;
     *)
