@@ -2,6 +2,7 @@
 
 import jinja2
 import os
+import socket
 import stat
 import subprocess
 import time
@@ -69,9 +70,29 @@ def restart_networking():
 def sync_time_with_metalbox():
     subprocess.run(["systemctl", "stop", "chrony.service"], check=True)
 
-    subprocess.run(["chronyd", "-q", "server fd33:fd0e:2aee::42 iburst"], check=True)
+    PORT = 6385
+    TIMEOUT = 120
 
-    subprocess.run(["hwclock", "--systohc"], check=True)
+    start = time.time()
+    reachable = False
+
+    while time.time() - start < TIMEOUT:
+        try:
+            sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+            sock.settimeout(2)
+            if sock.connect_ex(("metalbox", PORT)) == 0:
+                reachable = True
+                sock.close()
+                break
+            sock.close()
+        except:
+            pass
+        time.sleep(1)
+
+    if reachable:
+        subprocess.run(["chronyd", "-q", "server metalbox iburst"], check=True)
+
+        subprocess.run(["hwclock", "--systohc"], check=True)
 
 
 def start_ironic_python_agent():
