@@ -20,7 +20,3 @@ update-initramfs -u
 # disable systemd-networkd-wait-online service
 
 systemctl disable systemd-networkd-wait-online.service
-
-# disable ironic-python-agent service
-
-systemctl disable ironic-python-agent.service
