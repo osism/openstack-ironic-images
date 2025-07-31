@@ -1,7 +1,6 @@
 #!/usr/local/lib/osism/bin/python3
 
 import jinja2
-import json
 import os
 import stat
 import subprocess
@@ -9,6 +8,10 @@ import time
 
 from pyroute2 import IPRoute
 import mactools
+
+
+class NotFound(Exception):
+    pass
 
 
 def find_attr(obj, name):
@@ -63,6 +66,18 @@ def restart_networking():
     subprocess.run(["systemctl", "restart", "frr.service"], check=True)
 
 
+def sync_time_with_metalbox():
+    subprocess.run(["systemctl", "stop", "chrony.service"], check=True)
+
+    subprocess.run(["chronyd", "-q", "server fd33:fd0e:2aee::42 iburst"], check=True)
+
+    subprocess.run(["hwclock", "--systohc"], check=True)
+
+
+def start_ironic_python_agent():
+    subprocess.run(["systemctl", "start", "ironic-python-agent.service"], check=True)
+
+
 def main():
     data = {}
     print("Before scan_interfaces()")
@@ -90,6 +105,12 @@ def main():
 
     print("Before restart_networking()")
     restart_networking()
+
+    print("Before sync_time_with_metalbox()")
+    sync_time_with_metalbox()
+
+    print("Before start_ironic_python_agent()")
+    start_ironic_python_agent()
 
     print("Finished successfully")
 
