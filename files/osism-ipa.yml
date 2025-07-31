@@ -7,6 +7,7 @@
   elements:
     - ubuntu
     - ironic-python-agent-ramdisk
+    - burn-in
     - openssh-server
     - devuser
     - osism-ipa
