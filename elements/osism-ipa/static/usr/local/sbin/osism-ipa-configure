@@ -65,9 +65,24 @@ def restart_networking():
 def main():
     data = {}
     print("Before scan_interfaces()")
-    interfaces = scan_interfaces()
-    data["osism_interfaces"] = [interface[0] for interface in interfaces]
-    data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
+
+    attempt = 0
+    max_retries = 5
+    while attempt < max_retries:
+        try:
+            interfaces = scan_interfaces()
+            data["osism_interfaces"] = [interface[0] for interface in interfaces]
+            data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
+            break
+        except IndexError:
+            attempt += 1
+            if attempt < max_retries:
+                print(
+                    f"Network interfaces not yet correctly available. Attempt {attempt}/{max_retries}. Try again in 20 seconds."
+                )
+                time.sleep(20)
+            else:
+                raise
 
     print("Before write_config_files()")
     write_config_files(data)
