@@ -9,6 +9,7 @@ set -o pipefail
 case "$DIB_INIT_SYSTEM" in
     systemd)
         systemctl enable osism-ipa-config.service
+        systemctl disable ironic-python-agent.service
         ;;
     *)
         echo "Unsupported init system $DIB_INIT_SYSTEM"
