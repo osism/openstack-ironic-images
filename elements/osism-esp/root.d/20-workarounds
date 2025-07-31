@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+
+# NOTE: DIB expects some paths to exist
+sudo mkdir -p $TARGET_ROOT/{etc,proc,sys,dev,tmp,var/log,root}
+# NOTE: DIB expects an /etc/resolv.conf
+sudo touch $TARGET_ROOT/etc/resolv.conf

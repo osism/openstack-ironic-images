@@ -1,0 +1,12 @@
+---
+- imagename: osism-esp
+  arch: amd64
+  types:
+    - raw
+  checksum: true
+  logfile: /home/zuul/zuul-output/logs/osism-esp.log
+  elements:
+    - osism-esp
+  skip-base: true
+  environment:
+    ELEMENTS_PATH: ./elements
