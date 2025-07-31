@@ -1,0 +1,13 @@
+---
+- local_loop:
+    name: image0
+    size: 4MiB
+    block_size: 4096
+
+- mkfs:
+    name: ESP
+    base: image0
+    type: vfat
+    label: ESP
+    mount:
+      mount_point: /

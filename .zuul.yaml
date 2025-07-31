@@ -221,6 +221,39 @@
         pass-to-parent: true
     files: *osism_node_files
 
+- job:
+    name: openstack-ironic-images-build-osism-esp
+    parent: base-extra-logs
+    nodeset:
+      nodes:
+        - label: ubuntu-noble-uefi
+          name: noble
+    pre-run: playbooks/pre.yml
+    run: playbooks/builder.yml
+    vars:
+      build_name: osism-esp
+      image_format: raw
+      upload_image: false
+    files: &osism_esp_files
+      - "^elements/osism-esp/.*"
+      - "^files/osism-esp.yml$"
+      - "^playbooks/.*"
+
+- job:
+    name: openstack-ironic-images-publish-osism-esp
+    parent: openstack-ironic-images-build-osism-esp
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish-osism-esp
+    vars:
+      build_name: osism-esp
+      image_format: raw
+      upload_image: true
+    secrets:
+      - name: minio
+        secret: SECRET_OPENSTACK_IRONIC_IMAGES
+        pass-to-parent: true
+    files: *osism_esp_files
+
 - project:
     merge-mode: squash-merge
     default-branch: main
@@ -231,6 +264,7 @@
         - openstack-ironic-images-build-osism-ipa
         - openstack-ironic-images-build-osism-ipa-stable
         - openstack-ironic-images-build-osism-node
+        - openstack-ironic-images-build-osism-esp
         - yamllint
     periodic-daily:
       jobs:
@@ -246,4 +280,6 @@
         - openstack-ironic-images-publish-osism-ipa-stable:
             branches: main
         - openstack-ironic-images-publish-osism-node:
+            branches: main
+        - openstack-ironic-images-publish-osism-esp:
             branches: main
