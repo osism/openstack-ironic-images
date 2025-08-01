@@ -79,14 +79,13 @@ def start_ironic_python_agent():
     subprocess.run(["systemctl", "start", "ironic-python-agent.service"], check=True)
 
 
-def check_availability_of_metalbox():
+def check_availability_of_metalbox(timeout=60):
     PORT = 6385
-    TIMEOUT = 30
 
     start = time.time()
     reachable = False
 
-    while time.time() - start < TIMEOUT:
+    while time.time() - start < timeout:
         try:
             sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
             sock.settimeout(2)
@@ -130,7 +129,7 @@ def prepare_config():
 
 def main():
     attempt = 0
-    max_retries = 1
+    max_retries = 2
 
     # Sometimes network interfaces are not immediately visible. Therefore, if the
     # Metalbox cannot be reached, the configuration is regenerated once to add any
@@ -146,7 +145,10 @@ def main():
         restart_networking()
 
         print("Before check_availability_of_metalbox()")
-        reachable = check_availability_of_metalbox()
+        if attempt > 0:
+            reachable = check_availability_of_metalbox(120)
+        else:
+            reachable = check_availability_of_metalbox()
 
         if reachable:
             break
