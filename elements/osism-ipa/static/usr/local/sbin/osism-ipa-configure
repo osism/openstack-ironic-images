@@ -70,8 +70,18 @@ def restart_networking():
 def sync_time_with_metalbox():
     subprocess.run(["systemctl", "stop", "chrony.service"], check=True)
 
+    subprocess.run(["chronyd", "-q", "server metalbox iburst"], check=True)
+
+    subprocess.run(["hwclock", "--systohc"], check=True)
+
+
+def start_ironic_python_agent():
+    subprocess.run(["systemctl", "start", "ironic-python-agent.service"], check=True)
+
+
+def check_availability_of_metalbox():
     PORT = 6385
-    TIMEOUT = 120
+    TIMEOUT = 30
 
     start = time.time()
     reachable = False
@@ -89,18 +99,12 @@ def sync_time_with_metalbox():
             pass
         time.sleep(1)
 
-    if reachable:
-        subprocess.run(["chronyd", "-q", "server metalbox iburst"], check=True)
-
-        subprocess.run(["hwclock", "--systohc"], check=True)
+    return reachable
 
 
-def start_ironic_python_agent():
-    subprocess.run(["systemctl", "start", "ironic-python-agent.service"], check=True)
-
-
-def main():
+def prepare_config():
     data = {}
+
     print("Before scan_interfaces()")
 
     attempt = 0
@@ -121,11 +125,35 @@ def main():
             else:
                 raise
 
-    print("Before write_config_files()")
-    write_config_files(data)
+    return data
 
-    print("Before restart_networking()")
-    restart_networking()
+
+def main():
+    attempt = 0
+    max_retries = 1
+
+    # Sometimes network interfaces are not immediately visible. Therefore, if the
+    # Metalbox cannot be reached, the configuration is regenerated once to add any
+    # network interfaces that may be added later.
+    while attempt <= max_retries:
+        print("Before prepare_config()")
+        data = prepare_config()
+
+        print("Before write_config_files()")
+        write_config_files(data)
+
+        print("Before restart_networking()")
+        restart_networking()
+
+        print("Before check_availability_of_metalbox()")
+        reachable = check_availability_of_metalbox()
+
+        if reachable:
+            break
+
+        attempt += 1
+    else:
+        raise RuntimeError(f"Failed to reach metalbox after {max_retries} attempts")
 
     print("Before sync_time_with_metalbox()")
     sync_time_with_metalbox()
