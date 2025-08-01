@@ -1,6 +1,6 @@
 [Unit]
 Description=OSISM IPA Config Generation
-After=network-online.target
+After=network-online.target systemd-networkd.service systemd-udev-settle.service
 Wants=network-online.target
 
 [Service]
