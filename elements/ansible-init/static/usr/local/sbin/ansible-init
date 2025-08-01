@@ -19,7 +19,7 @@ def unmount_config_drive():
     config_drive = "/dev/disk/by-label/config-2"
 
     subprocess.run(["umount", config_drive],
-                   check=True)
+                   check=False)
 
 def apply_config():
     with open("/var/log/ansible.out","w") as outpipe:
