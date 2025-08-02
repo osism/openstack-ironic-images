@@ -38,6 +38,16 @@
     # hostname
     hostname_name: osism-NNN
 
+    # docker
+    docker_user: dragon
+    docker_opts:
+      max-concurrent-downloads: 20
+    docker_version: "5:27.5.1"
+    docker_cli_version: "5:27.5.1"
+
+    # docker-compose
+    docker_compose_install_type: package
+
   roles:
     - osism.commons.hostname
     - osism.commons.repository
@@ -55,3 +65,5 @@
     - osism.services.chrony
     - osism.services.journald
     - osism.services.lldpd
+    - osism.services.docker
+    - osism.commons.docker_compose
