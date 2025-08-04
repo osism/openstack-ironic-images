@@ -53,6 +53,7 @@
 
   roles:
     - osism.commons.hostname
+    - osism.commons.timezone
     - osism.commons.repository
     - osism.commons.microcode
     - osism.commons.operator
