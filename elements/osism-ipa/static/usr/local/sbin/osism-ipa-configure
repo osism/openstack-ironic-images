@@ -68,11 +68,35 @@ def restart_networking():
 
 
 def sync_time_with_metalbox():
-    subprocess.run(["systemctl", "stop", "chrony.service"], check=True)
+    """Synchronize time with metalbox, ignoring errors and showing warnings if sync fails."""
+    try:
+        # Stop chrony service
+        result = subprocess.run(
+            ["systemctl", "stop", "chrony.service"], capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            print(f"Warning: Failed to stop chrony service: {result.stderr.strip()}")
 
-    subprocess.run(["chronyd", "-q", "server metalbox iburst"], check=True)
+        # Sync time with metalbox
+        result = subprocess.run(
+            ["chronyd", "-q", "server metalbox iburst"], capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            print(
+                f"Warning: Time synchronization with metalbox failed: {result.stderr.strip()}"
+            )
+            return
 
-    subprocess.run(["hwclock", "--systohc"], check=True)
+        # Set hardware clock from system time
+        result = subprocess.run(
+            ["hwclock", "--systohc"], capture_output=True, text=True
+        )
+        if result.returncode != 0:
+            print(f"Warning: Failed to set hardware clock: {result.stderr.strip()}")
+
+    except Exception as e:
+        print(f"Warning: Time synchronization with metalbox failed due to error: {e}")
+        return
 
 
 def start_ironic_python_agent():
