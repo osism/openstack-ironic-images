@@ -7,7 +7,8 @@
 - mkfs:
     name: ESP
     base: image0
-    type: vfat
+    type: fat
+    opts: "-F 12"
     label: ESP
     mount:
       mount_point: /
