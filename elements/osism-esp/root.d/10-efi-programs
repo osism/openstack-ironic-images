@@ -11,4 +11,4 @@ set -o pipefail
 sudo mkdir -p $TARGET_ROOT/EFI/BOOT
 
 sudo cp -a /boot/efi/EFI/BOOT/BOOTX64.EFI $TARGET_ROOT/EFI/BOOT/BOOTX64.EFI
-sudo cp -a /usr/lib/grub/x86_64-efi/monolithic/grubx64.efi $TARGET_ROOT/EFI/BOOT/GRUBX64.efi
+sudo cp -a /usr/lib/grub/x86_64-efi/monolithic/grubx64.efi $TARGET_ROOT/EFI/BOOT/GRUBX64.EFI
