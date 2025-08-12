@@ -151,9 +151,9 @@ def prepare_config():
     return data
 
 
-def main():
+def run_variant(variant, max_retries = 2):
     attempt = 0
-    max_retries = 2
+    print(f"Trying variant {variant}")
 
     # Sometimes network interfaces are not immediately visible. Therefore, if the
     # Metalbox cannot be reached, the configuration is regenerated once to add any
@@ -161,6 +161,7 @@ def main():
     while attempt <= max_retries:
         print("Before prepare_config()")
         data = prepare_config()
+        data['variant'] = variant
 
         print("Before write_config_files()")
         write_config_files(data)
@@ -175,11 +176,24 @@ def main():
             reachable = check_availability_of_metalbox()
 
         if reachable:
-            break
+            return True
 
         attempt += 1
+    
+    print(f"Variant {variant} failed after {attempt} attempts")
+    return False
+
+def main():
+    # Try multiple variants.
+    # OOB: add osism_ipv6 as a /64 network on the onboard eno* interface
+    # BGP: announce osism_ipv6 as single address via BGP
+    variants = ['BGP', 'OOB']
+    for variant in variants:
+        reachable = run_variant(variant)
+        if reachable:
+            break
     else:
-        raise RuntimeError(f"Failed to reach metalbox after {max_retries} attempts")
+        raise RuntimeError(f"Failed to reach metalbox after trying all variants")
 
     print("Before sync_time_with_metalbox()")
     sync_time_with_metalbox()
