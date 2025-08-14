@@ -21,10 +21,8 @@ network:
 
 {% elif variant == 'OOB' %}
   ethernets:
-    eno1:
+    {{ osism_onboard_interface }}:
         mtu: 1500
-        match:
-            name: eno*
         addresses:
         - {{ osism_ipv6 }}/64
 {% endif %}

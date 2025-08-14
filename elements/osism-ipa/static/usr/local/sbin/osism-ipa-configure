@@ -42,6 +42,23 @@ def scan_interfaces():
 
     return interfaces
 
+def get_onboard_interface(interfaces):
+    # Try to guess lowest onboard interface
+    if_names = [interface[0] for interface in interfaces].sort()
+    for if_name in if_names:
+        if if_name.startswith('eno'):
+            return if_name
+    return if_names[0]
+
+def get_variant():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = (cmdline.strip().split())
+    
+    for param in params:
+        if param.lower().startswith('osism-ipa-network='):
+            return param.split('=')[1].strip().upper()
+    return 'BGP'
 
 config_files = [
     ("frr.conf.j2", "/etc/frr/frr.conf"),
@@ -136,7 +153,9 @@ def prepare_config():
         try:
             interfaces = scan_interfaces()
             data["osism_interfaces"] = [interface[0] for interface in interfaces]
+            data["osism_onboard_interface"] = get_onboard_interface(interfaces)
             data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
+            data["variant"] = get_variant()
             break
         except IndexError:
             attempt += 1
@@ -151,9 +170,9 @@ def prepare_config():
     return data
 
 
-def run_variant(variant, max_retries = 2):
+def main():
     attempt = 0
-    print(f"Trying variant {variant}")
+    max_retries = 2
 
     # Sometimes network interfaces are not immediately visible. Therefore, if the
     # Metalbox cannot be reached, the configuration is regenerated once to add any
@@ -161,7 +180,6 @@ def run_variant(variant, max_retries = 2):
     while attempt <= max_retries:
         print("Before prepare_config()")
         data = prepare_config()
-        data['variant'] = variant
 
         print("Before write_config_files()")
         write_config_files(data)
@@ -176,24 +194,11 @@ def run_variant(variant, max_retries = 2):
             reachable = check_availability_of_metalbox()
 
         if reachable:
-            return True
+            break
 
         attempt += 1
-    
-    print(f"Variant {variant} failed after {attempt} attempts")
-    return False
-
-def main():
-    # Try multiple variants.
-    # OOB: add osism_ipv6 as a /64 network on the onboard eno* interface
-    # BGP: announce osism_ipv6 as single address via BGP
-    variants = ['BGP', 'OOB']
-    for variant in variants:
-        reachable = run_variant(variant)
-        if reachable:
-            break
     else:
-        raise RuntimeError(f"Failed to reach metalbox after trying all variants")
+        raise RuntimeError(f"Failed to reach metalbox after {max_retries} attempts")
 
     print("Before sync_time_with_metalbox()")
     sync_time_with_metalbox()
