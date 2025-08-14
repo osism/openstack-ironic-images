@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export DIB_OSISM_ESP_GRUB2="${DIB_OSISM_ESP_GRUB2:-/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed}"
+export DIB_OSISM_ESP_SHIM="${DIB_OSISM_ESP_SHIM:-/usr/lib/shim/shimx64.efi.signed}"
+export DIB_OSISM_ESP_BLOCK_COUNT="${DIB_OSISM_ESP_BLOCK_COUNT:-1024}"
+
+sudo dd bs=4096 count="${DIB_OSISM_ESP_BLOCK_COUNT}" if=/dev/zero of="${DIB_OSISM_ESP_DEST}"
+mkfs.msdos -F 12 -n OSIM_ESP "${DIB_OSISM_ESP_DEST}"
+mmd -i "${DIB_OSISM_ESP_DEST}" EFI EFI/BOOT
+mcopy -i "${DIB_OSISM_ESP_DEST}" -v "${DIB_OSISM_ESP_SHIM}" ::EFI/BOOT/BOOTX64.EFI
+mcopy -i "${DIB_OSISM_ESP_DEST}" -v "${DIB_OSISM_ESP_GRUB2}" ::EFI/BOOT/GRUBX64.EFI
+mdir -i "${DIB_OSISM_ESP_DEST}" ::EFI/BOOT

@@ -1,0 +1,2 @@
+export DIB_OSISM_ESP_DEST=${DIB_OSISM_ESP_DEST:-/tmp/esp.raw}
+

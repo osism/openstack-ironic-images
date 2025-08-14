@@ -1,12 +1,15 @@
 ---
 - imagename: osism-esp
   arch: amd64
+  checksum: true
   types:
     - raw
-  checksum: true
   logfile: /home/zuul/zuul-output/logs/osism-esp.log
   elements:
+    - ubuntu
+    - vm
     - osism-esp
-  skip-base: true
   environment:
     ELEMENTS_PATH: ./elements
+    DIB_RELEASE: noble
+    DIB_BLOCK_DEVICE: efi
