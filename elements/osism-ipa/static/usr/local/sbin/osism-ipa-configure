@@ -44,7 +44,8 @@ def scan_interfaces():
 
 def get_onboard_interface(interfaces):
     # Try to guess lowest onboard interface
-    if_names = [interface[0] for interface in interfaces].sort()
+    if_names = [interface[0] for interface in interfaces]
+    if_names.sort()
     for if_name in if_names:
         if if_name.startswith('eno'):
             return if_name
