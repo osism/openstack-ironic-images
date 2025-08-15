@@ -7,3 +7,8 @@ set -eu
 set -o pipefail
 
 cp "${TARGET_ROOT}${DIB_OSISM_ESP_DEST}" "${IMAGE_NAME}.raw"
+if [[ -n "$DIB_CHECKSUM" && "$DIB_CHECKSUM" != "0" ]]; then
+    [[ "$DIB_CHECKSUM" == "1" ]] && DIB_CHECKSUM="md5,sha256"
+    [[ "$DIB_CHECKSUM" == *md5* ]] && md5sum "${IMAGE_NAME}.raw" > "${IMAGE_NAME}.raw.md5"
+    [[ "$DIB_CHECKSUM" == *sha256* ]] && sha256sum "${IMAGE_NAME}.raw" > "${IMAGE_NAME}.raw.sha256"
+fi
