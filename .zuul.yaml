@@ -45,6 +45,10 @@
     name: semaphore-openstack-ironic-images-publish-osism-node
     max: 1
 
+- semaphore:
+    name: semaphore-openstack-ironic-images-publish-osism-esp
+    max: 1
+
 - job:
     name: abstract-openstack-ironic-images-build
     abstract: true
