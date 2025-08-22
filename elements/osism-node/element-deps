@@ -1,3 +1,4 @@
 ansible-init
+enable-serial-console
 install-static
 package-installs
