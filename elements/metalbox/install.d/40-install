@@ -20,6 +20,7 @@ ansible-playbook -i localhost, /root/part1.yml
 
 git clone https://github.com/osism/metalbox /opt/configuration
 chown -R dragon:dragon /opt/configuration
+bash /opt/configuration/scripts/remove-repository-config.sh
 
 # prepare manager environment
 
@@ -66,6 +67,14 @@ update-initramfs -u
 ansible-playbook -i localhost, /root/part2.yml
 
 # cleanup
+
+pushd /opt/configuration
+git config --global --add safe.directory /opt/configuration
+git checkout -- environments/configuration.yml
+chown -R dragon:dragon /opt/configuration
+popd
+rm /etc/apt/sources.list.d/*.sources
+mv /root/osism.sources /etc/apt/sources.list.d/
 
 rm -f /etc/netplan/50-cloud-init.yaml
 rm -rf /root/.ansible

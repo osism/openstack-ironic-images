@@ -1,0 +1,5 @@
+Types: deb
+URIs: http://127.0.0.1/ubuntu-noble
+Suites: stable
+Components: main
+Trusted: yes
