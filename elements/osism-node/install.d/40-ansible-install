@@ -26,3 +26,4 @@ update-initramfs -u
 
 rm -f /etc/netplan/50-cloud-init.yaml
 rm -rf /root/.ansible
+rm -rf /var/tmp/*
