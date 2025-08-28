@@ -17,6 +17,7 @@ lldpd:
 netplan.io:
 procps:
 python3:
+smartmontools:
 util-linux-extra:
 vim:
 wget:
