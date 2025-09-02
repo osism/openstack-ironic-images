@@ -1,0 +1,7 @@
+[Unit]
+Description=Mount OSISM Configuration Drive
+StopWhenUnneeded=yes
+
+[Mount]
+What=/dev/disk/by-label/config-2
+Where=/mnt/config
