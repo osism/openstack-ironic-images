@@ -1,8 +1,10 @@
 [Unit]
 Description=Ansible Init
+ConditionPathExists=!/var/lib/ansible-init
 
 [Service]
 ExecStart=/usr/local/sbin/ansible-init
+ExecStartPost=/usr/bin/touch /var/lib/ansible-init
 Type=oneshot
 RemainAfterExit=yes
 
