@@ -16,6 +16,7 @@
     cleanup_cloudinit: false
     cleanup_packages_extra:
       - apport
+      - multipath-tools
       - snapd
 
     # packages
