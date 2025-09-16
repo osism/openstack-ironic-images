@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Create upper and work directories
+UPPERDIR=${TARGET_ROOT}/boot/${DIB_RELEASE}/rw
+sudo mkdir -p ${UPPERDIR}
+WORKDIR=${TARGET_ROOT}/boot/${DIB_RELEASE}/work
+sudo mkdir -p ${WORKDIR}
+
+# Create mountpoint for squashfs as lower directory
+LOWERDIR=${TMP_BUILD_DIR}/lower
+sudo mkdir -p ${LOWERDIR}
+
+# Mount squashfs
+sudo mount -t squashfs -o "loop,ro" ${TARGET_ROOT}/boot/${DIB_RELEASE}/${DIB_RELEASE}.squashfs ${LOWERDIR}
+
+# Mount overlay
+sudo mount -t overlay -o "noatime,lowerdir=${LOWERDIR},upperdir=${UPPERDIR},workdir=${WORKDIR}" overlay $TMP_BUILD_DIR/mnt

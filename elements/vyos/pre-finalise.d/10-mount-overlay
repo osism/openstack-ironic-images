@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Recontruct overlay for finalise.d
+sudo mkdir -p ${TMP_BUILD_DIR}/tmpmnt
+EFI_SOURCE=$(sudo findmnt -n -o SOURCE ${TMP_BUILD_DIR}/mnt/boot/efi)
+EFI_FSTYPE=$(sudo findmnt -n -o FSTYPE ${TMP_BUILD_DIR}/mnt/boot/efi)
+EFI_OPTIONS=$(sudo findmnt -n -o OPTIONS ${TMP_BUILD_DIR}/mnt/boot/efi)
+ROOT_SOURCE=$(sudo findmnt -n -o SOURCE ${TMP_BUILD_DIR}/mnt)
+ROOT_FSTYPE=$(sudo findmnt -n -o FSTYPE ${TMP_BUILD_DIR}/mnt)
+ROOT_OPTIONS=$(sudo findmnt -n -o OPTIONS ${TMP_BUILD_DIR}/mnt)
+sudo umount ${TMP_BUILD_DIR}/mnt/sys
+sudo umount ${TMP_BUILD_DIR}/mnt/proc
+sudo umount ${TMP_BUILD_DIR}/mnt/dev/pts
+sudo umount ${TMP_BUILD_DIR}/mnt/dev
+sudo umount ${TMP_BUILD_DIR}/mnt/boot/efi
+sudo umount ${TMP_BUILD_DIR}/mnt
+sudo mount -t ${ROOT_FSTYPE} -o ${ROOT_OPTIONS} ${ROOT_SOURCE} ${TMP_BUILD_DIR}/tmpmnt
+UPPERDIR=${TMP_BUILD_DIR}/tmpmnt/boot/${DIB_RELEASE}/rw
+WORKDIR=${TMP_BUILD_DIR}/tmpmnt/boot/${DIB_RELEASE}/work
+LOWERDIR=${TMP_BUILD_DIR}/lower
+sudo mkdir -p ${LOWERDIR}
+sudo mount -t squashfs -o "loop,ro" ${TMP_BUILD_DIR}/tmpmnt/boot/${DIB_RELEASE}/${DIB_RELEASE}.squashfs ${LOWERDIR}
+
+sudo mount -t overlay -o "noatime,lowerdir=${LOWERDIR},upperdir=${UPPERDIR},workdir=${WORKDIR}" overlay ${TMP_BUILD_DIR}/mnt
+
+DEV_PTS_OPTIONS=$(findmnt --first-only /dev/pts --noheadings --output OPTIONS)
+sudo mount -t proc none ${TMP_BUILD_DIR}/mnt/proc
+sudo mount --bind /dev ${TMP_BUILD_DIR}/mnt/dev
+sudo mount -t devpts -o ${DEV_PTS_OPTIONS} devpts ${TMP_BUILD_DIR}/mnt/dev/pts
+sudo mount -o ro -t sysfs none ${TMP_BUILD_DIR}/mnt/sys
+sudo mount --bind ${TMP_BUILD_DIR}/tmpmnt ${TMP_BUILD_DIR}/mnt/boot
+sudo mkdir -p ${TMP_BUILD_DIR}/mnt/boot/efi
+sudo mount -t ${EFI_FSTYPE} -o ${EFI_OPTIONS} ${EFI_SOURCE} ${TMP_BUILD_DIR}/mnt/boot/efi

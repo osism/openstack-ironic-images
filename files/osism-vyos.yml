@@ -1,0 +1,14 @@
+---
+- imagename: osism-vyos
+  arch: amd64
+  image-size: 5
+  checksum: true
+  logfile: /home/zuul/zuul-output/logs/osism-vyos.log
+  elements:
+    - vyos
+    - block-device-osism-efi
+  environment:
+    ELEMENTS_PATH: ./elements
+    SKIP_BASE: "1"
+    DIB_SKIP_BASE_PACKAGE_INSTALL: "1"
+    DIB_AVOID_PACKAGES_UPDATE: "1"

@@ -1,0 +1,61 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+[ -n "$ARCH" ]
+[ -n "$TARGET_ROOT" ]
+
+shopt -s extglob
+
+BASE_IMAGE_FILE=$(basename $DIB_ISO_IMAGE)
+CACHED_FILE=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE
+CACHED_FILE_LOCK=$DIB_LOCKFILES/$BASE_IMAGE_FILE.lock
+CACHED_MINISIG=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE.minisig
+
+function get_vyos_iso() {
+    if [ -n "$DIB_LOCAL_IMAGE" ] ; then
+        echo "Using local image without download"
+        if [ ! -f "$DIB_LOCAL_IMAGE" ] ; then
+            echo "Unable to find image $DIB_LOCAL_IMAGE locally! Check path and file name to source image"
+        exit 1
+        fi
+        IMAGE_PATH=$DIB_LOCAL_IMAGE
+        BASE_IMAGE_FILE=$(basename $DIB_LOCAL_IMAGE)
+        CACHED_FILE=$IMAGE_PATH
+    else
+        if [ -n "$DIB_OFFLINE" -a -f "$CACHED_FILE" ] ; then
+            echo "Not checking freshness of cached $CACHED_FILE."
+        else
+            echo "Fetching Base Image"
+            $TMP_HOOKS_PATH/bin/cache-url ${DIB_ISO_IMAGE}.minisig $CACHED_MINISIG
+            $TMP_HOOKS_PATH/bin/cache-url ${DIB_ISO_IMAGE} $CACHED_FILE
+            pushd $DIB_IMAGE_CACHE
+	    minisign -Vm $DIB_IMAGE_CACHE/$BASE_IMAGE_FILE -P $DIB_MINISIG_PUBLIC_KEY
+        fi
+        IMAGE_PATH=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE
+    fi
+    # Create a temporary mount point:
+    MOUNTPOINT=$TMP_BUILD_DIR/tmpmount
+    sudo mkdir $MOUNTPOINT
+    sudo mount -o loop $IMAGE_PATH $MOUNTPOINT
+    trap "sudo umount $MOUNTPOINT" EXIT
+
+    sudo mkdir -p $TARGET_ROOT/boot/$DIB_RELEASE
+    sudo cp $MOUNTPOINT/live/filesystem.squashfs $TARGET_ROOT/boot/$DIB_RELEASE/$DIB_RELEASE.squashfs
+    sudo cp $MOUNTPOINT/live/initrd.img* $TARGET_ROOT/boot/$DIB_RELEASE/
+    sudo cp $MOUNTPOINT/live/vmlinuz* $TARGET_ROOT/boot/$DIB_RELEASE/
+}
+
+(
+    echo "Getting $CACHED_FILE_LOCK: $(date)"
+    # Wait up to 20 minutes for another process to download
+    if ! flock -w 1200 9 ; then
+        echo "Did not get $CACHED_FILE_LOCK: $(date)"
+        exit 1
+    fi
+    get_vyos_iso
+) 9> $CACHED_FILE_LOCK
