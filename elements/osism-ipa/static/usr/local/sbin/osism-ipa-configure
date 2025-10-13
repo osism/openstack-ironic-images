@@ -42,24 +42,27 @@ def scan_interfaces():
 
     return interfaces
 
+
 def get_onboard_interface(interfaces):
     # Try to guess lowest onboard interface
     if_names = [interface[0] for interface in interfaces]
     if_names.sort()
     for if_name in if_names:
-        if if_name.startswith('eno'):
+        if if_name.startswith("eno"):
             return if_name
     return if_names[0]
+
 
 def get_variant():
     with open("/proc/cmdline", "r") as f:
         cmdline = f.read().strip()
-    params = (cmdline.strip().split())
-    
+    params = cmdline.strip().split()
+
     for param in params:
-        if param.lower().startswith('osism-ipa-network='):
-            return param.split('=')[1].strip().upper()
-    return 'BGP'
+        if param.lower().startswith("osism-ipa-network="):
+            return param.split("=")[1].strip().upper()
+    return "BGP"
+
 
 config_files = [
     ("frr.conf.j2", "/etc/frr/frr.conf"),
