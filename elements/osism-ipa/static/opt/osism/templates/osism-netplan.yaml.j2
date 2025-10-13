@@ -5,6 +5,7 @@ network:
   version: 2
   renderer: networkd
 
+{% if variant == 'BGP' %}
   dummy-devices:
     loopback0:
         addresses:
@@ -17,3 +18,11 @@ network:
         mtu: 9000
         optional: yes
 {% endfor %}
+
+{% elif variant == 'OOB' %}
+  ethernets:
+    {{ osism_onboard_interface }}:
+        mtu: 1500
+        addresses:
+        - {{ osism_ipv6 }}/64
+{% endif %}

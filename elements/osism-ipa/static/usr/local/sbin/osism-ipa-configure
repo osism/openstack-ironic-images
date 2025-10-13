@@ -43,6 +43,27 @@ def scan_interfaces():
     return interfaces
 
 
+def get_onboard_interface(interfaces):
+    # Try to guess lowest onboard interface
+    if_names = [interface[0] for interface in interfaces]
+    if_names.sort()
+    for if_name in if_names:
+        if if_name.startswith("eno"):
+            return if_name
+    return if_names[0]
+
+
+def get_variant():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-network="):
+            return param.split("=")[1].strip().upper()
+    return "BGP"
+
+
 config_files = [
     ("frr.conf.j2", "/etc/frr/frr.conf"),
     ("osism-netplan.yaml.j2", "/etc/netplan/01-osism.yaml"),
@@ -136,7 +157,9 @@ def prepare_config():
         try:
             interfaces = scan_interfaces()
             data["osism_interfaces"] = [interface[0] for interface in interfaces]
+            data["osism_onboard_interface"] = get_onboard_interface(interfaces)
             data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
+            data["variant"] = get_variant()
             break
         except IndexError:
             attempt += 1
