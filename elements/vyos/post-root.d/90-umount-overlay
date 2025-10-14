@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+sudo umount ${TMP_BUILD_DIR}/mnt/sys
+sudo umount ${TMP_BUILD_DIR}/mnt/proc
+sudo umount ${TMP_BUILD_DIR}/mnt/dev/pts
+sudo umount ${TMP_BUILD_DIR}/mnt/dev
+sudo umount ${TMP_BUILD_DIR}/mnt
+sudo umount ${TMP_BUILD_DIR}/lower

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Create persistence config
+sudo echo -en '/ union' > ${TMP_BUILD_DIR}/persistence.conf
+sudo mv ${TMP_BUILD_DIR}/persistence.conf ${TMP_BUILD_DIR}/mnt/

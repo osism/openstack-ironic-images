@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+sudo umount ${TMP_BUILD_DIR}/mnt/sys
+sudo umount ${TMP_BUILD_DIR}/mnt/proc
+sudo umount ${TMP_BUILD_DIR}/mnt/dev/pts
+sudo umount ${TMP_BUILD_DIR}/mnt/dev
+EFI_SOURCE=$(sudo findmnt -n -o SOURCE ${TMP_BUILD_DIR}/mnt/boot/efi)
+EFI_FSTYPE=$(sudo findmnt -n -o FSTYPE ${TMP_BUILD_DIR}/mnt/boot/efi)
+EFI_OPTIONS=$(sudo findmnt -n -o OPTIONS ${TMP_BUILD_DIR}/mnt/boot/efi)
+sudo umount ${TMP_BUILD_DIR}/mnt/boot/efi
+sudo umount ${TMP_BUILD_DIR}/mnt/boot
+sudo umount ${TMP_BUILD_DIR}/mnt
+sudo umount ${TMP_BUILD_DIR}/lower
+ROOT_SOURCE=$(sudo findmnt -n -o SOURCE ${TMP_BUILD_DIR}/tmpmnt)
+ROOT_FSTYPE=$(sudo findmnt -n -o FSTYPE ${TMP_BUILD_DIR}/tmpmnt)
+ROOT_OPTIONS=$(sudo findmnt -n -o OPTIONS ${TMP_BUILD_DIR}/tmpmnt)
+sudo umount ${TMP_BUILD_DIR}/tmpmnt
+sudo mount -t ${ROOT_FSTYPE} -o ${ROOT_OPTIONS} ${ROOT_SOURCE} ${TMP_BUILD_DIR}/mnt
+
+DEV_PTS_OPTIONS=$(findmnt --first-only /dev/pts --noheadings --output OPTIONS)
+sudo mount -t proc none ${TMP_BUILD_DIR}/mnt/proc
+sudo mount --bind /dev ${TMP_BUILD_DIR}/mnt/dev
+sudo mount -t devpts -o ${DEV_PTS_OPTIONS} devpts ${TMP_BUILD_DIR}/mnt/dev/pts
+sudo mount -o ro -t sysfs none ${TMP_BUILD_DIR}/mnt/sys
+sudo mkdir -p ${TMP_BUILD_DIR}/mnt/boot/efi
+sudo mount -t ${EFI_FSTYPE} -o ${EFI_OPTIONS} ${EFI_SOURCE} ${TMP_BUILD_DIR}/mnt/boot/efi

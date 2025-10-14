@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+[ -n "$ARCH" ]
+
+export DISTRO_NAME=vyos
+export DIB_LOCAL_IMAGE=${DIB_LOCAL_IMAGE:-}
+export DIB_RELEASE=${DIB_RELEASE:-1.5-stream-2025-Q2}
+export DIB_ISO_IMAGE=${DIB_ISO_IMAGES:-https://community-downloads.vyos.dev/stream/$DIB_RELEASE/vyos-$DIB_RELEASE-generic-$ARCH.iso}
+export DIB_MINISIG_PUBLIC_KEY=${DIB_MINISIG_PUBLIC_KEY:-RWTR1ty93Oyontk6caB9WqmiQC4fgeyd/ejgRxCRGd2MQej7nqebHneP}
+export DIB_CONSOLE_TYPE=${DIB_CONSOLE_TYPE:-ttyS}

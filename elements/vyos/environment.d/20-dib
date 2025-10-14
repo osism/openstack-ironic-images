@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+export DIB_INIT_SYSTEM=${DIB_INIT_SYSTEM:-systemd}
+export DIB_SKIP_BASE_PACKAGE_INSTALL=1
+export DIB_AVOID_PACKAGES_UPDATE=1

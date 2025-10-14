@@ -49,6 +49,10 @@
     name: semaphore-openstack-ironic-images-publish-osism-esp
     max: 1
 
+- semaphore:
+    name: semaphore-openstack-ironic-images-publish-osism-vyos
+    max: 1
+
 - job:
     name: abstract-openstack-ironic-images-build
     abstract: true
@@ -258,6 +262,38 @@
         pass-to-parent: true
     files: *osism_esp_files
 
+- job:
+    name: openstack-ironic-images-build-osism-vyos
+    parent: base-extra-logs
+    nodeset:
+      nodes:
+        - label: ubuntu-noble-uefi
+          name: noble
+    pre-run: playbooks/pre.yml
+    run: playbooks/builder.yml
+    vars:
+      build_name: osism-vyos
+      upload_image: false
+    files: &osism_vyos_files
+      - "^elements/block-device-osism-efi/.*"
+      - "^elements/osism-vyos/.*"
+      - "^files/osism-vyos.yml$"
+      - "^playbooks/.*"
+
+- job:
+    name: openstack-ironic-images-publish-osism-vyos
+    parent: openstack-ironic-images-build-osism-vyos
+    semaphores:
+      - name: semaphore-openstack-ironic-images-publish-osism-vyos
+    vars:
+      build_name: osism-vyos
+      upload_image: true
+    secrets:
+      - name: minio
+        secret: SECRET_OPENSTACK_IRONIC_IMAGES
+        pass-to-parent: true
+    files: *osism_vyos_files
+
 - project:
     merge-mode: squash-merge
     default-branch: main
@@ -269,6 +305,7 @@
         - openstack-ironic-images-build-osism-ipa-stable
         - openstack-ironic-images-build-osism-node
         - openstack-ironic-images-build-osism-esp
+        - openstack-ironic-images-build-osism-vyos
         - yamllint
     periodic-daily:
       jobs:
@@ -286,4 +323,6 @@
         - openstack-ironic-images-publish-osism-node:
             branches: main
         - openstack-ironic-images-publish-osism-esp:
+            branches: main
+        - openstack-ironic-images-build-osism-vyos:
             branches: main

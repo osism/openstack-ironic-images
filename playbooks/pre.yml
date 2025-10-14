@@ -16,6 +16,7 @@
           - dosfstools
           - gdisk
           - kpartx
+          - minisign
           - qemu-utils
           - squashfs-tools
           - zip
