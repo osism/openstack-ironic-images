@@ -324,5 +324,5 @@
             branches: main
         - openstack-ironic-images-publish-osism-esp:
             branches: main
-        - openstack-ironic-images-build-osism-vyos:
+        - openstack-ironic-images-publish-osism-vyos:
             branches: main
