@@ -38,16 +38,16 @@
         cmd: |
           wget https://dl.min.io/client/mc/release/linux-amd64/mc
           chmod +x mc
-          ./mc alias set minio https://swift.services.a.regiocloud.tech {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
+          ./mc alias set minio https://nbg1.your-objectstorage.com {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
 
           sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
 
           if [[ "{{ _image_format }}" == "raw" ]]; then
               zip osism-{{ _dib_element }}-image.zip osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
-              ./mc cp osism-{{ _dib_element }}-image.zip minio/openstack-ironic-images
+              ./mc cp osism-{{ _dib_element }}-image.zip minio/osism/openstack-ironic-images/
           else
-              ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM minio/openstack-ironic-images
-              ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }} minio/openstack-ironic-images
+              ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM minio/osism/openstack-ironic-images/
+              ./mc cp osism-{{ _dib_element }}-image.{{ _image_format }} minio/osism/openstack-ironic-images/
           fi
 
       when: upload_image | bool
