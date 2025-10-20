@@ -45,7 +45,7 @@ skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/libra
 # download registry volume archive
 
 if [[ "$DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE" == "true" ]] then
-    wget -O /opt/registry.tar.bz2 https://swift.services.a.regiocloud.tech/swift/v1/AUTH_b182637428444b9aa302bb8d5a5a418c/metalbox/registry.tar.bz2
+    wget -O /opt/registry.tar.bz2 https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2
 fi
 
 # download ironic images
