@@ -17,6 +17,3 @@ rm -f /etc/default/grub.d/50-cloudimg-settings.cfg
 update-grub
 grub-install --no-nvram --modules=mdraid1x -v $EFI_BOOT_DIR
 rm -rf /boot/efi/EFI/BOOT
-
-rm -f /etc/apt/sources.list.d/*
-rm -rf /var/lib/apt/lists/*
