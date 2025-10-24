@@ -309,6 +309,7 @@
         - yamllint
     periodic-daily:
       jobs:
+        - openstack-ironic-images-publish-metalbox
         - yamllint
     post:
       jobs:

@@ -7,6 +7,53 @@
     _image_format: "{{ image_format | default('raw') }}"
 
   tasks:
+    - name: Check registry.tar.bz2 timestamp for metalbox image
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -e
+
+          MAX_ATTEMPTS=12
+          WAIT_SECONDS=300
+          URL="https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2"
+
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Attempt $attempt of $MAX_ATTEMPTS: Checking Last-Modified header..."
+
+            # Get Last-Modified header
+            LAST_MODIFIED=$(curl -sI "$URL" | grep -i '^Last-Modified:' | sed 's/Last-Modified: //i' | tr -d '\r')
+
+            if [ -z "$LAST_MODIFIED" ]; then
+              echo "ERROR: Could not retrieve Last-Modified header"
+              exit 1
+            fi
+
+            echo "Last-Modified: $LAST_MODIFIED"
+
+            # Convert Last-Modified to YYYY-MM-DD format
+            # Last-Modified format: "Day, DD Mon YYYY HH:MM:SS GMT"
+            FILE_DATE=$(date -d "$LAST_MODIFIED" +%Y-%m-%d)
+            TODAY=$(date +%Y-%m-%d)
+
+            echo "File date: $FILE_DATE"
+            echo "Today's date: $TODAY"
+
+            if [ "$FILE_DATE" = "$TODAY" ]; then
+              echo "SUCCESS: File was modified today. Proceeding with build."
+              exit 0
+            fi
+
+            if [ $attempt -lt $MAX_ATTEMPTS ]; then
+              echo "File was not modified today. Waiting $WAIT_SECONDS seconds before retry..."
+              sleep $WAIT_SECONDS
+            else
+              echo "ERROR: After $MAX_ATTEMPTS attempts, file was still not modified today."
+              exit 1
+            fi
+          done
+      when: _dib_element == 'metalbox'
+      changed_when: false
+
     - name: Run build script
       ansible.builtin.shell:
         executable: /bin/bash
