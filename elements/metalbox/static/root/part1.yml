@@ -63,8 +63,10 @@
     # packages
     required_packages_extra:
       - ca-certificates
+      - fio
       - frr
       - htop
+      - iperf3
       - ipmitool
       - iptables
       - net-tools
