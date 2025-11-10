@@ -9,4 +9,4 @@ ff02::2 ip6-allrouters
 ff02::3 ip6-allhosts
 
 # OSISM metalbox
-fd33:fd0e:2aee::42 metalbox
+fd33:fd0e:2aee::42 metalbox.osism.xyz metalbox
