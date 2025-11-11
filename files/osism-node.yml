@@ -15,7 +15,6 @@
     - openssh-server
   environment:
     ELEMENTS_PATH: ./elements
-    DIB_BOOTLOADER_USE_SERIAL_CONSOLE: "False"
     DIB_DEV_USER_USERNAME: osism
     DIB_DEV_USER_SHELL: /bin/bash
     DIB_DEV_USER_PASSWORD: pass
