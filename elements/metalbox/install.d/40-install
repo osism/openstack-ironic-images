@@ -31,7 +31,7 @@ popd
 # prepare netbox environment
 
 sudo -u dragon pipx install netbox-manager
-sudo -u dragon pipx install 'ansible-core>=2.18.0,<2.19.0'
+sudo -u dragon pipx install 'ansible-core>=2.19.0,<2.20.0'
 sudo -u dragon /home/dragon/.local/bin/ansible-galaxy collection install netbox.netbox
 
 # download registry image
