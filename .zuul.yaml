@@ -311,6 +311,13 @@
       jobs:
         - openstack-ironic-images-publish-metalbox
         - yamllint
+    periodic-weekly:
+      jobs:
+        - openstack-ironic-images-publish-burnin
+        - openstack-ironic-images-publish-osism-esp
+        - openstack-ironic-images-publish-osism-ipa
+        - openstack-ironic-images-publish-osism-ipa-stable
+        - openstack-ironic-images-publish-osism-node
     post:
       jobs:
         - openstack-ironic-images-publish-burnin:
