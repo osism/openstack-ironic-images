@@ -70,6 +70,7 @@
       - ipmitool
       - iptables
       - net-tools
+      - nfs-common
       - python3-netaddr
       - rsync
       - skopeo
