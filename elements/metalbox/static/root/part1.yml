@@ -74,6 +74,7 @@
       - python3-netaddr
       - rsync
       - skopeo
+      - snmp
       - socat
       - sosreport
       - tcpdump
