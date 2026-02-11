@@ -80,6 +80,7 @@
       - "^files/burnin.sh"
       - "^files/burnin/.*"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-burnin
@@ -98,6 +99,7 @@
       - "^files/burnin.sh"
       - "^files/burnin/.*"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-build-metalbox
@@ -110,6 +112,7 @@
       - "^files/metalbox.sh"
       - "^files/metalbox/.*"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-metalbox
@@ -128,6 +131,7 @@
       - "^files/metalbox.sh"
       - "^files/metalbox/.*"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-build-osism-ipa
@@ -146,6 +150,7 @@
       - "^elements/osism-ipa/.*"
       - "^files/osism-ipa.yml$"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-osism-ipa
@@ -179,6 +184,7 @@
       - "^elements/osism-ipa/.*"
       - "^files/osism-ipa-stable.yml$"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-osism-ipa-stable
@@ -214,6 +220,7 @@
       - "^elements/osism-node/.*"
       - "^files/osism-node.yml$"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-osism-node
@@ -246,6 +253,7 @@
       - "^elements/osism-esp/.*"
       - "^files/osism-esp.yml$"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-osism-esp
@@ -279,6 +287,7 @@
       - "^elements/osism-vyos/.*"
       - "^files/osism-vyos.yml$"
       - "^playbooks/.*"
+      - "^requirements.txt"
 
 - job:
     name: openstack-ironic-images-publish-osism-vyos

@@ -1,1 +1,2 @@
 diskimage-builder==3.37.0
+setuptools<82.0.0
