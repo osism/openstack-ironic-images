@@ -28,6 +28,7 @@
       - iperf3
       - ipmitool
       - iptables
+      - linux-generic-hwe-24.04
       - net-tools
       - python3-netaddr
       - rsync
