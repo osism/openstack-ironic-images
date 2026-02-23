@@ -18,6 +18,7 @@
           - kpartx
           - minisign
           - qemu-utils
+          - rclone
           - squashfs-tools
           - zip
 
