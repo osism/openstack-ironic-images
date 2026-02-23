@@ -2,7 +2,7 @@
 - secret:
     name: SECRET_OPENSTACK_IRONIC_IMAGES
     data:
-      MINIO_ACCESS_KEY: !encrypted/pkcs1-oaep
+      S3_ACCESS_KEY: !encrypted/pkcs1-oaep
         - lCrjjw0PGgYdGd6bhvt8QAIZwOGqrGqQqxNrCLw5QrfcpsMVVibKkqSp35xmorMOJbvQ3
           jWKAJpqfQNL+UEE/e5WZwfe7pRGKDx3u2fKdCkGexSC2Q2vKCKEL6D20OPW7ELsOoh+Si
           8V0UaLqNnROUrbZZlzZcyQ7yUJNscYTcZcQ/DQJZjNLS/nnZWTThizV5+mzYDtVBdmrhn
@@ -13,7 +13,7 @@
           t+aq7j3Wlb5TOrUf7LeEmYQ0jYW898zKnnAYHhPy8w3IYX4DKEZQB1EyCCsTSJLCrVqkJ
           bdvG5/88EUWd3PCQ16YsKC7CzDd+TzWe99oYFSSJ91Km9pItIH3y8SkZLkgTPT91Mf8BK
           ioa8WKFwrBGwJyfFDCQDQ2grieUzfgV1pc3SMcutbKqylM4vsO6h6feIp+eJKQ=
-      MINIO_SECRET_KEY: !encrypted/pkcs1-oaep
+      S3_SECRET_KEY: !encrypted/pkcs1-oaep
         - SwQdIWGnwIBDIn6Xvmt7xsKXx7/qiNuFNqb61p5mFAQOzKdJO3voMRBM40lX9oawgclsh
           pcLfQtsYBVkU3XoacoChsEKgmJ/qqHLJghwzPeBpVMakwyPx7DQDYEWaEYziUgMeGmlEc
           Jgsj3GCFqWZnRbdMob6WEAVWpzsFteS3PvNnSoLveUnN44rLdjrRllmpAp/7hq+TABtgg
@@ -91,7 +91,7 @@
       dib_element: burnin
       image_format: raw
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files:
@@ -123,7 +123,7 @@
       dib_element: metalbox
       image_format: raw
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files:
@@ -162,7 +162,7 @@
       image_format: initramfs
       upload_image: true
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files: *osism_ipa_files
@@ -196,7 +196,7 @@
       image_format: initramfs
       upload_image: true
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files: *osism_ipa_stable_files
@@ -231,7 +231,7 @@
       build_name: osism-node
       upload_image: true
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files: *osism_node_files
@@ -265,7 +265,7 @@
       image_format: raw
       upload_image: true
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files: *osism_esp_files
@@ -298,7 +298,7 @@
       build_name: osism-vyos
       upload_image: true
     secrets:
-      - name: minio
+      - name: s3
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
     files: *osism_vyos_files

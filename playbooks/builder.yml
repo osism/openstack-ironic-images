@@ -40,28 +40,29 @@
         executable: /bin/bash
         chdir: "{{ zuul.project.src_dir }}"
         cmd: |
-          wget https://dl.min.io/client/mc/release/linux-amd64/mc
-          chmod +x mc
-          ./mc alias set minio https://nbg1.your-objectstorage.com {{ minio.MINIO_ACCESS_KEY | trim }} {{ minio.MINIO_SECRET_KEY | trim }}
-
+          export RCLONE_CONFIG_S3_TYPE=s3
+          export RCLONE_CONFIG_S3_PROVIDER=Other
+          export RCLONE_CONFIG_S3_ENDPOINT=https://nbg1.your-objectstorage.com
+          export RCLONE_CONFIG_S3_ACCESS_KEY_ID={{ s3.S3_ACCESS_KEY | trim }}
+          export RCLONE_CONFIG_S3_SECRET_ACCESS_KEY={{ s3.S3_SECRET_KEY | trim }}
 
           if [[ "{{ _build_name }}" == "osism-esp" ]]; then
               cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
-              ./mc cp {{ _build_name }}.{{ _image_format }} minio/osism/openstack-ironic-images/
-              ./mc cp {{ _build_name }}.{{ _image_format }}.CHECKSUM minio/osism/openstack-ironic-images/
+              rclone copyto {{ _build_name }}.{{ _image_format }} s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}
+              rclone copyto {{ _build_name }}.{{ _image_format }}.CHECKSUM s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}.CHECKSUM
           elif [[ "{{ _image_format }}" == "raw" ]]; then
               cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
               zip {{ _build_name }}.zip {{ _build_name }}.{{ _image_format }} {{ _build_name }}.{{ _image_format }}.CHECKSUM
-              ./mc cp {{ _build_name }}.zip minio/osism/openstack-ironic-images/
+              rclone copyto {{ _build_name }}.zip s3:osism/openstack-ironic-images/{{ _build_name }}.zip
           elif [[ "{{ _image_format }}" == "initramfs" ]]; then
               cp {{ _build_name }}.sha256 {{ _build_name }}.CHECKSUM
-              ./mc cp {{ _build_name }}.CHECKSUM minio/osism/openstack-ironic-images/
-              ./mc cp {{ _build_name }}.{{ _image_format }} minio/osism/openstack-ironic-images/
-              ./mc cp {{ _build_name }}.kernel minio/osism/openstack-ironic-images/
+              rclone copyto {{ _build_name }}.CHECKSUM s3:osism/openstack-ironic-images/{{ _build_name }}.CHECKSUM
+              rclone copyto {{ _build_name }}.{{ _image_format }} s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}
+              rclone copyto {{ _build_name }}.kernel s3:osism/openstack-ironic-images/{{ _build_name }}.kernel
           else
               cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
-              ./mc cp {{ _build_name }}.{{ _image_format }}.CHECKSUM minio/osism/openstack-ironic-images/
-              ./mc cp {{ _build_name }}.{{ _image_format }} minio/osism/openstack-ironic-images/
+              rclone copyto {{ _build_name }}.{{ _image_format }}.CHECKSUM s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}.CHECKSUM
+              rclone copyto {{ _build_name }}.{{ _image_format }} s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}
           fi
 
       when: upload_image | bool
