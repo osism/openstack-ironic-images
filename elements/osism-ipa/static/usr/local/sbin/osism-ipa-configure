@@ -75,6 +75,39 @@ def get_type():
     return "default"
 
 
+def get_ipv4():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-ipv4="):
+            return param.split("=")[1].strip()
+    return "10.10.255.255"
+
+
+def get_ipv6(interfaces):
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-ipv6="):
+            return param.split("=")[1].strip()
+    return "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
+
+
+def get_as():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-as="):
+            return param.split("=")[1].strip()
+    return "4210255255"
+
+
 config_files = [
     ("frr.conf.j2", "/etc/frr/frr.conf"),
     ("netplan.yaml.j2", "/etc/netplan/01-osism.yaml"),
@@ -169,7 +202,9 @@ def prepare_config():
             interfaces = scan_interfaces()
             data["osism_interfaces"] = [interface[0] for interface in interfaces]
             data["osism_onboard_interface"] = get_onboard_interface(interfaces)
-            data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
+            data["osism_ipv4"] = get_ipv4()
+            data["osism_ipv6"] = get_ipv6(interfaces)
+            data["osism_as"] = get_as()
             data["variant"] = get_variant()
             data["type"] = get_type()
             break
