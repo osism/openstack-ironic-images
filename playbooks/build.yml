@@ -84,10 +84,11 @@
         chdir: "{{ zuul.project.src_dir }}"
         cmd: |
           export RCLONE_CONFIG_S3_TYPE=s3
-          export RCLONE_CONFIG_S3_PROVIDER=Other
+          export RCLONE_CONFIG_S3_PROVIDER=Ceph
           export RCLONE_CONFIG_S3_ENDPOINT=https://nbg1.your-objectstorage.com
           export RCLONE_CONFIG_S3_ACCESS_KEY_ID={{ s3.S3_ACCESS_KEY | trim }}
           export RCLONE_CONFIG_S3_SECRET_ACCESS_KEY={{ s3.S3_SECRET_KEY | trim }}
+          export RCLONE_CONFIG_S3_ACL=public-read
 
           sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
 
