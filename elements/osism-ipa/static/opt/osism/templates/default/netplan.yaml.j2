@@ -9,7 +9,7 @@ network:
   dummy-devices:
     loopback0:
         addresses:
-        - 10.10.255.255/32
+        - {{ osism_ipv4 }}/32
         - {{ osism_ipv6 }}/128
 
   ethernets:
