@@ -64,14 +64,25 @@ def get_variant():
     return "BGP"
 
 
+def get_type():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-type="):
+            return param.split("=")[1].strip().lower()
+    return "default"
+
+
 config_files = [
     ("frr.conf.j2", "/etc/frr/frr.conf"),
-    ("osism-netplan.yaml.j2", "/etc/netplan/01-osism.yaml"),
+    ("netplan.yaml.j2", "/etc/netplan/01-osism.yaml"),
 ]
 
 
-def write_config_files(data):
-    template_path = "/opt/osism/templates"
+def write_config_files(data, ipa_type="default"):
+    template_path = "/opt/osism/templates/%s" % ipa_type
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_path))
     for template_name, file_name in config_files:
         template = env.get_template(template_name)
@@ -160,6 +171,7 @@ def prepare_config():
             data["osism_onboard_interface"] = get_onboard_interface(interfaces)
             data["osism_ipv6"] = "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
             data["variant"] = get_variant()
+            data["type"] = get_type()
             break
         except IndexError:
             attempt += 1
@@ -186,7 +198,7 @@ def main():
         data = prepare_config()
 
         print("Before write_config_files()")
-        write_config_files(data)
+        write_config_files(data, data.get("type", "default"))
 
         print("Before restart_networking()")
         restart_networking()
