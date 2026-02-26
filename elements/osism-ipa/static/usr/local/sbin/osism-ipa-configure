@@ -97,7 +97,7 @@ def get_ipv6(interfaces):
     return "fd33:fd0e:2aee:0:%s" % interfaces[0][1]
 
 
-def get_as():
+def get_as(ipv4):
     with open("/proc/cmdline", "r") as f:
         cmdline = f.read().strip()
     params = cmdline.strip().split()
@@ -105,7 +105,9 @@ def get_as():
     for param in params:
         if param.lower().startswith("osism-ipa-as="):
             return param.split("=")[1].strip()
-    return "4210255255"
+
+    octets = ipv4.split(".")
+    return "42" + octets[1] + octets[2] + octets[3]
 
 
 config_files = [
@@ -204,7 +206,7 @@ def prepare_config():
             data["osism_onboard_interface"] = get_onboard_interface(interfaces)
             data["osism_ipv4"] = get_ipv4()
             data["osism_ipv6"] = get_ipv6(interfaces)
-            data["osism_as"] = get_as()
+            data["osism_as"] = get_as(data["osism_ipv4"])
             data["variant"] = get_variant()
             data["type"] = get_type()
             break
@@ -233,7 +235,7 @@ def main():
         data = prepare_config()
 
         print("Before write_config_files()")
-        write_config_files(data, data.get("type", "default"))
+        write_config_files(data, data["type"])
 
         print("Before restart_networking()")
         restart_networking()
