@@ -12,7 +12,9 @@ router bgp {{ osism_as }}
  neighbor switches password {{ osism_aa }}
  neighbor switches timers connect 30
 {% for interface in osism_interfaces %}
+{% if "bmc" not in interface and "oob" not in interface %}
  neighbor {{ interface }} interface peer-group switches
+{% endif %}
 {% endfor %}
  !
  address-family ipv4 unicast

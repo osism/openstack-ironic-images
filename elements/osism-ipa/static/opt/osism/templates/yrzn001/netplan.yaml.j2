@@ -13,7 +13,9 @@ network:
 
   ethernets:
 {% for interface in osism_interfaces %}
+{% if "bmc" not in interface and "oob" not in interface %}
     {{ interface }}:
         mtu: 9000
         optional: yes
+{% endif %}
 {% endfor %}
