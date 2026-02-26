@@ -2,6 +2,7 @@
 
 import jinja2
 import os
+import re
 import socket
 import stat
 import subprocess
@@ -110,6 +111,19 @@ def get_as(ipv4):
     return "42" + octets[1] + octets[2] + octets[3]
 
 
+def get_extra_params():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    extra = {}
+    for param in params:
+        match = re.match(r"^osism-([a-z]{2})=(.*)$", param)
+        if match:
+            extra["osism_%s" % match.group(1)] = match.group(2)
+    return extra
+
+
 config_files = [
     ("frr.conf.j2", "/etc/frr/frr.conf"),
     ("netplan.yaml.j2", "/etc/netplan/01-osism.yaml"),
@@ -209,6 +223,9 @@ def prepare_config():
             data["osism_as"] = get_as(data["osism_ipv4"])
             data["variant"] = get_variant()
             data["type"] = get_type()
+            for key, value in get_extra_params().items():
+                if key not in data:
+                    data[key] = value
             break
         except IndexError:
             attempt += 1
