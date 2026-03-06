@@ -14,6 +14,8 @@ network:
   ethernets:
 {% for interface in osism_interfaces %}
     {{ interface }}:
+        dhcp4: false
+        dhcp6: false
         mtu: 9000
         optional: yes
 {% endfor %}
