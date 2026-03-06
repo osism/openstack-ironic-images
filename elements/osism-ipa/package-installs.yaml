@@ -19,3 +19,7 @@ python3-venv:
 util-linux-extra:
 vim:
 wget:
+unattended-upgrades:
+  uninstall: true
+update-notifier-common:
+  uninstall: true
