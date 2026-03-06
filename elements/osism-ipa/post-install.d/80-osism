@@ -9,11 +9,13 @@ set -o pipefail
 case "$DIB_INIT_SYSTEM" in
     systemd)
         systemctl mask glean@.service glean.service
-        systemctl disable ironic-agent-resolve-config-drive.service
         systemctl disable apparmor.service
-        systemctl enable systemd-udev-settle.service
+        systemctl disable chrony.service
+        systemctl disable frr.service
+        systemctl disable ironic-agent-resolve-config-drive.service
         systemctl disable ironic-python-agent.service
         systemctl enable osism-ipa-config.service
+        systemctl enable systemd-udev-settle.service
         ;;
     *)
         echo "Unsupported init system $DIB_INIT_SYSTEM"
