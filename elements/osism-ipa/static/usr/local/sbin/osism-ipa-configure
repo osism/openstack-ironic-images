@@ -38,8 +38,9 @@ def scan_interfaces():
             continue
         mac = mactools.MacAddress(find_attr(link, "IFLA_ADDRESS"))
         eui64 = mac.eui64_suffix
-        print("%s %s %s" % (if_name, mac, eui64))
-        interfaces.append((if_name, eui64))
+        operstate = link.get("state", "down")
+        print("%s %s %s %s" % (if_name, mac, eui64, operstate))
+        interfaces.append((if_name, eui64, operstate))
 
     return interfaces
 
@@ -217,6 +218,9 @@ def prepare_config():
         try:
             interfaces = scan_interfaces()
             data["osism_interfaces"] = [interface[0] for interface in interfaces]
+            data["osism_interfaces_up"] = [
+                interface[0] for interface in interfaces if interface[2] == "up"
+            ]
             data["osism_onboard_interface"] = get_onboard_interface(interfaces)
             data["osism_ipv4"] = get_ipv4()
             data["osism_ipv6"] = get_ipv6(interfaces)
