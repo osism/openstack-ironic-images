@@ -215,9 +215,9 @@ def prepare_config():
                 interface[0] for interface in interfaces if interface[2] == "UP"
             ]
             data["osism_onboard_interface"] = get_onboard_interface(interfaces)
-            data["osism_ipv4"] = get_ipv4()
-            data["osism_ipv6"] = get_ipv6(interfaces)
-            data["osism_as"] = get_as(data["osism_ipv4"])
+            data["osism_ipa_ipv4"] = get_ipv4()
+            data["osism_ipa_ipv6"] = get_ipv6(interfaces)
+            data["osism_ipa_as"] = get_as(data["osism_ipa_ipv4"])
             data["variant"] = get_variant()
             data["type"] = get_type()
             for key, value in get_extra_params().items():

@@ -8,8 +8,8 @@ network:
   dummy-devices:
     loopback0:
         addresses:
-        - {{ osism_ipv4 }}/32
-        - {{ osism_ipv6 }}/128
+        - {{ osism_ipa_ipv4 }}/32
+        - {{ osism_ipa_ipv6 }}/128
 
   ethernets:
 {% for interface in osism_interfaces %}
