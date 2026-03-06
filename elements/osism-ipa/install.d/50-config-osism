@@ -25,3 +25,7 @@ systemctl disable systemd-networkd-wait-online.service
 
 systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.timer
+
+# disable motd-news timer
+
+systemctl disable motd-news.timer
