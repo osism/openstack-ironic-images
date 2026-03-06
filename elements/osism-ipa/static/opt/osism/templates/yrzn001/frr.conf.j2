@@ -11,7 +11,7 @@ router bgp {{ osism_as }}
  neighbor switches remote-as external
  neighbor switches password {{ osism_aa }}
  neighbor switches timers connect 30
-{% for interface in osism_interfaces %}
+{% for interface in osism_interfaces_up %}
  neighbor {{ interface }} interface peer-group switches
 {% endfor %}
  !
