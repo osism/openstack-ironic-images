@@ -16,10 +16,12 @@ netplan.io:
 procps:
 python3:
 python3-venv:
+socat:
+tcpdump:
 util-linux-extra:
-vim:
-wget:
 unattended-upgrades:
   uninstall: true
 update-notifier-common:
   uninstall: true
+vim:
+wget:
