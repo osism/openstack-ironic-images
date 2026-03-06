@@ -4,8 +4,8 @@ hostname osism-ipa
 no ipv6 forwarding
 service integrated-vtysh-config
 !
-router bgp {{ osism_as }}
- bgp router-id {{ osism_ipv4 }}
+router bgp {{ osism_ipa_as }}
+ bgp router-id {{ osism_ipa_ipv4 }}
  bgp bestpath as-path multipath-relax
  neighbor switches peer-group
  neighbor switches remote-as external
@@ -46,11 +46,11 @@ route-map RM-switches-out permit 100
 exit
 !
 route-map RM_SET_SRC4 permit 10
- set src {{ osism_ipv4 }}
+ set src {{ osism_ipa_ipv4 }}
 exit
 !
 route-map RM_SET_SRC6 permit 10
- set src {{ osism_ipv6 }}
+ set src {{ osism_ipa_ipv6 }}
 exit
 !
 ip protocol bgp route-map RM_SET_SRC4
