@@ -112,6 +112,33 @@ def get_as(ipv4):
     return "42" + octets[1] + octets[2] + octets[3]
 
 
+def get_metalbox_ip():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-metalbox="):
+            return param.split("=")[1].strip()
+    return None
+
+
+def update_hosts_metalbox(ip):
+    with open("/etc/hosts", "r") as f:
+        lines = f.readlines()
+
+    new_lines = []
+    for line in lines:
+        if line.strip() and not line.strip().startswith("#"):
+            parts = line.split()
+            if "metalbox" in parts or "metalbox.osism.xyz" in parts:
+                line = "%s metalbox.osism.xyz metalbox\n" % ip
+        new_lines.append(line)
+
+    with open("/etc/hosts", "w") as f:
+        f.writelines(new_lines)
+
+
 def get_extra_params():
     with open("/proc/cmdline", "r") as f:
         cmdline = f.read().strip()
@@ -186,13 +213,22 @@ def check_availability_of_metalbox(timeout=60):
 
     while time.time() - start < timeout:
         try:
-            sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
-            sock.settimeout(2)
-            if sock.connect_ex(("metalbox", PORT)) == 0:
-                reachable = True
-                sock.close()
+            addrinfo = socket.getaddrinfo(
+                "metalbox", PORT, socket.AF_UNSPEC, socket.SOCK_STREAM
+            )
+            for af, socktype, proto, canonname, sa in addrinfo:
+                try:
+                    sock = socket.socket(af, socktype, proto)
+                    sock.settimeout(2)
+                    if sock.connect_ex(sa) == 0:
+                        reachable = True
+                        sock.close()
+                        break
+                    sock.close()
+                except:
+                    pass
+            if reachable:
                 break
-            sock.close()
         except:
             pass
         time.sleep(1)
@@ -238,6 +274,11 @@ def prepare_config():
 
 
 def main():
+    metalbox_ip = get_metalbox_ip()
+    if metalbox_ip:
+        print("Configuring metalbox IP: %s" % metalbox_ip)
+        update_hosts_metalbox(metalbox_ip)
+
     attempt = 0
     max_retries = 2
 
