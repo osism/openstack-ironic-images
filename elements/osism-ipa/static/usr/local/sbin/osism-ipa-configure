@@ -146,7 +146,7 @@ def restart_networking():
 
     subprocess.run(["netplan", "apply"], check=True)
 
-    subprocess.run(["systemctl", "start", "frr.service"], check=True)
+    subprocess.run(["systemctl", "restart", "frr.service"], check=True)
 
 
 def sync_time_with_metalbox():
