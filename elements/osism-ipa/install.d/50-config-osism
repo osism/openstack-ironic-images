@@ -20,3 +20,8 @@ update-initramfs -u
 # disable systemd-networkd-wait-online service
 
 systemctl disable systemd-networkd-wait-online.service
+
+# disable apt-daily timers
+
+systemctl disable apt-daily.timer
+systemctl disable apt-daily-upgrade.timer
