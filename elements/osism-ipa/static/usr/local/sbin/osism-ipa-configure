@@ -112,6 +112,28 @@ def get_as(ipv4):
     return "42" + octets[1] + octets[2] + octets[3]
 
 
+def get_mtu():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-mtu="):
+            return int(param.split("=")[1].strip())
+    return 9000
+
+
+def get_metalbox_timeout():
+    with open("/proc/cmdline", "r") as f:
+        cmdline = f.read().strip()
+    params = cmdline.strip().split()
+
+    for param in params:
+        if param.lower().startswith("osism-ipa-metalbox-timeout="):
+            return int(param.split("=")[1].strip())
+    return 60
+
+
 def get_metalbox_ip():
     with open("/proc/cmdline", "r") as f:
         cmdline = f.read().strip()
@@ -166,14 +188,38 @@ def write_config_files(data, ipa_type="default"):
         template.stream(data).dump(file_name)
 
 
-def restart_networking():
+def restart_networking(max_retries=3):
     os.chmod("/etc/netplan/01-osism.yaml", stat.S_IRUSR)
 
     subprocess.run(["systemctl", "daemon-reload"], check=True)
 
-    subprocess.run(["netplan", "apply"], check=True)
+    for attempt in range(1, max_retries + 1):
+        result = subprocess.run(["netplan", "apply"], capture_output=True, text=True)
+        if result.returncode == 0:
+            break
+        print(
+            f"Warning: netplan apply failed (attempt {attempt}/{max_retries}): {result.stderr.strip()}"
+        )
+        if attempt == max_retries:
+            raise RuntimeError(
+                f"netplan apply failed after {max_retries} attempts: {result.stderr.strip()}"
+            )
+        time.sleep(5 * attempt)
 
-    subprocess.run(["systemctl", "restart", "frr.service"], check=True)
+    for attempt in range(1, max_retries + 1):
+        result = subprocess.run(
+            ["systemctl", "restart", "frr.service"], capture_output=True, text=True
+        )
+        if result.returncode == 0:
+            break
+        print(
+            f"Warning: FRR restart failed (attempt {attempt}/{max_retries}): {result.stderr.strip()}"
+        )
+        if attempt == max_retries:
+            raise RuntimeError(
+                f"FRR restart failed after {max_retries} attempts: {result.stderr.strip()}"
+            )
+        time.sleep(5 * attempt)
 
 
 def sync_time_with_metalbox():
@@ -254,6 +300,8 @@ def prepare_config():
             data["osism_ipa_ipv4"] = get_ipv4()
             data["osism_ipa_ipv6"] = get_ipv6(interfaces)
             data["osism_ipa_as"] = get_as(data["osism_ipa_ipv4"])
+            data["osism_ipa_mtu"] = get_mtu()
+            data["osism_ipa_metalbox_timeout"] = get_metalbox_timeout()
             data["variant"] = get_variant()
             data["type"] = get_type()
             for key, value in get_extra_params().items():
@@ -296,10 +344,11 @@ def main():
         restart_networking()
 
         print("Before check_availability_of_metalbox()")
+        timeout = data["osism_ipa_metalbox_timeout"]
         if attempt > 0:
-            reachable = check_availability_of_metalbox(120)
+            reachable = check_availability_of_metalbox(timeout * 2)
         else:
-            reachable = check_availability_of_metalbox()
+            reachable = check_availability_of_metalbox(timeout)
 
         if reachable:
             break

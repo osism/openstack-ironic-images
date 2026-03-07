@@ -16,6 +16,6 @@ network:
     {{ interface }}:
         dhcp4: false
         dhcp6: false
-        mtu: 9000
+        mtu: {{ osism_ipa_mtu }}
         optional: yes
 {% endfor %}
