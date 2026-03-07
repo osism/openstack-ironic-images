@@ -9,7 +9,9 @@ router bgp {{ osism_ipa_as }}
  bgp bestpath as-path multipath-relax
  neighbor switches peer-group
  neighbor switches remote-as external
+{% if osism_aa is defined and osism_aa %}
  neighbor switches password {{ osism_aa }}
+{% endif %}
  neighbor switches timers connect 30
 {% for interface in osism_interfaces_up %}
  neighbor {{ interface }} interface peer-group switches
