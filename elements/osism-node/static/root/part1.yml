@@ -10,7 +10,7 @@
     operator_group: dragon
     operator_password: $6$uBNqcH/eR0dQ2wxA$Zeb/dLBKStIq4gFxgUKKmrnCs4uGlGQoCby/G9CSfAJE2VzTb8ofm.HCYzmKJXkzIXIjdQL1xeDoI3b9GAvVX.
     operator_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIALTE5geSy9lKjGRlhEGiIjp81ayr4Sbl8bPBYY9FgVh dragon@ctl3001
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIALTE5geSy9lKjGRlhEGiIjp81ayr4Sbl8bPBYY9FgVh dragon@osism
 
     # cleanup
     cleanup_cloudinit: false
