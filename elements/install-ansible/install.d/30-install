@@ -25,3 +25,8 @@ ansible-galaxy collection install --collections-path /usr/share/ansible/collecti
 
 ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-services
 ansible-galaxy collection install --collections-path /usr/share/ansible/collections git+https://github.com/osism/ansible-collection-commons
+
+# log the used commits of the osism ansible collections
+
+echo "osism/ansible-collection-services commit: $(git ls-remote https://github.com/osism/ansible-collection-services HEAD | awk '{print $1}')"
+echo "osism/ansible-collection-commons commit: $(git ls-remote https://github.com/osism/ansible-collection-commons HEAD | awk '{print $1}')"
