@@ -40,12 +40,6 @@
         executable: /bin/bash
         chdir: "{{ zuul.project.src_dir }}"
         cmd: |
-          export RCLONE_CONFIG_S3_TYPE=s3
-          export RCLONE_CONFIG_S3_PROVIDER=Other
-          export RCLONE_CONFIG_S3_ENDPOINT=https://nbg1.your-objectstorage.com
-          export RCLONE_CONFIG_S3_ACCESS_KEY_ID={{ s3.S3_ACCESS_KEY | trim }}
-          export RCLONE_CONFIG_S3_SECRET_ACCESS_KEY={{ s3.S3_SECRET_KEY | trim }}
-
           if [[ "{{ _build_name }}" == "osism-esp" ]]; then
               cp {{ _build_name }}.{{ _image_format }}.sha256 {{ _build_name }}.{{ _image_format }}.CHECKSUM
               rclone copyto {{ _build_name }}.{{ _image_format }} s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}
@@ -65,6 +59,15 @@
               rclone copyto {{ _build_name }}.{{ _image_format }} s3:osism/openstack-ironic-images/{{ _build_name }}.{{ _image_format }}
           fi
 
+      environment:
+        RCLONE_CONFIG_S3_TYPE: s3
+        RCLONE_CONFIG_S3_PROVIDER: Ceph
+        RCLONE_CONFIG_S3_ENDPOINT: https://nbg1.your-objectstorage.com
+        RCLONE_CONFIG_S3_REGION: nbg1
+        RCLONE_CONFIG_S3_ACCESS_KEY_ID: "{{ secret.ACCESS_KEY | trim }}"
+        RCLONE_CONFIG_S3_SECRET_ACCESS_KEY: "{{ secret.SECRET_KEY | trim }}"
+        RCLONE_CONFIG_S3_ACL: public-read
+        RCLONE_CONFIG_S3_NO_CHECK_BUCKET: "true"
       when: upload_image | bool
       no_log: true
       changed_when: true
