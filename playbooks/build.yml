@@ -5,9 +5,11 @@
   vars:
     _dib_element: "{{ dib_element | default('burnin') }}"
     _image_format: "{{ image_format | default('raw') }}"
+    _openstack_version: "{{ openstack_version | default('2024.2') }}"
+    _image_name: "osism-{{ _dib_element }}{{ '-' + _openstack_version if openstack_version is defined else '' }}-image"
 
   tasks:
-    - name: Check registry.tar.bz2 timestamp for metalbox image
+    - name: Check registry tarball timestamp for metalbox image
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
@@ -15,7 +17,7 @@
 
           MAX_ATTEMPTS=12
           WAIT_SECONDS=300
-          URL="https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2"
+          URL="https://nbg1.your-objectstorage.com/osism/metalbox/registry-{{ _openstack_version }}.tar.bz2"
 
           for attempt in $(seq 1 $MAX_ATTEMPTS); do
             echo "Attempt $attempt of $MAX_ATTEMPTS: Checking Last-Modified header..."
@@ -72,7 +74,7 @@
           disk-image-create \
             -a amd64 \
             -t {{ _image_format }} \
-            -o osism-{{ _dib_element }}-image.{{ _image_format }} \
+            -o {{ _image_name }}.{{ _image_format }} \
             --image-size $IMAGE_SIZE \
             vm block-device-efi ubuntu bootloader cloud-init $IMAGE_ELEMENTS {{ _dib_element }}
 
@@ -83,14 +85,14 @@
         executable: /bin/bash
         chdir: "{{ zuul.project.src_dir }}"
         cmd: |
-          sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
+          sha256sum {{ _image_name }}.{{ _image_format }} {{ _image_name }}.{{ _image_format }}.CHECKSUM
 
           if [[ "{{ _image_format }}" == "raw" ]]; then
-              zip osism-{{ _dib_element }}-image.zip osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
-              rclone copyto osism-{{ _dib_element }}-image.zip s3:osism/openstack-ironic-images/osism-{{ _dib_element }}-image.zip
+              zip {{ _image_name }}.zip {{ _image_name }}.{{ _image_format }} {{ _image_name }}.{{ _image_format }}.CHECKSUM
+              rclone copyto {{ _image_name }}.zip s3:osism/openstack-ironic-images/{{ _image_name }}.zip
           else
-              rclone copyto osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM s3:osism/openstack-ironic-images/osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
-              rclone copyto osism-{{ _dib_element }}-image.{{ _image_format }} s3:osism/openstack-ironic-images/osism-{{ _dib_element }}-image.{{ _image_format }}
+              rclone copyto {{ _image_name }}.{{ _image_format }}.CHECKSUM s3:osism/openstack-ironic-images/{{ _image_name }}.{{ _image_format }}.CHECKSUM
+              rclone copyto {{ _image_name }}.{{ _image_format }} s3:osism/openstack-ironic-images/{{ _image_name }}.{{ _image_format }}
           fi
 
       environment:
