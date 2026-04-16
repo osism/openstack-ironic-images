@@ -2,5 +2,7 @@ export DIB_DEV_USER_PWDLESS_SUDO=True
 export DIB_DEV_USER_PASSWORD=password
 export DIB_DEV_USER_SHELL=/usr/bin/bash
 
+export DIB_METALBOX_REGISTRY_VERSION=${DIB_METALBOX_REGISTRY_VERSION:-2025.1}
+
 export IMAGE_SIZE=10
 export IMAGE_ELEMENTS="cloud-init-nocloud"
