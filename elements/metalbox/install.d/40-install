@@ -12,6 +12,31 @@ export LC_ALL=
 
 export PATH=/root/.local/bin:$PATH
 
+log_disk_usage() {
+    local label="${1:-snapshot}"
+
+    set +e
+    echo "===== metalbox disk usage: ${label} ====="
+    df -h /
+    df -ih /
+    for path in /opt /root/.local /home/dragon/.local /usr /var /var/cache/apt /tmp; do
+        if [[ -e "$path" ]]; then
+            du -sh "$path"
+        else
+            echo "missing $path"
+        fi
+    done
+    for path in /opt/registry.tar /opt/alpine.tar /opt/registry.tar.bz2 /opt/ironic-agent.initramfs /opt/ironic-agent.kernel; do
+        if [[ -e "$path" ]]; then
+            ls -lh "$path"
+        else
+            echo "missing $path"
+        fi
+    done
+    echo "===== end metalbox disk usage: ${label} ====="
+    set -e
+}
+
 # run part 1
 
 ansible-playbook -i localhost, /root/part1.yml
@@ -55,6 +80,8 @@ if [[ "$DIB_METALBOX_IPA_IMAGES" == "true" ]] then
     wget -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.kernel
 fi
 
+log_disk_usage "after metalbox downloads"
+
 # change console font
 
 sed -i 's/FONTFACE="Fixed"/FONTFACE="Terminus"/' /etc/default/console-setup
@@ -69,3 +96,5 @@ ansible-playbook -i localhost, /root/part2.yml
 
 rm -f /etc/netplan/50-cloud-init.yaml
 rm -rf /root/.ansible
+
+log_disk_usage "end of metalbox install"
