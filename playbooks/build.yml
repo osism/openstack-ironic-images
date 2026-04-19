@@ -7,15 +7,18 @@
     _image_format: "{{ image_format | default('raw') }}"
 
   tasks:
-    - name: Check registry.tar.bz2 timestamp for metalbox image
+    - name: Check registry archive timestamp for metalbox image
       ansible.builtin.shell:
         executable: /bin/bash
+        chdir: "{{ zuul.project.src_dir }}"
         cmd: |
           set -e
 
           MAX_ATTEMPTS=12
           WAIT_SECONDS=300
-          URL="https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2"
+
+          source files/{{ _dib_element }}.sh
+          URL="https://nbg1.your-objectstorage.com/osism/metalbox/registry-${DIB_METALBOX_REGISTRY_VERSION}-full.tar.bz2"
 
           for attempt in $(seq 1 $MAX_ATTEMPTS); do
             echo "Attempt $attempt of $MAX_ATTEMPTS: Checking Last-Modified header..."
