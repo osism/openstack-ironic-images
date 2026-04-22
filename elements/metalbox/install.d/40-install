@@ -71,6 +71,12 @@ skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/libra
 
 if [[ "$DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE" == "true" ]] then
     wget -O /opt/registry.tar.bz2 https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2
+
+    echo "===== registry.tar.bz2 image catalog ====="
+    tar tjf /opt/registry.tar.bz2 \
+        | sed -n 's|.*repositories/\(.*\)/_manifests/tags/\([^/]*\)/current/link$|\1:\2|p' \
+        | sort -u
+    echo "===== end registry.tar.bz2 image catalog ====="
 fi
 
 # download ironic images
