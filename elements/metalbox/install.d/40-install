@@ -82,8 +82,10 @@ fi
 # download ironic images
 
 if [[ "$DIB_METALBOX_IPA_IMAGES" == "true" ]] then
-    wget -O /opt/ironic-agent.initramfs https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.initramfs
-    wget -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.kernel
+    ping -c2 tarballs.opendev.org
+
+    wget --tries=3 -O /opt/ironic-agent.initramfs https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.initramfs || exit 2
+    wget --tries=3 -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.kernel || exit 2
 fi
 
 log_disk_usage "after metalbox downloads"
