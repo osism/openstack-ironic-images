@@ -10,6 +10,7 @@
         type: 'EF00'
         size: 549MiB
         mkfs:
+          label: ESP
           type: vfat
           mount:
             mount_point: /boot/efi
