@@ -38,7 +38,7 @@
     max: 1
 
 - semaphore:
-    name: semaphore-openstack-ironic-images-publish-osism-ipa-stable
+    name: semaphore-openstack-ironic-images-publish-osism-ipa-latest
     max: 1
 
 - semaphore:
@@ -168,7 +168,7 @@
     files: *osism_ipa_files
 
 - job:
-    name: openstack-ironic-images-build-osism-ipa-stable
+    name: openstack-ironic-images-build-osism-ipa-latest
     parent: base-extra-logs
     nodeset:
       nodes:
@@ -177,29 +177,29 @@
     pre-run: playbooks/pre.yml
     run: playbooks/builder.yml
     vars:
-      build_name: osism-ipa-stable
+      build_name: osism-ipa-latest
       upload_image: false
-    files: &osism_ipa_stable_files
+    files: &osism_ipa_latest_files
       - "^elements/install-ansible/.*"
       - "^elements/osism-ipa/.*"
-      - "^files/osism-ipa-stable.yml$"
+      - "^files/osism-ipa-latest.yml$"
       - "^playbooks/.*"
       - "^requirements.txt"
 
 - job:
-    name: openstack-ironic-images-publish-osism-ipa-stable
-    parent: openstack-ironic-images-build-osism-ipa-stable
+    name: openstack-ironic-images-publish-osism-ipa-latest
+    parent: openstack-ironic-images-build-osism-ipa-latest
     semaphores:
-      - name: semaphore-openstack-ironic-images-publish-osism-ipa-stable
+      - name: semaphore-openstack-ironic-images-publish-osism-ipa-latest
     vars:
-      build_name: osism-ipa-stable
+      build_name: osism-ipa-latest
       image_format: initramfs
       upload_image: true
     secrets:
       - name: secret
         secret: SECRET_OPENSTACK_IRONIC_IMAGES
         pass-to-parent: true
-    files: *osism_ipa_stable_files
+    files: *osism_ipa_latest_files
 
 - job:
     name: openstack-ironic-images-build-osism-node
@@ -311,7 +311,7 @@
         - openstack-ironic-images-build-burnin
         - openstack-ironic-images-build-metalbox
         - openstack-ironic-images-build-osism-ipa
-        - openstack-ironic-images-build-osism-ipa-stable
+        - openstack-ironic-images-build-osism-ipa-latest
         - openstack-ironic-images-build-osism-node
         - openstack-ironic-images-build-osism-esp
         - openstack-ironic-images-build-osism-vyos
@@ -325,7 +325,7 @@
         - openstack-ironic-images-publish-burnin
         - openstack-ironic-images-publish-osism-esp
         - openstack-ironic-images-publish-osism-ipa
-        - openstack-ironic-images-publish-osism-ipa-stable
+        - openstack-ironic-images-publish-osism-ipa-latest
         - openstack-ironic-images-publish-osism-node
     post:
       jobs:
@@ -335,7 +335,7 @@
             branches: main
         - openstack-ironic-images-publish-osism-ipa:
             branches: main
-        - openstack-ironic-images-publish-osism-ipa-stable:
+        - openstack-ironic-images-publish-osism-ipa-latest:
             branches: main
         - openstack-ironic-images-publish-osism-node:
             branches: main
