@@ -26,7 +26,7 @@ log_disk_usage() {
             echo "missing $path"
         fi
     done
-    for path in /opt/registry.tar /opt/alpine.tar /opt/registry.tar.bz2 /opt/ironic-agent.initramfs /opt/ironic-agent.kernel; do
+    for path in /opt/registry.tar /opt/alpine.tar /opt/registry.tar.bz2; do
         if [[ -e "$path" ]]; then
             ls -lh "$path"
         else
@@ -77,15 +77,6 @@ if [[ "$DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE" == "true" ]] then
         | sed -n 's|.*repositories/\(.*\)/_manifests/tags/\([^/]*\)/current/link$|\1:\2|p' \
         | sort -u
     echo "===== end registry.tar.bz2 image catalog ====="
-fi
-
-# download ironic images
-
-if [[ "$DIB_METALBOX_IPA_IMAGES" == "true" ]] then
-    ping -c2 tarballs.opendev.org || true
-
-    wget --tries=3 -O /opt/ironic-agent.initramfs https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.initramfs || exit 2
-    wget --tries=3 -O /opt/ironic-agent.kernel https://tarballs.opendev.org/openstack/ironic-python-agent/dib/files/ipa-centos9-stable-${DIB_METALBOX_OPENSTACK_RELEASE}.kernel || exit 2
 fi
 
 log_disk_usage "after metalbox downloads"
