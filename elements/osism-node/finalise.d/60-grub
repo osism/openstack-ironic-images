@@ -13,6 +13,14 @@ if [ -f /boot/grub/x86_64-efi/mdraid1x.mod ]; then
     cp /boot/grub/x86_64-efi/mdraid1x.mod /boot/efi/$EFI_BOOT_DIR
 fi
 
+# NOTE: Disable `quick_boot`, which gates `recordfail`. The `recordfail`
+# feature relies on being able to write to grubenv, which is not implemented
+# for mdraids. This leads to the grub error
+# "Diskfilter writes are not supported"
+# https://askubuntu.com/questions/468466/diskfilter-writes-are-not-supported-what-triggers-this-error
+# Since this image may end up on an mdraid we disable recordfail here.
+sed -i 's#quick_boot="1"#quick_boot="0"#g' /etc/grub.d/*
+
 rm -f /etc/default/grub.d/50-cloudimg-settings.cfg
 update-grub
 grub-install --no-nvram --modules=mdraid1x -v $EFI_BOOT_DIR
