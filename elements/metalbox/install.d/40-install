@@ -69,14 +69,35 @@ skopeo copy --dest-tls-verify=false docker://registry.osism.tech/dockerhub/libra
 
 # download registry volume archive
 
-if [[ "$DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE" == "true" ]] then
-    wget -O /opt/registry.tar.bz2 https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2
-
-    echo "===== registry.tar.bz2 image catalog ====="
-    tar tjf /opt/registry.tar.bz2 \
-        | sed -n 's|.*repositories/\(.*\)/_manifests/tags/\([^/]*\)/current/link$|\1:\2|p' \
-        | sort -u
-    echo "===== end registry.tar.bz2 image catalog ====="
+if [[ "$DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE" == "true" ]]; then
+    url="https://nbg1.your-objectstorage.com/osism/metalbox/registry.tar.bz2"
+    max_attempts=4
+    attempt=1
+    while true; do
+        echo "Downloading registry.tar.bz2 (attempt ${attempt}/${max_attempts})..."
+        rm -f /opt/registry.tar.bz2
+        # The catalog listing doubles as the integrity gate: tar -j fully
+        # decompresses the stream, so a full-length-but-corrupt download fails
+        # here (non-zero under pipefail) and triggers a clean re-download
+        # instead of poisoning the build. --tries lets wget ride out transient
+        # connection drops to fetch a complete body.
+        if wget --tries=3 --timeout=120 -O /opt/registry.tar.bz2 "$url" \
+           && catalog=$(tar tjf /opt/registry.tar.bz2 \
+                | sed -n 's|.*repositories/\(.*\)/_manifests/tags/\([^/]*\)/current/link$|\1:\2|p' \
+                | sort -u); then
+            echo "===== registry.tar.bz2 image catalog ====="
+            echo "$catalog"
+            echo "===== end registry.tar.bz2 image catalog ====="
+            break
+        fi
+        if (( attempt >= max_attempts )); then
+            echo "ERROR: registry.tar.bz2 still corrupt/unavailable after ${max_attempts} attempts." >&2
+            exit 1
+        fi
+        echo "Download failed integrity check; retrying in 15s..." >&2
+        sleep 15
+        (( attempt++ ))
+    done
 fi
 
 log_disk_usage "after metalbox downloads"
