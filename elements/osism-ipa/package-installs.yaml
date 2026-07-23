@@ -4,6 +4,7 @@ cloud-init:
   uninstall: true
 curl:
 dmidecode:
+ethtool:
 file:
 frr:
 git:
