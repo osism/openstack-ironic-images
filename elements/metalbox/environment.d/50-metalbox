@@ -1,1 +1,16 @@
 export DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE=${DIB_METALBOX_DOWNLOAD_REGISTRY_ARCHIVE:-true}
+
+# Admit ConfigDrive so the image can also be booted as a virtual machine, where
+# a config drive is the only metadata channel. Without this the cloud-init-nocloud
+# element pins the list to NoCloud alone, its empty seed always matches, and
+# user-data, the config drive and the SSH keypair are all ignored -- leaving a
+# VM-booted MetalBox with no way to receive the network configuration it needs
+# (network_ethernets is empty by design until the site data fills it in).
+#
+# NoCloud is kept, and ConfigDrive is probed first. On bare metal ConfigDrive is
+# a local disk-label lookup that fails fast when absent, after which NoCloud's
+# seed matches as before -- so neither platform pays the two-minute datasource
+# poll the nocloud element exists to avoid. This file sorts after that element's
+# own environment.d entry, so the assignment below wins while its seed is still
+# installed.
+export DIB_CLOUD_INIT_DATASOURCES="ConfigDrive, NoCloud"
