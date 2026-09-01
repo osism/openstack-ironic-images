@@ -1,5 +1,6 @@
 #!/usr/local/lib/osism/bin/python3
 
+import errno
 import jinja2
 import os
 import re
@@ -10,6 +11,8 @@ import time
 
 from pyroute2 import IPRoute
 import mactools
+
+CONNECT_TIMEOUT = 2
 
 
 class NotFound(Exception):
@@ -253,33 +256,91 @@ def start_ironic_python_agent():
     subprocess.run(["systemctl", "start", "ironic-python-agent.service"], check=True)
 
 
+def format_sockaddr(af, sa):
+    if af == socket.AF_INET6:
+        return "[%s]:%s" % (sa[0], sa[1])
+    return "%s:%s" % (sa[0], sa[1])
+
+
+def describe_connect_error(rc):
+    # settimeout() puts the socket in non-blocking mode, so connect_ex()
+    # reports a connect that simply got no answer as EAGAIN rather than as a
+    # timeout. Spell that out; "EAGAIN" reads like a transient local problem.
+    if rc in (errno.EAGAIN, errno.EINPROGRESS):
+        return "timed out after %ds (no response)" % CONNECT_TIMEOUT
+    return errno.errorcode.get(rc, rc)
+
+
 def check_availability_of_metalbox(timeout=60):
     PORT = 6385
 
     start = time.time()
     reachable = False
+    attempts = 0
+    last_error = None
+    previous = {}
+
+    def log(tag, line, is_error=True):
+        # Only print when the message for this tag changes. The loop runs once
+        # a second for the whole timeout, so repeating every identical failure
+        # would bury the transitions that actually say something.
+        nonlocal last_error
+        if is_error:
+            last_error = line
+        if previous.get(tag) != line:
+            print(line)
+            previous[tag] = line
 
     while time.time() - start < timeout:
+        attempts += 1
+
         try:
             addrinfo = socket.getaddrinfo(
                 "metalbox", PORT, socket.AF_UNSPEC, socket.SOCK_STREAM
             )
-            for af, socktype, proto, canonname, sa in addrinfo:
-                try:
-                    sock = socket.socket(af, socktype, proto)
-                    sock.settimeout(2)
-                    if sock.connect_ex(sa) == 0:
-                        reachable = True
-                        sock.close()
-                        break
-                    sock.close()
-                except:
-                    pass
-            if reachable:
-                break
-        except:
-            pass
+        except OSError as e:
+            log("resolve", "metalbox lookup failed: %r" % e)
+            time.sleep(1)
+            continue
+
+        log(
+            "resolve",
+            "metalbox resolves to: %s"
+            % ", ".join(format_sockaddr(af, sa) for af, _, _, _, sa in addrinfo),
+            is_error=False,
+        )
+
+        for af, socktype, proto, canonname, sa in addrinfo:
+            target = format_sockaddr(af, sa)
+            try:
+                sock = socket.socket(af, socktype, proto)
+            except OSError as e:
+                log(target, "socket for %s failed: %r" % (target, e))
+                continue
+            try:
+                sock.settimeout(CONNECT_TIMEOUT)
+                rc = sock.connect_ex(sa)
+                if rc == 0:
+                    reachable = True
+                    break
+                log(
+                    target,
+                    "connect to %s failed: %s" % (target, describe_connect_error(rc)),
+                )
+            except OSError as e:
+                log(target, "connect to %s failed: %r" % (target, e))
+            finally:
+                sock.close()
+
+        if reachable:
+            break
         time.sleep(1)
+
+    if not reachable:
+        print(
+            "Metalbox unreachable after %ds / %d attempts, last error: %s"
+            % (time.time() - start, attempts, last_error or "none recorded")
+        )
 
     return reachable
 
