@@ -20,34 +20,69 @@
           for attempt in $(seq 1 $MAX_ATTEMPTS); do
             echo "Attempt $attempt of $MAX_ATTEMPTS: Checking Last-Modified header..."
 
-            # Get Last-Modified header
-            LAST_MODIFIED=$(curl -sI "$URL" | grep -i '^Last-Modified:' | sed 's/Last-Modified: //i' | tr -d '\r')
+            # Keep the whole response, not just the header: when the header
+            # is missing, the status line, the other headers and curl's stderr
+            # are the only record of why. Do not add -f -- it discards exactly
+            # that record on an HTTP error.
+            HEAD_OUT=$(curl -sS --retry 3 --retry-delay 5 \
+              -I -w 'http_code=%{http_code}\n' "$URL" 2>&1 || true)
 
-            if [ -z "$LAST_MODIFIED" ]; then
-              echo "ERROR: Could not retrieve Last-Modified header"
-              exit 1
+            # Read the header out of the FINAL response block only.
+            # --retry can leave several blocks in HEAD_OUT, and the answer must
+            # come from the response curl settled on -- not merely the last
+            # header present anywhere. Those differ when an earlier block
+            # carries Last-Modified and the final one does not: taking the
+            # earlier value would report a fresh mirror on the strength of a
+            # response that failed, and build against an unverified archive.
+            # Each status line therefore clears the candidate, so what survives
+            # to END belongs to the final block, or is empty.
+            #
+            # Collapsing the value to one line also matters: date -d rejects a
+            # multiline argument, and under set -e that would kill the task and
+            # every remaining attempt with it.
+            LAST_MODIFIED=$(printf '%s\n' "$HEAD_OUT" | tr -d '\r' | awk '
+              /^[Hh][Tt][Tt][Pp]\// { candidate = ""; next }
+              {
+                if (tolower($0) ~ /^last-modified:/) {
+                  candidate = substr($0, index($0, ":") + 1)
+                  sub(/^[ \t]+/, "", candidate)
+                }
+              }
+              END { print candidate }' || true)
+
+            # Parsed tolerantly for the same reason: an unparseable date is a
+            # reason to poll again, not to abandon the wait.
+            FILE_DATE=""
+            if [ -n "$LAST_MODIFIED" ]; then
+              echo "Last-Modified: $LAST_MODIFIED"
+
+              # Last-Modified format: "Day, DD Mon YYYY HH:MM:SS GMT"
+              FILE_DATE=$(date -d "$LAST_MODIFIED" +%Y-%m-%d 2>/dev/null || true)
             fi
-
-            echo "Last-Modified: $LAST_MODIFIED"
-
-            # Convert Last-Modified to YYYY-MM-DD format
-            # Last-Modified format: "Day, DD Mon YYYY HH:MM:SS GMT"
-            FILE_DATE=$(date -d "$LAST_MODIFIED" +%Y-%m-%d)
             TODAY=$(date +%Y-%m-%d)
 
-            echo "File date: $FILE_DATE"
-            echo "Today's date: $TODAY"
+            if [ -n "$FILE_DATE" ]; then
+              echo "File date: $FILE_DATE"
+              echo "Today's date: $TODAY"
 
-            if [ "$FILE_DATE" = "$TODAY" ]; then
-              echo "SUCCESS: File was modified today. Proceeding with build."
-              exit 0
+              if [ "$FILE_DATE" = "$TODAY" ]; then
+                echo "SUCCESS: File was modified today. Proceeding with build."
+                exit 0
+              fi
+
+              echo "File was not modified today."
+            elif [ -n "$LAST_MODIFIED" ]; then
+              echo "Last-Modified could not be parsed as a date."
+            else
+              echo "Last-Modified header unavailable. curl reported:"
+              printf '%s\n' "$HEAD_OUT" | sed 's/^/  /'
             fi
 
-            if [ $attempt -lt $MAX_ATTEMPTS ]; then
-              echo "File was not modified today. Waiting $WAIT_SECONDS seconds before retry..."
-              sleep $WAIT_SECONDS
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              echo "Waiting $WAIT_SECONDS seconds before retry..."
+              sleep "$WAIT_SECONDS"
             else
-              echo "ERROR: After $MAX_ATTEMPTS attempts, file was still not modified today."
+              echo "ERROR: After $MAX_ATTEMPTS attempts, $URL was still not modified today."
               exit 1
             fi
           done
