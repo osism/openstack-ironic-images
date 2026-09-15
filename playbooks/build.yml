@@ -113,6 +113,23 @@
 
       changed_when: true
 
+    - name: Write the rclone configuration with the object-storage credentials
+      ansible.builtin.copy:
+        dest: "{{ ansible_user_dir }}/.rclone.conf"
+        mode: "0600"
+        content: |
+          [s3]
+          type = s3
+          provider = Ceph
+          endpoint = https://nbg1.your-objectstorage.com
+          region = nbg1
+          access_key_id = {{ secret.ACCESS_KEY | trim }}
+          secret_access_key = {{ secret.SECRET_KEY | trim }}
+          acl = public-read
+          no_check_bucket = true
+      when: upload_image | bool
+      no_log: true
+
     - name: Run upload script
       ansible.builtin.shell:  # noqa command-instead-of-module
         executable: /bin/bash
@@ -129,14 +146,9 @@
           fi
 
       environment:
-        RCLONE_CONFIG_S3_TYPE: s3
-        RCLONE_CONFIG_S3_PROVIDER: Ceph
-        RCLONE_CONFIG_S3_ENDPOINT: https://nbg1.your-objectstorage.com
-        RCLONE_CONFIG_S3_REGION: nbg1
-        RCLONE_CONFIG_S3_ACCESS_KEY_ID: "{{ secret.ACCESS_KEY | trim }}"
-        RCLONE_CONFIG_S3_SECRET_ACCESS_KEY: "{{ secret.SECRET_KEY | trim }}"
-        RCLONE_CONFIG_S3_ACL: public-read
-        RCLONE_CONFIG_S3_NO_CHECK_BUCKET: "true"
+        RCLONE_CONFIG: "{{ ansible_user_dir }}/.rclone.conf"
+        RCLONE_VERBOSE: "1"
+        RCLONE_STATS: 30s
+        RCLONE_STATS_ONE_LINE: "true"
       when: upload_image | bool
-      no_log: true
       changed_when: true
