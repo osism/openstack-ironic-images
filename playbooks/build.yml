@@ -135,7 +135,9 @@
         executable: /bin/bash
         chdir: "{{ zuul.project.src_dir }}"
         cmd: |
-          sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
+          set -e
+
+          sha256sum osism-{{ _dib_element }}-image.{{ _image_format }} > osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
 
           if [[ "{{ _image_format }}" == "raw" ]]; then
               zip osism-{{ _dib_element }}-image.zip osism-{{ _dib_element }}-image.{{ _image_format }} osism-{{ _dib_element }}-image.{{ _image_format }}.CHECKSUM
