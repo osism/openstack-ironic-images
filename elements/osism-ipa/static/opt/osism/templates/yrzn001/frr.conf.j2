@@ -22,7 +22,6 @@ router bgp {{ osism_ipa_as }}
   no neighbor switches send-community
   neighbor switches route-map RM-switches-in in
   neighbor switches route-map RM-switches-out out
-  maximum-paths 2
  exit-address-family
  !
  address-family ipv6 unicast
@@ -31,7 +30,6 @@ router bgp {{ osism_ipa_as }}
   neighbor switches activate
   neighbor switches route-map RM-switches-in in
   neighbor switches route-map RM-switches-out out
-  maximum-paths 2
  exit-address-family
 
 exit

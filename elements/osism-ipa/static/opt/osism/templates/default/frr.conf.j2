@@ -17,7 +17,6 @@ router bgp {{ osism_ipa_as }}
 {% for interface in osism_interfaces_up %}
   neighbor {{ interface }} route-map bgp_out out
 {% endfor %}
-  maximum-paths 2
  exit-address-family
  !
  address-family ipv6 unicast
