@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osism-ipa-hardware"
+version = "1.0.0"
+description = "OSISM hardware manager for ironic-python-agent"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+# Installed into IPA's own virtualenv, so ironic-python-agent is not
+# declared: pip must not touch it.
+dependencies = []
+
+[project.entry-points."ironic_python_agent.hardware_managers"]
+osism = "osism_ipa_hardware.manager:OsismHardwareManager"
+
+[tool.setuptools]
+packages = ["osism_ipa_hardware"]
