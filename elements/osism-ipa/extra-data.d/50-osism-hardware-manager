@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+[ -n "$TMP_HOOKS_PATH" ] || die "Temp hook path not set"
+
+SCRIPTDIR=$(dirname $0)
+
+mkdir -p $TMP_HOOKS_PATH/osism-ipa-hardware
+cp -r $SCRIPTDIR/../hardware-manager/pyproject.toml \
+    $SCRIPTDIR/../hardware-manager/osism_ipa_hardware \
+    $TMP_HOOKS_PATH/osism-ipa-hardware/
